@@ -1,0 +1,33 @@
+# ── large artifacts (kept locally, NOT in git) ──────────────────────────────
+models/
+output/
+data/datasets/
+data/ifc_models/
+# keep small benchmark test sets in git:
+!data/test_sets/
+
+# ── python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.env
+
+# ── tooling / editor ────────────────────────────────────────────────────────
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+.vscode/
+.DS_Store
+
+# ── node (demo front-end) ───────────────────────────────────────────────────
+node_modules/
+
+# ── run scratch ─────────────────────────────────────────────────────────────
+logs/
+*.log

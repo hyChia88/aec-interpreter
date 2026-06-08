@@ -1,0 +1,26 @@
+[project]
+name = "aec-interpreter"
+version = "0.1.0"
+description = "Neuro-symbolic interpreter middleware: grounds on-site evidence (image + NL) to IFC element GUIDs over a BIM knowledge graph."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    # filled in during Phase 0 step 2 (code migration). Pin then.
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
