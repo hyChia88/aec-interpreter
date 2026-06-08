@@ -5,13 +5,46 @@ description = "Neuro-symbolic interpreter middleware: grounds on-site evidence (
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    # filled in during Phase 0 step 2 (code migration). Pin then.
+    # ── contract / config / core ──
+    "pydantic>=2.0",
+    "jsonschema>=4.0.0",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0",
+    "colorama>=0.4.6",
+    "numpy>=1.24.0",
+    "pillow>=10.0.0",
+    # ── IFC graph ──
+    "ifcopenshell>=0.7",
+    # ── VLM extraction + visual specialists ──
+    "transformers>=4.30.0",
+    "torch>=2.0.0",
+    # ── external / baseline model APIs ──
+    "google-generativeai==0.8.5",
+    "openai==2.8.1",
+    # ── eval reporting / plots ──
+    "matplotlib>=3.5.0",
+    "seaborn>=0.11.0",
+    "pandas>=1.3.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest",
     "ruff",
+]
+# heavy geometry stack (datagen / point-cloud alignment only)
+geom = [
+    "open3d>=0.17.0",
+]
+# legacy V1 agent + interactive chat (NOT used by the neuro-symbolic pipeline; kept
+# only if the old agent path is run for qualitative comparison)
+agent = [
+    "langchain>=0.1.0",
+    "langchain-core>=0.1.0",
+    "langchain-google-genai>=0.0.1",
+    "langgraph>=0.1.0",
+    "fastmcp>=0.2.0",
+    "mcp>=1.0.0",
 ]
 
 [build-system]

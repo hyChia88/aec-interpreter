@@ -1,0 +1,392 @@
+# Tool Descriptions and Usage Guidelines
+# Reference for developers and documentation
+
+tools:
+  list_available_spaces:
+    name: "list_available_spaces"
+    signature: "list_available_spaces() -> str"
+    description: |
+      Use this tool to discover what rooms/floors/spaces are available in the IFC model.
+      This is helpful when you don't know the exact room names to search.
+      Returns a list of available space names that can be used with get_elements_by_room.
+
+    when_to_use:
+      - User asks "What rooms are there?"
+      - User asks "What spaces exist?"
+      - User asks "List all floors"
+      - You need to know what spaces exist before querying
+      - A query fails and you need to see what's available
+
+    example_queries:
+      - "What spaces are available?"
+      - "List all rooms"
+      - "What floors are in this building?"
+
+    example_output: |
+      Available spaces:
+        - 'floor 0' (123 elements)
+        - 'floor 1' (45 elements)
+
+  get_elements_by_room:
+    name: "get_elements_by_room"
+    signature: "get_elements_by_room(room_name: str) -> str"
+    description: |
+      Use this tool to find BIM objects located in a specific room or space.
+      Input: The name of the room (e.g., 'floor 0', 'kitchen').
+      Output: A list of elements with their names, types, and GUIDs.
+
+    parameters:
+      room_name:
+        type: str
+        required: true
+        format: "Must be lowercase, exact match from spatial_index"
+        examples:
+          - "floor 0"
+          - "floor 1"
+        note: "Space names are case-sensitive and usually lowercase"
+
+    when_to_use:
+      - User asks "What's on Floor 0?"
+      - User wants to see elements in a specific room
+      - You need to search for specific element types in a space
+
+    example_queries:
+      - "What's on floor 0?"
+      - "Show me everything in the kitchen"
+      - "Find all elements on floor 1"
+
+    example_output: |
+      [
+        {'guid': 'abc123...', 'type': 'IfcWall', 'name': 'Yttervägg', 'description': ''},
+        {'guid': 'def456...', 'type': 'IfcDoor', 'name': 'Innerdörr', 'description': ''},
+        ...
+      ]
+
+    limitations:
+      - Returns max 30 elements to prevent token overflow
+      - Requires exact space name (use list_available_spaces first if unsure)
+      - Uses substring matching on lowercase keys
+
+  get_element_details:
+    name: "get_element_details"
+    signature: "get_element_details(guid: str) -> str"
+    description: |
+      Use this tool to get detailed technical properties (Psets) of a specific element by its GUID.
+      Useful for compliance checking (checking material, fire rating, etc.).
+
+    parameters:
+      guid:
+        type: str
+        required: true
+        format: "IFC GlobalId format (22 characters, base64-like)"
+        examples:
+          - "3cJh4vCKb06wZ6$sKPKYTS"
+          - "2O2Fr$t4X7Zf8NOew3FLOH"
+        note: "Must be exact GUID from the IFC model"
+
+    when_to_use:
+      - User asks for details about a specific element
+      - Need to verify compliance properties
+      - Want to check material, fire rating, or other Psets
+      - Follow-up after finding elements with get_elements_by_room
+
+    example_queries:
+      - "Show details for GUID abc123"
+      - "What are the properties of element xyz?"
+      - "Get specifications for that cabinet"
+
+    example_output: |
+      {
+        'GlobalId': '3cJh4vCKb06wZ6$sKPKYTS',
+        'Name': 'M_Base Cabinet',
+        'Type': 'IfcFurniture',
+        'PredefinedType': 'Kitchen Cabinet'
+      }
+
+    limitations:
+      - Currently returns basic properties only (MVP)
+      - Full Pset extraction (Pset_WallCommon, etc.) not yet implemented
+      - Returns "Element not found" if GUID doesn't exist
+
+  generate_3d_view:
+    name: "generate_3d_view"
+    signature: "generate_3d_view(guid: str) -> str"
+    description: |
+      Generates a visual verification snapshot (render) of the element.
+      Use this when the user asks to 'see' or 'visualize' the defect.
+
+    parameters:
+      guid:
+        type: str
+        required: true
+        format: "IFC GlobalId"
+        note: "Element must exist in the IFC model"
+
+    when_to_use:
+      - User asks "Show me that element"
+      - User wants visual verification
+      - Creating documentation or reports
+      - Insurance claims or work orders
+
+    example_queries:
+      - "Can you show me what that looks like?"
+      - "Generate a 3D view"
+      - "I need a visual of that cabinet"
+
+    example_output: |
+      /server/renders/abc123_inspection_view.png
+
+    limitations:
+      - Requires Blender with Bonsai/BlenderBIM addon installed
+      - Set BLENDER_PATH environment variable if not in PATH
+      - Rendering takes 10-60 seconds depending on model complexity
+
+    implementation_notes: |
+      Current implementation:
+      1. Calls Blender in headless mode with render_worker.py
+      2. Loads IFC file and finds element by GUID
+      3. Positions camera to frame the element
+      4. Renders to PNG at 800x600 resolution
+      5. Returns JSON with image_path on success
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Visual Analysis Tools (CLIP-based)
+  # ─────────────────────────────────────────────────────────────────────────────
+
+  analyze_site_image:
+    name: "analyze_site_image"
+    signature: "analyze_site_image(image_path: str) -> str"
+    description: |
+      Analyze a site photo to classify what building elements are visible.
+      Uses CLIP multimodal AI to understand the content of the image.
+      Returns top-5 most likely element types with confidence scores.
+
+    parameters:
+      image_path:
+        type: str
+        required: true
+        format: "Absolute or relative path to image file (jpg, png)"
+        examples:
+          - "/root/cmu/master_thesis/mscd_demo/data/ground_truth/gt_1/imgs/img_gt_001_1.png"
+          - "data/ground_truth/gt_1/imgs/img_gt_001_1.png"
+
+    when_to_use:
+      - User asks "What's in this image?"
+      - User provides an image path and asks for analysis
+      - Need to understand what a site photo shows before matching to BIM
+
+    example_queries:
+      - "Analyze this image: /path/to/photo.jpg"
+      - "What's in the image at data/ground_truth/gt_1/imgs/img_gt_001_1.png?"
+      - "Can you read/see/analyze this photo?"
+
+    example_output: |
+      Analysis of site image (img_gt_001_1.png):
+        Most likely elements visible:
+          - Window with glass pane (confidence: 0.85)
+          - Crack or damage on surface (confidence: 0.72)
+          - Concrete wall surface (confidence: 0.65)
+          - Metal door frame (confidence: 0.45)
+          - Beam or lintel (confidence: 0.38)
+
+    response_guidance: |
+      After calling this tool, you MUST:
+      1. Report the analysis results to the user
+      2. Describe what the image likely shows based on top scores
+      3. Suggest next steps (e.g., match to BIM elements if storey known)
+
+  match_image_to_elements:
+    name: "match_image_to_elements"
+    signature: "match_image_to_elements(image_path: str, storey_filter: str = None, top_k: int = 5) -> str"
+    description: |
+      Match a site photo to BIM elements in the IFC model using CLIP visual AI.
+      Returns ranked list of matching BIM elements with GUIDs and confidence scores.
+      Combines visual understanding with 4D spatial filtering.
+
+    parameters:
+      image_path:
+        type: str
+        required: true
+        description: "Path to the site photo"
+
+      storey_filter:
+        type: str
+        required: false
+        description: "Storey name to narrow search (e.g., 'sixth', 'Level 1')"
+        examples:
+          - "sixth"
+          - "Level 1"
+          - "1 - First Floor"
+
+      top_k:
+        type: int
+        required: false
+        default: 5
+        description: "Number of top matches to return"
+
+    when_to_use:
+      - User provides image AND you know the floor/storey
+      - After analyze_site_image, to find specific BIM elements
+      - Need to link a photo to IFC elements with GUIDs
+
+    example_output: |
+      Top 5 matches for site image (filtered to 'sixth'):
+        #1: Window_North_6F (IfcWindow)
+             GUID: 0Um_J2ClP45uPRcRbJqhxe
+             Confidence: 0.782
+        #2: Wall_Ext_6F (IfcWall)
+             GUID: 1X3Gy$abc123def456
+             Confidence: 0.654
+
+  compare_defect_images:
+    name: "compare_defect_images"
+    signature: "compare_defect_images(image_path1: str, image_path2: str) -> str"
+    description: |
+      Compare two site photos to check if they show the same defect/area.
+      Returns similarity score and interpretation (VERY HIGH/HIGH/MODERATE/LOW/VERY LOW).
+
+    parameters:
+      image_path1:
+        type: str
+        required: true
+        description: "Path to first image"
+
+      image_path2:
+        type: str
+        required: true
+        description: "Path to second image"
+
+    when_to_use:
+      - User asks "Is this the same defect as before?"
+      - Need to check if two photos show the same issue
+      - Grouping related defect images
+
+    example_output: |
+      Image Comparison Results:
+        Image 1: crack_v1.jpg
+        Image 2: crack_v2.jpg
+        Similarity Score: 0.850
+        Interpretation: VERY HIGH - Images almost certainly show the same subject
+
+  match_text_to_elements:
+    name: "match_text_to_elements"
+    signature: "match_text_to_elements(description: str, storey_filter: str = None, top_k: int = 5) -> str"
+    description: |
+      Match a text description to BIM elements using CLIP semantic similarity.
+      Useful when user describes a defect verbally without providing an image.
+
+    parameters:
+      description:
+        type: str
+        required: true
+        description: "Text description of the element or defect"
+        examples:
+          - "cracked window on the north wall"
+          - "damaged concrete near the elevator"
+
+      storey_filter:
+        type: str
+        required: false
+        description: "Optional storey name to narrow search"
+
+      top_k:
+        type: int
+        required: false
+        default: 5
+        description: "Number of top matches to return"
+
+    when_to_use:
+      - User describes a defect without providing an image
+      - Need semantic matching between description and BIM elements
+      - Alternative to image-based matching
+
+    example_output: |
+      Top 5 matches for: "damaged concrete near the elevator"
+        (filtered to storey: 'first')
+
+        #1: Slab_Elevator_1F (IfcSlab)
+             GUID: 3cJh4vCKb06wZ6$sKPKYTS
+             Location: 1 - First Floor
+             Confidence: 0.723
+
+# Workflow patterns
+workflows:
+  visual_image_analysis:
+    steps:
+      - "User provides an image path and asks to analyze it"
+      - "Call analyze_site_image(image_path)"
+      - "Report the analysis results with confidence scores"
+      - "If storey context is available, suggest matching to BIM elements"
+
+    example: |
+      User: "What's in the image at data/ground_truth/gt_1/imgs/img_gt_001_1.png?"
+      Agent:
+        1. analyze_site_image("data/ground_truth/gt_1/imgs/img_gt_001_1.png")
+        2. "The image shows: Window with glass pane (0.85), Crack or damage (0.72)..."
+        3. "This appears to be a damaged window. Would you like me to match it to specific BIM elements?"
+
+  visual_element_matching:
+    steps:
+      - "User provides image AND floor context"
+      - "Call match_image_to_elements(image_path, storey_filter)"
+      - "Report top matches with GUIDs"
+      - "Recommend the best candidate"
+
+    example: |
+      User: "Match this photo to elements on the 6th floor"
+      Agent:
+        1. match_image_to_elements("photo.jpg", storey_filter="sixth", top_k=5)
+        2. "Top match: Window_North_6F (GUID: 0Um_J2ClP45uPRcRbJqhxe) with confidence 0.78"
+
+  basic_room_query:
+    steps:
+      - "User asks about a room/floor"
+      - "Call get_elements_by_room(room_name)"
+      - "Display results"
+
+    example: |
+      User: "What's on floor 0?"
+      Agent: get_elements_by_room("floor 0") → Show results
+
+  element_detail_inspection:
+    steps:
+      - "User provides GUID or references element from previous query"
+      - "Call get_element_details(guid)"
+      - "Display properties"
+      - "Optionally call generate_3d_view(guid) for visualization"
+
+    example: |
+      User: "Show details for that cabinet"
+      Agent: get_element_details("abc123") → Show properties
+
+  discovery_then_query:
+    steps:
+      - "User asks vague question without knowing space names"
+      - "Call list_available_spaces() first"
+      - "Then call get_elements_by_room(space) based on user intent"
+      - "Filter results for keywords"
+
+    example: |
+      User: "Find all cabinets"
+      Agent:
+        1. list_available_spaces() → See 'floor 0', 'floor 1'
+        2. get_elements_by_room("floor 0") → Get all elements
+        3. Filter for 'cabinet' in name → Return matches
+
+  compliance_check:
+    steps:
+      - "User asks about compliance for element type"
+      - "Call get_elements_by_room(floor) to get all elements"
+      - "Filter for specific type (e.g., IfcDoor)"
+      - "For each element, call get_element_details(guid)"
+      - "Check for required properties"
+      - "Report any missing/incomplete data"
+
+    example: |
+      User: "Check fire rating compliance for all doors on floor 0"
+      Agent:
+        1. get_elements_by_room("floor 0")
+        2. Filter for type='IfcDoor'
+        3. For each door: get_element_details(guid)
+        4. Check if 'FireRating' property exists
+        5. Report compliant vs non-compliant doors

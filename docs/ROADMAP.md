@@ -34,9 +34,17 @@ have the BIM, not a labeled photo dataset.
 - OpenCV (position 27%) and ResNet (size 31.6%) already beat the VLM on their sub-tasks
   but are only used as soft rerank text.
 
-**Spine claim:** *In determinism-constrained, high-repetition IFC retrieval, the binding
-constraint is field-level extraction confidence; calibrated field-routing recovers a
-measurable fraction of the oracle–realized gap.*
+**Spine claim (framed as a tension resolution):** *Neuro-symbolic IFC retrieval faces a
+**determinism/auditability ↔ adaptivity/accuracy** tension — the deterministic backend is
+auditable but cannot exploit uncertain extractions, so it falls back to a coarse pool. We
+resolve it with a confidence-routing layer placed **between** probabilistic extraction and
+deterministic execution: the policy adapts, the execution stays auditable. Mechanism:
+field-level extraction confidence is the binding constraint, and calibrated per-field
+routing recovers a measurable fraction of the oracle–realized gap.*
+
+> Lead with the tension/auditability framing, not "we added calibration." In a
+> liability-heavy vertical (AEC), an auditable deterministic decision trace + calibrated
+> confidence is a genuine differentiator.
 
 ---
 
@@ -60,6 +68,11 @@ Top-1 at small n). Latency/cost tracked first-class. Top-1 reported but demoted.
   from `synth_v0.5_ap` — n=60 makes Top-1 CI ±~6–7pp, unprovable. Cheap (synthetic).
 - **[NEW] Leakage check:** split by **disjoint elements/regions, not just case-IDs**.
   Document the split. (Critical before any learned ranker.)
+- **[NEW] Per-field confidence contract invariant:** every extracted attribute carries
+  `{value, confidence, source}` (VLM logprob for categorical/text, OpenCV score for
+  position, ResNet confidence for size, alignment confidence for schema-repaired values).
+  This is the *enabling substrate* for P1 routing and closes `neurosym/README.md`
+  limitations #4 + #10. Design it in `schemas/` + `service/` now, not later.
 
 ### P2 — Confidence-gated deterministic position/size (supporting system result)
 Promote high-confidence OpenCV position / ResNet size from soft-rerank to *gated*
@@ -75,6 +88,22 @@ constraints (hard if confident, soft otherwise). Fastest mover; GT-in-Pool must 
 - **Gate on a calibration sanity-check first (ECE + reliability diagram)** — if
   confidences aren't calibrated, the routing premise fails.
 - New diagnostic metric: live pool vs oracle L3 (9) → shows routing closes 76→9.
+- **"Clarify"/defer = first-class outcome (selective prediction).** Report a
+  **coverage-vs-accuracy curve** (accuracy at each defer rate), not just point accuracy —
+  "here are 9 candidates, I'm unsure" beats a confident wrong Top-1, and *is* the triage
+  value prop.
+- **Adaptivity-arm ablation (home of the AI-agent orchestration idea).** Same backbone,
+  three adaptivity levels: `static-threshold → tiny learned router → LLM-agent
+  orchestrator` (agent reads extraction + confidences + *intermediate pool sizes*,
+  decides which deterministic specialist to call / which constraint to relax — adaptive
+  test-time compute over deterministic tools, NOT agent-as-grounding). Score accuracy
+  **+ latency + repeatability**. Static is the headline; the agent must beat it on the
+  same budget. "Agentic orchestration doesn't pay its latency" is itself a finding.
+
+> **ECE-failure contingency (state up front):** out-of-the-box VLM token-probabilities
+> are usually poorly calibrated. If the ECE gate fails, the gain shifts to
+> schema-alignment + visual specialists carrying the load. Survivable, but name the risk
+> rather than discovering it late.
 
 ### P4 — Subtype-contrastive data aug (reframed as a finding)
 Add hard-negative subtype contrasts to the Blender pipeline; retrain a LoRA variant.
