@@ -18,6 +18,8 @@ dependencies = [
     # ── VLM extraction + visual specialists ──
     "transformers>=4.30.0",
     "torch>=2.0.0",
+    "opencv-python>=4.8.0",   # cv2 — OpenCV position/counting specialist (neurosym/floorplan_counter)
+    "langchain-core>=0.1.0",  # visual/image_parser VLM message types (TODO: decouple in service/)
     # ── external / baseline model APIs ──
     "google-generativeai==0.8.5",
     "openai==2.8.1",

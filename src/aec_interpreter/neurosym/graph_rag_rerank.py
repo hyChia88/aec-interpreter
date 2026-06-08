@@ -18,7 +18,7 @@ from typing import Any, Dict, List, Optional, Sequence
 
 # Reuse the offline experiment helpers verbatim — they already handle
 # fingerprint Cypher, fusion scoring, prompt assembly, and answer parsing.
-from evaluation.experiments.graph_rag_rerank_ap import (  # noqa: E402
+from aec_interpreter.neurosym.graph_rag_rerank_ap import (  # noqa: E402
     DEFAULT_MODEL,
     _build_prompt,
     _call_gemini,

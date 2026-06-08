@@ -21,12 +21,18 @@ from typing import Any, Dict, List, Optional
 
 def get_base_dir() -> Path:
     """
-    Return the project root directory (parent of src/).
+    Return the project root directory (the dir containing pyproject.toml + prompts/).
 
-    This is the single source of truth for the base directory calculation,
-    replacing scattered Path(__file__).parent.parent calls.
+    Single source of truth for base-dir resolution. Anchors to the pyproject.toml
+    marker by walking upward, so it is robust to package depth (avoids the fragile
+    parent-counting that broke when code moved into the src/aec_interpreter/ package).
     """
-    return Path(__file__).parent.parent.parent
+    here = Path(__file__).resolve()
+    for parent in here.parents:
+        if (parent / "pyproject.toml").exists():
+            return parent
+    # fallback for the known layout: src/aec_interpreter/common/config.py -> 4 up = root
+    return here.parent.parent.parent.parent
 
 
 def load_config(config_file: str = "config.yaml") -> Dict[str, Any]:
