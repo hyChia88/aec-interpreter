@@ -61,7 +61,34 @@ Top-1 at small n). Latency/cost tracked first-class. Top-1 reported but demoted.
   refactored `schema/`, prompts, `ifc-bonsai-mcp` as datagen tool).
 - `docs/`: ROADMAP, DATA_INVENTORY, REPO_MAP, results_ledger.
 - `src/aec_interpreter/service/` (pipeline as callable + FastAPI, shared by demo+eval)
-  + `eval/run_benchmark.py` (bootstrap CIs).
+  + `eval/run_benchmark.py` (bootstrap CIs). **Two modes (decided 2026-06-08):**
+  - `--from-traces` — score saved per-case e2e traces offline. **No Neo4j, no GPU.**
+    Used for harness validation, thesis-parity, and as a fast regression baseline.
+  - `--live` — run the real pipeline (extract → plan → retrieve → rerank). **Needs
+    Neo4j + model inference (GPU or API).** Used for every new experiment (P2/P1) and
+    for publication-grade from-scratch reproduction.
+- **Runtime deps (surveyed 2026-06-08):** retrieval backend = `memory | neo4j`; memory
+  mode *degrades* on all topology strategies ("no adjacency data") so faithful results
+  need **Neo4j** (`bolt://localhost:7687`, ingested from IFC via `ifc_engine.py`).
+  Live extraction needs the Qwen2.5-VL LoRA (GPU) or an API path. Precomputed artifacts
+  exist for every variant: Track-A extraction `output/.../gN__ap_eval.jsonl` and Track-B
+  per-case e2e `…/ap_e2e_phase5_g8/g8_posctx_dim/traces_*.jsonl` + `metrics/*_metrics.json`.
+- **Baseline-reproduction (immediate):** `--from-traces` over the migrated G8 e2e trace,
+  cross-checked against `g8_posctx_dim__ap_e2e_phase5_metrics.json` —
+  target `Top-10 30.0% · MRR 0.1104 · GT-in-pool 100% · final pool median 76 / mean 118.4`.
+  Match ⇒ harness validated + parity established. Add bootstrap CIs (new vs thesis).
+- **🚪 Publication gate — closing `mscd_demo`:** because the goal is to publish ONLY this
+  repo, the old repo can be retired *only after* `--live` runs **fully self-contained from
+  this repo**. That requires, still TODO: (1) **dockerize Neo4j** (`docker-compose`) +
+  the IFC→graph ingestion path; (2) **migrate the AP IFC model file(s)** into
+  `data/ifc_models/` (gitignored + documented; currently NOT migrated); (3) **model-adapter
+  access** (G8 1.6G via gitignore+documented download / DVC, or an API inference path).
+  Until these land, `mscd_demo` stays as the live-run fallback. The saved traces then
+  become regression fixtures, not the only source of numbers.
+
+**Sequencing (decided):** (1) offline `--from-traces` harness + thesis parity → (2) live
+closeout (Neo4j docker + IFC migration + model access) = the gate to retire `mscd_demo` →
+(3) P2/P1 (which run `--live`).
 - **Pre-registration:** per-phase `protocol.md` committed to git *before* running
   (confirmatory vs exploratory).
 - **[NEW] Synthetic-dataset-enhance:** regenerate a **larger clean held-out (~n=300)**

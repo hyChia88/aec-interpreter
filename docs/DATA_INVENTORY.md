@@ -51,5 +51,8 @@ held-out is generated. Until verified, treat any learned-ranker result as provis
 - [x] **prompts + schema + AP held-out migrated** → `prompts/`, `schemas/corenetx_min/v0.schema.json`, `data/test_sets/cases_ap_heldout_e2e.jsonl`
 - [ ] `synth_v0.5_ap` (822M) → **referenced by documented path** (NOT copied; gitignored). Path in `config/` TBD when wiring service.
 - [ ] `lora6_v2_ap_20260331` (G8) + `cluster_classifier_ap` → **referenced by documented path** (NOT copied; 1.6G+43M gitignored). Wire path in `config/`.
+- [x] `uv venv` + `uv pip install -e ".[dev]"` + full-import smoke test (42/43 modules clean; `common.mcp` = V1/`[agent]` only) — **done 2026-06-08**
+- [ ] **[publish gate] AP IFC model file(s)** → migrate into `data/ifc_models/` (gitignored + documented). NOT yet migrated; config default path was `data/ifc/AdvancedProject/IFC/AdvancedProject.ifc` (confirm actual AP model location in `mscd_demo`). Required for `--live` / closing `mscd_demo`.
+- [ ] **[publish gate] Neo4j** dockerized + IFC→graph ingestion reproducible in-repo.
+- [ ] G8 (+ gemini) e2e traces + `*_metrics.json` → migrate as eval fixtures (small, in git) for offline `--from-traces` parity.
 - [ ] larger clean held-out (~n=300) → generated + leakage-checked
-- [ ] `pip install -e .` then full-import smoke test (deps now pinned in pyproject)
