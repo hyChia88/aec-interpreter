@@ -55,3 +55,29 @@ Conventions:
 | 2026-06-08 | 0 | from-traces:g8_posctx_dim | b87ef4b+ | AP held-out (60) | final pool (median) | 76.0 | [61, 78] | confirmatory | mean 118.4 [92.7, 146.8] |
 | 2026-06-08 | 0 | from-traces:g8_posctx_dim | b87ef4b+ | AP held-out (60) | Top-1 | 6.7% | [1.7, 13.3] | confirmatory | CI shows Top-1 unprovable at n=60 → demote, regen n≈300 |
 | 2026-06-08 | 0 | from-traces:gemini_ap_v2 | b87ef4b+ | AP held-out (60) | Top-10 | 18.3% | [8.3, 28.3] | confirmatory | ranking-metrics parity PASS; gt_in_pool known-diff (see note) |
+
+## Idea 3a — optimal-fingerprint ceiling (FIRST CUT: attribute layer, oracle r=1, Neo4j-free)
+
+`eval/fingerprint_ceiling.py` over `element_index.jsonl` (universe = 1233 AP elements;
+60 held-out targets). Confusable set C(e) = elements sharing e's fingerprint.
+
+| pool (60 targets) | median | mean | min..max |
+|---|---|---|---|
+| coarse (storey+ifc_class) | 46 | 112.4 | 14..362 |
+| attribute-optimal (oracle r=1) | **13** | 35.1 | 1..260 |
+
+- **3.8× median shrinkage** from attribute feature-selection alone (no topology).
+- **`object_type` does essentially all of it** (coarse+object_type → median 13; material /
+  fire_rating / is_external add ~0 at the margin). `space_name`/`target_name_keyword`/
+  `neighbor_type` are dead for AP (≈0% coverage).
+- **Attributes plateau:** only **2/60** uniquely identified by attributes alone → topology
+  features are required to approach Top-1 / oracle-L3 (~9). Motivates the topology cut + P1.
+
+> **Caveats:** (1) universe = element_index (1233) ≠ live graph (1666) + finer live
+> ifc_class granularity → absolute |C| ≠ live pool 76; the *relative* shrinkage is the
+> result. (2) Oracle r=1 = upper bound; `object_type` is a Revit family/type string whose
+> real photo-extraction reliability is likely low, so the **reliability-weighted cut (next)**
+> will show a realizable floor well above 13 — that gap is the prize P1 chases. (3) Topology
+> features pending (offline-geometry edge table, Neo4j-free) = second cut.
+
+Figure: `output/fingerprint_ceiling.png` (coarse vs attribute-optimal distributions) → §4 spine visual.

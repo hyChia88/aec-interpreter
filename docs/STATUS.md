@@ -5,7 +5,7 @@
 > [`DATA_INVENTORY.md`](DATA_INVENTORY.md) (assets), and `git log` (timeline).
 
 **Last updated:** 2026-06-08
-**Current position:** Phase 0 (foundation) — execution-order step 1 partial; live-closeout prepped (blocked on Docker).
+**Current position:** Phase 0 — step 1 (contract done), step 2 Idea 3a first cut done; live-closeout prepped (blocked on Docker).
 
 ---
 
@@ -20,6 +20,9 @@
 - **Per-field confidence contract (structure)** — `schema/contract.py`: uniform
   `FieldValue {value, confidence, source, role}` + `ConstraintContract` + `from_legacy`
   adapter + generated `schemas/constraint_contract.schema.json` + 5 tests. (§2.1 step 1)
+- **Idea 3a first cut (attribute-layer ceiling, Neo4j-free)** — `eval/fingerprint_ceiling.py`:
+  median pool 46→13 (3.8×) from attributes alone, all via `object_type`; plateaus (2/60
+  unique) → motivates topology + P1. Figure + ledger + 2 tests. (§2.1 step 2)
 - **Live-closeout prep (docker-independent)** — `docker-compose.yml` (Neo4j 5.26, no APOC), `scripts/graph_build/` (01 export / 02 topology / 03 views) + runbook, AP IFC model + element_index migrated, `config/config.yaml`, py2neo dep (`1a9487a`).
 
 ## 🟡 In progress / partial (§2.1 step 1)
