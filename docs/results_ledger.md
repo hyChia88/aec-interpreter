@@ -162,5 +162,47 @@ hard-gate lever; the **soft-rerank lever (→ Top-k/MRR) is dominant and is alre
 implemented for 2 fields** (`graph_rag_rerank_ap.py:508` `_candidate_match_signals`:
 `fusion = Σ score·conf / Σ conf` over `size_band` (ResNet conf) + `position_context`
 (OpenCV/F4 conf), with hardcoded 0.7/0.8 default weights). **P1 = generalize 2→all routable
-fields + replace hardcoded defaults with calibrated confidence (ECE gate).** A future
-third cut should quantify the prize on Top-k/MRR under confidence-weighted scoring, not |C|.
+fields + replace hardcoded defaults with calibrated confidence (ECE gate).**
+
+## Idea 3a — THIRD CUT: soft-rerank prize on Top-k / MRR (offline, real pools)
+
+`eval/rerank_prize.py` reranks the **real G8 trace pools** (median 76, GT-in-pool 60/60)
+by feature agreement — each pool guid joined to `element_index.jsonl` for its features,
+expected Top-k/MRR with analytic tie handling. This sizes the prize on the *binding* metric
+(ranking) instead of |C|. **Observed extraction reliability from the traces: storey 0.52,
+ifc_class 0.82** (real G8 per-set numbers; refines cut-2's documented LoRA5 proxies 0.66/0.50).
+
+| scheme (60 cases) | Top-1 | Top-5 | Top-10 | MRR |
+|---|---|---|---|---|
+| realized (G8) | 6.7 | 16.7 | **30.0** | 0.110 |
+| blind rerank (storey+class, 2-field) | 3.3 | 9.8 | 15.7 | 0.084 |
+| calibrated rerank (zero wrong fields) | 3.7 | 11.8 | 19.6 | 0.098 |
+| oracle storey+class (perfect coarse) | 4.9 | 17.9 | 31.5 | 0.137 |
+| **realistic +object_type (r=0.625)** | **13.2** | **40.2** | **59.5** | **0.271** |
+| oracle +object_type (r=1 ceiling) | 18.1 | 53.6 | 76.3 | 0.352 |
+
+- **Coarse is saturated:** oracle storey+class (31.5) ≈ realized (30.0) — perfecting the
+  fields the model already extracts barely moves Top-10. Consistent with cut-1 (coarse pool 46).
+- **The prize is object_type** (cut-2's sole discriminator, which the pipeline does NOT yet
+  extract): oracle +object_type lifts Top-10 30→**76** (+45pp ceiling), Top-1 6.7→18.
+- **Realistic estimate** (object_type specialist at r=0.625 + calibrated soft rerank;
+  E = r·oracle + (1−r)·coarse): Top-10 **59.5** (≈2× realized), Top-1 **13.2** (≈2×), MRR
+  0.271 (2.5×) — **with zero recall cost** (soft rerank never evicts GT).
+- **Calibration prize, isolated** (controlled 2-field): zeroing wrong-extraction weights
+  beats confidence-blind rerank by **+3.9pp** Top-10 — small here because only storey+class
+  participate, but it's the real per-field effect P1 calibration exploits across all fields.
+
+> **Caveats:** (1) blind/calibrated rows use ONLY storey+class to isolate the calibration
+> effect → they sit *below* realized_g8, which uses the full pipeline (spatial relations +
+> Gemini rerank + name hints); do NOT read blind<realized as "rerank hurts". (2) object_type
+> oracle r=1 is a ceiling; r=0.625 is the cut-2 proxy (Revit family-type string, hard to read
+> from a photo) — the realistic row is the defensible number. (3) the realistic-row fallback
+> assumes calibration is good enough to revert to coarse when object_type is wrong (rather
+> than be misled) — that is exactly the P1 premise, gated on the ECE study.
+
+**Net story (cuts 1–3):** grounding is reliability-bound, not feature-bound; the one
+discriminator (object_type) is unextracted; extracting it (**P2 specialist**) + calibrated
+**soft rerank** (**P1**) ≈ doubles Top-10/Top-1 with no recall loss. This is the paper's
+money figure and the justification for the P2→P1 order. Idea 3b stays retired.
+
+Figure: `output/rerank_prize.png` (Top-1/Top-10 across schemes — the elbow at object_type).

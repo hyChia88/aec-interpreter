@@ -29,6 +29,13 @@
   0.009 if all hard-filtered (best single r=0.625) → the 76→~13 gap is **reliability-bound**.
   **Decisive gate: Idea 3b (learned feature-selector) = SKIP; all effort → P1 calibrated
   routing.** Calibrated `object_type` routing alone: coarse 46→25.4. Figure + ledger + 3 tests.
+  Also: full `IfcRel*` census (no untapped relation; `IfcRelSpaceBoundary`=0 → room-feature
+  is the real-data revisit target) + 2-lever correction (soft rerank, not hard filter).
+- **Idea 3a third cut (soft-rerank prize on Top-k/MRR, offline)** — `eval/rerank_prize.py`:
+  reranks the real trace pools by feature agreement. Coarse is saturated (oracle storey+class
+  31.5 ≈ realized 30); the prize is **object_type** — realistic specialist (r=0.625) +
+  calibrated soft rerank **≈ doubles Top-10 (30→59.5) and Top-1 (6.7→13.2), zero recall cost**.
+  Money figure for the paper; justifies P2→P1 order. Figure + ledger + 4 tests (18 total).
 - **Live-closeout prep (docker-independent)** — `docker-compose.yml` (Neo4j 5.26, no APOC), `scripts/graph_build/` (01 export / 02 topology / 03 views) + runbook, AP IFC model + element_index migrated, `config/config.yaml`, py2neo dep (`1a9487a`).
 
 ## 🟡 In progress / partial (§2.1 step 1)
