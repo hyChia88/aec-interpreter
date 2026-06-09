@@ -1,0 +1,93 @@
+{
+  "$defs": {
+    "FieldValue": {
+      "additionalProperties": false,
+      "description": "A single extracted attribute with routing-relevant metadata.\n\nvalue:      extracted value (None = not extracted / absent)\nconfidence: [0,1], or None when no confidence signal exists for this field yet\nsource:     provenance of the value/confidence\nrole:       routing decision assigned by the P1 policy (unset until routed)",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "source": {
+          "default": "unknown",
+          "title": "Source",
+          "type": "string"
+        },
+        "role": {
+          "default": "unset",
+          "enum": [
+            "hard_filter",
+            "soft_prior",
+            "drop",
+            "clarify",
+            "unset"
+          ],
+          "title": "Role",
+          "type": "string"
+        }
+      },
+      "title": "FieldValue",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Per-field confidence contract (generated from schema/contract.py). Do not hand-edit; regenerate.",
+  "properties": {
+    "storey_name": {
+      "$ref": "#/$defs/FieldValue"
+    },
+    "ifc_class": {
+      "$ref": "#/$defs/FieldValue"
+    },
+    "space_name": {
+      "$ref": "#/$defs/FieldValue"
+    },
+    "position_context": {
+      "$ref": "#/$defs/FieldValue"
+    },
+    "size_cluster": {
+      "$ref": "#/$defs/FieldValue"
+    },
+    "size_band": {
+      "$ref": "#/$defs/FieldValue"
+    },
+    "target_name_keyword": {
+      "$ref": "#/$defs/FieldValue"
+    },
+    "spatial_relations": {
+      "items": {
+        "$ref": "#/$defs/FieldValue"
+      },
+      "title": "Spatial Relations",
+      "type": "array"
+    },
+    "extraction_source": {
+      "default": "unknown",
+      "title": "Extraction Source",
+      "type": "string"
+    }
+  },
+  "title": "ConstraintContract",
+  "type": "object",
+  "$id": "aec-interpreter/constraint_contract/v0"
+}

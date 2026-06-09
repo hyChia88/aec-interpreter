@@ -17,11 +17,15 @@
 - **Offline eval harness** — `eval/run_benchmark.py --from-traces` (+ `--variant`, `experiments.yaml`), clean scorer + bootstrap CIs (`3e2ca8c`).
 - **Thesis parity validated** — G8 reproduces all 7 Track-B metrics exactly (Top-10 30.0%, MRR 0.1104, GT-in-pool 100%, pool median 76 / mean 118.4).
 - **Parity regression test** — `tests/test_parity.py`, `pytest` 4 passed (`ab51520`).
+- **Per-field confidence contract (structure)** — `schema/contract.py`: uniform
+  `FieldValue {value, confidence, source, role}` + `ConstraintContract` + `from_legacy`
+  adapter + generated `schemas/constraint_contract.schema.json` + 5 tests. (§2.1 step 1)
 - **Live-closeout prep (docker-independent)** — `docker-compose.yml` (Neo4j 5.26, no APOC), `scripts/graph_build/` (01 export / 02 topology / 03 views) + runbook, AP IFC model + element_index migrated, `config/config.yaml`, py2neo dep (`1a9487a`).
 
 ## 🟡 In progress / partial (§2.1 step 1)
 
-- **Per-field confidence contract** `{value, confidence, source}` for *all* fields — NOT done (today only `position_context` + `size_band`). Foundational for P1.
+- **Per-field confidence contract** — ✅ structure + adapter + schema + tests done; ⬜ still
+  need to *populate* it in the live extractor/specialists (P1 wiring) once `--live` exists.
 - **Larger held-out (n≈300)** regenerated from `synth_v0.5_ap` — NOT done.
 - **Leakage-safe split** (disjoint elements/regions) — NOT done.
 
