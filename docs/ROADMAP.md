@@ -130,6 +130,13 @@ closeout (Neo4j docker + IFC migration + model access) = the gate to retire `msc
   Deliverable: `eval/fingerprint_ceiling.py` + ledger row + the §4 spine figure.
   **Gate for Idea 3b (learned selector):** only pursue if S\* beats the simple
   Union-above-reliability-threshold heuristic; if heuristic ~95% as good, the null is the finding.
+  - **✅ DONE (2026-06-09) — both cuts.** First cut (`fingerprint_ceiling.py`): coarse 46 →
+    attribute-optimal 13 (3.8×), all via `object_type`; plateaus at 2/60 unique. Second cut
+    (`fingerprint_reliability.py`, +offline topology +reliability r(f)): topology adds only
+    13→**12** (FILLS/CONNECTS homogeneous, ADJACENT_TO sparse) → **feature space saturated**;
+    ∏r collapses to 0.009 if all hard-filtered → the 76→~13 gap is **reliability-bound**.
+    **Idea-3b GATE RESULT = SKIP** (no feature-selection prize for a learned selector; the
+    lever is P1 calibrated routing). Numbers + caveats in `results_ledger.md`.
   > **Cautions (write into the protocol):** (1) ceiling is on the same synthetic generator →
   > "optimal *given correct constraints*", same caveat as oracle, not "provably optimal";
   > (2) ∏ r(f) assumes feature/error **independence** — direction/position errors correlate;
@@ -210,12 +217,12 @@ Situational — adopt **only when the phase actually needs it**, and only if it 
 | # | Step | Phase | Why here / what it gates |
 |---|---|---|---|
 | 1 | Scaffold + **confidence contract** + larger held-out (n≈300) + leakage-safe split | Phase 0 | nothing is routable/measurable without the `{value,confidence,source}` contract and CI-usable test set. Pre-register `protocol.md`. |
-| 2 | **Idea 3a — offline optimal-fingerprint ceiling** | Phase 0 | highest ROI, before any training; produces the new ceiling + §4 spine figure; *defines the prize*; sets the 3b gate. |
+| 2 | **Idea 3a — offline optimal-fingerprint ceiling** ✅ DONE (both cuts, 2026-06-09) | Phase 0 | produced the ceiling (coarse 46→13, +topology→12 = saturated) + §4 figures; defined the prize as **reliability-bound**; gate fired → **Idea 3b SKIP**. |
 | 3 | **P2** — gate position/size + **Idea 2a** segmenter | P2 | fastest mover, GT-in-pool stays 100%; adds routable fields (incl. 22% storey fix) that P1 then routes → precedes P1. |
 | 4 | **P1** — calibrated field-routing + schema-alignment | P1 | the headline. Needs contract (1), prize gap (2), specialists (3). **Gate on ECE/reliability first.** |
 | 5 | **P1 adaptivity ablation** (static → learned → agent, Idea 1) | P1 | only after static router works (it's the baseline the agent must beat). Apply Guardrail 1 (steelman) + 2 (measure repeatability). |
 | 6 | **P4** — subtype-contrastive data aug | P4 | slowest loop; last; benefits from calibrated pipeline being in place. |
-| — | Idea 3b (learned fingerprint selector) | optional | only if step 2 shows S\* beats the simple heuristic. |
+| — | Idea 3b (learned fingerprint selector) | ❌ RETIRED (2026-06-09) | step-2 gate fired SKIP: feature space saturated (attr-oracle 13 ≈ attr+topo 12), so no feature-selection prize; the recoverable gap is reliability-bound → P1's job, not a learned selector. |
 | — | P3 (GNN rerank) | optional | demoted; low novelty + leakage risk. |
 
 **Cross-cutting (run alongside, required before submission):** ≥1 external baseline

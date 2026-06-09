@@ -81,3 +81,61 @@ Conventions:
 > features pending (offline-geometry edge table, Neo4j-free) = second cut.
 
 Figure: `output/fingerprint_ceiling.png` (coarse vs attribute-optimal distributions) → §4 spine visual.
+
+## Idea 3a — SECOND CUT: topology features + reliability-weighting → prize gap + 3b gate
+
+`eval/fingerprint_reliability.py` over `element_index.jsonl` (deduped by GUID → **852**
+unique; raw 1233 double-counts IfcWall/IfcWallStandardCase). Adds offline (Neo4j-free)
+topology features (ADJACENT_TO neighbour-class signature + CONTINUOUS spanning, same
+geometry as `scripts/graph_build/02_add_topology_edges.py`) and per-field extraction
+reliability r(f) from `mscd_demo/results.md` U3/Group-3.
+
+**Oracle ceiling — feature space is SATURATED:**
+
+| pool (60 held-out targets, r=1) | median |
+|---|---|
+| coarse (storey+class) | 46 |
+| attribute-optimal | 13 |
+| **attr + topology (full oracle)** | **12** |
+
+- Topology adds only **1** element of shrinkage over attributes (13→12).
+- **FILLS / CONNECTS_TO are type-level homogeneous** (389 FILLS = all windows/doors→walls;
+  686 CONNECTS = all wall↔wall) → zero discrimination at the granularity a photo can
+  extract. ADJACENT_TO is sparse (36/60 targets have **no** neighbour; 12 distinct
+  signatures building-wide). Discriminative topology needs a *named* neighbour (multi-hop;
+  thesis hop-2 predicate reliability ≈ 0.05).
+
+**Reliability bind (the recall↔discrimination tension, quantified):** per-field r ≈
+storey 0.66, ifc_class 0.50, object_type 0.625 (rest unmeasured/≈0 power). Joint recall if
+a feature subset is hard-filtered ≈ ∏r(f):
+
+| hard-filtered subset | oracle pool | ∏r recall |
+|---|---|---|
+| storey | 141 | 0.66 |
+| + ifc_class (= coarse) | 46 | 0.33 |
+| + object_type | 13 | 0.21 |
+| all 8 features | 12 | 0.009 |
+
+- **No hard filter sustains 90% recall** — even storey alone is 0.66. This is *why* the
+  live planner UNIONs (soft) instead of INTERSECTs (hard): hard-filtering destroys recall,
+  so the realized pool stays at ~76 despite a 12–13 oracle ceiling.
+- **Calibrated single-feature recovery** (no compounding): `object_type` is the *only*
+  feature with both discrimination and r>0.5. Perfectly calibrated routing on it alone:
+  E[|C|] = 0.625·13 + 0.375·46 = **25.4** (coarse 46 → 25 ≈ half the 46→13 gap). Every
+  other feature recovers 0 (no power or r≤0.5).
+
+**Idea-3b GATE → SKIP.** The feature space is saturated (attr-oracle 13 ≈ attr+topo-oracle
+12), so there is no feature-*selection* prize for a learned selector to win. The entire
+recoverable gap (76 → ~13) is **reliability-bound**, so the correct lever is **P1
+calibrated routing** (hard-filter per-instance only when confidence warrants), not Idea 3b.
+This is the decisive output of the cut: it retires Idea 3b and points all effort at P1.
+
+> **Caveats:** (1) r(f) are best-available per-field proxies (LoRA5 / Group-3 MC, n=70; G8
+> not separately tabulated) — they set the *shape*, the live ECE study (P1) replaces them
+> with per-instance confidence. (2) ∏r assumes independent per-field errors → upper bound
+> on the recall penalty (the live system also unions over P0∪P1 strategies, which is why
+> realized GT-in-pool is 100% despite low ∏r). (3) deduped universe 852 ≠ live 1666 →
+> compare ratios, not absolute |C| vs live pool 76.
+
+Figure: `output/fingerprint_reliability.png` (oracle pool ↓ vs joint recall ∏r ↓ along the
+greedy frontier — the scissors crossing = the reliability bind) → §4 core figure.
