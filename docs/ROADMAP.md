@@ -145,6 +145,21 @@ ifc_class when adding spatial supervision) — makes it a finding, not just augm
 - **Triage measurement** (even small: human/simulated time + success) — validates the
   "compress 1200→70 for triage" value prop, which Top-k does not.
 
+### Tooling / skills (leverage where they add professionalism + accuracy)
+Situational — adopt **only when the phase actually needs it**, and only if it helps; not now.
+- **P1 fine-tuning → consider `/peft` + `/trl-fine-tuning`** (and `/axolotl` for a YAML-driven
+  pilot config) when we do real per-project LoRA adaptation / preference (accept-reject) SFT
+  from the G8 checkpoint. Recommended *if helpful* — they encode best practices (rank
+  allocation, adapter merging, continued training) that raise rigor/accuracy.
+- **P1/P2 experiment tracking → `/weights-and-biases`** once multiple adapter runs need
+  comparison tables for the paper.
+- **Do NOT pull in now / mind the misfits:** `/instructor` (+ constrained decoding) only
+  enforces JSON *validity*, not the *semantic* field correctness that is our actual bottleneck —
+  already DROPPED in ARCHIVE; `/grpo-rl-training` is overkill vs SFT for our signal; paper
+  skills (`/systems-paper-writing`, `/academic-plotting`) belong to the deferred paper phase.
+- **Repo-quality validation is not a skill** — it's `ruff` + a `pytest` parity-regression test
+  + `/code-review` on new code.
+
 **Sequence:** Phase 0 → P2 → P1 (+calibration check) → P4. P3 (GNN) only optional ablation.
 
 ---
