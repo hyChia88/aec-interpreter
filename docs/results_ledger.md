@@ -139,3 +139,28 @@ This is the decisive output of the cut: it retires Idea 3b and points all effort
 
 Figure: `output/fingerprint_reliability.png` (oracle pool ↓ vs joint recall ∏r ↓ along the
 greedy frontier — the scissors crossing = the reliability bind) → §4 core figure.
+
+**Raw-IFC relationship census (does saturation hold against ALL physical relations?):**
+full `IfcRel*` census of `AdvancedProject.ifc`: material 1345 (have), CONNECTS_TO 686
+(have, all wall↔wall), FILLS 389 (have, all window/door→wall), type 202 (have →
+object_type), MEP ports 139 (irrelevant), aggregates 17 (tiny), storey-containment 10
+(have). **`IfcRelSpaceBoundary` = 0; only 8 `IfcSpace`s with non-semantic names
+("3ROK"/"5ROK"/"Area").** → no untapped discriminative+extractable relation in this file;
+saturation holds **for this building**. ⚠️ **Caveat (threats-to-validity):** saturation is
+a property of this homogeneous synthetic mock-up with *no exported space boundaries*, not
+of the method. On a real project IFC with `IfcRelSpaceBoundary` + named rooms,
+"element bounds room X" would be discriminative **and** photo-extractable — the first
+feature to revisit on real data, and the reason `space_name` is 0% here.
+
+**Two levers, and |C| under-counts the prize — correction to the prize-gap above.** The
+∏r collapse binds **hard filtering only** (a wrong hard filter evicts GT → recall loss).
+**Soft confidence-weighted rerank sidesteps the tension**: keep GT in pool (UNION, recall
+100%), spend the unreliable signal on *ordering* only. The binding metric is NOT pool size
+— realized **GT-in-pool = 100%** already, yet **Top-1 6.7% / Top-10 30%**, so the
+bottleneck is ranking *inside* the pool. The |C|-based prize (46→25.4) models only the
+hard-gate lever; the **soft-rerank lever (→ Top-k/MRR) is dominant and is already
+implemented for 2 fields** (`graph_rag_rerank_ap.py:508` `_candidate_match_signals`:
+`fusion = Σ score·conf / Σ conf` over `size_band` (ResNet conf) + `position_context`
+(OpenCV/F4 conf), with hardcoded 0.7/0.8 default weights). **P1 = generalize 2→all routable
+fields + replace hardcoded defaults with calibrated confidence (ECE gate).** A future
+third cut should quantify the prize on Top-k/MRR under confidence-weighted scoring, not |C|.

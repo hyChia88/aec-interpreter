@@ -163,6 +163,15 @@ constraints (hard if confident, soft otherwise). Fastest mover; GT-in-Pool must 
 ### P1 — Calibrated field-routing + verified schema-alignment (HEADLINE)
 - Per-field confidence → role decision {hard filter / soft prior / drop / clarify};
   threshold-calibration first, optional tiny learned router.
+- **Two levers — the SOFT one is dominant (Idea-3a 2nd-cut correction, 2026-06-09).**
+  The ∏r recall collapse binds **hard filtering only** (wrong hard filter evicts GT). The
+  **soft confidence-weighted rerank** keeps GT in pool (recall stays 100%) and spends the
+  unreliable signal on *ordering* — sidestepping the tension. Since realized GT-in-pool is
+  already 100% but Top-1 6.7%/Top-10 30%, the bottleneck is **ranking inside the pool**, so
+  soft rerank is the bigger prize. **Already implemented for 2 fields** (`size_band` ResNet
+  conf + `position_context` OpenCV conf) in `graph_rag_rerank_ap.py:508`
+  (`fusion = Σ score·conf / Σ conf`, hardcoded 0.7/0.8 weights). **P1 core work =
+  generalize 2→all routable fields + replace hardcoded weights with CALIBRATED confidence.**
 - Verified schema-alignment (embedding-sim + existence-check Cypher, **Gusarov-style,
   adopted as a component, NOT sold as novelty**) repairs each value to a graph-attested
   term and emits alignment confidence.
