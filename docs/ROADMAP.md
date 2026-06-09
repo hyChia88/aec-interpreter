@@ -54,6 +54,22 @@ Test set = **AP held-out only** (116-unified dropped, flawed). Primary metrics =
 **pool-compression (76→9) + MRR@10 + per-field extraction accuracy** (more power than
 Top-1 at small n). Latency/cost tracked first-class. Top-1 reported but demoted.
 
+### 2.0 Framing spine — one tension, four layers
+
+The enhancements are **not separate directions** — they are the same
+determinism/auditability ↔ adaptivity/accuracy tension (§1) attacked at four layers.
+Framed as "one tension at four layers" → coherent depth; framed as "we also added an
+agent, also segmentation, also a fingerprint module" → scope creep / desk-reject.
+**Rule:** every enhancement is justified by *which layer it deepens*, never by "more
+capability." If it doesn't map to a layer, it broadens → cut.
+
+| Layer | Decision | Enhancement | Status |
+|---|---|---|---|
+| Policy-adaptivity | how smart must the router be? | agent vs learned vs static (Idea 1) | P1 ablation arm |
+| **Routing** *(headline)* | per-field confidence → {hard/soft/drop/clarify} | P1 calibrated field-routing | HEADLINE |
+| Evidence | which deterministic specialists feed the contract | segmentation/classification specialist (Idea 2a) | P2 extension |
+| Feature-selection | which feature *subset* uniquely+reliably IDs an element | optimal discriminative fingerprint (Idea 3) | Phase 0 (3a) + theory of P1 |
+
 ### Phase 0 — Foundation (new clean monorepo + harness)  ← CURRENT
 - New clean monorepo (datagen + system + eval + demo). Old 3 components frozen as
   thesis-submission archive. Migrate ONLY canonical assets (`synth_v0.5_ap`,
@@ -102,11 +118,40 @@ closeout (Neo4j docker + IFC migration + model access) = the gate to retire `msc
   position, ResNet confidence for size, alignment confidence for schema-repaired values).
   This is the *enabling substrate* for P1 routing and closes `neurosym/README.md`
   limitations #4 + #10. Design it in `schemas/` + `service/` now, not later.
+- **[NEW — Idea 3a] Offline optimal-fingerprint ceiling (do FIRST after the contract; near-free, reframes the paper).**
+  Pure compute on the IFC graph + measured per-field reliabilities — **no training, no GPU,
+  no new data.** Reframes P1 from "we added calibration" to "we *formulate* grounding as
+  **constrained discriminative feature-selection** and show calibrated routing is its online
+  approximation." For target *e*: confusable set C(*e*) = same-storey+ifc_class siblings;
+  pick feature subset **S\*** = argmax discriminative_power(S) s.t. expected_recall(S) ≥ τ
+  (joint reliability ≈ ∏ r(f) → the recall-vs-discrimination tension = why the live planner
+  Unions not Intersects). Two runs: oracle r=1 (per-element ceiling vs uniform L4) +
+  reliability-weighted (= P1 generalized per-subset); the gap = the prize P1 chases.
+  Deliverable: `eval/fingerprint_ceiling.py` + ledger row + the §4 spine figure.
+  **Gate for Idea 3b (learned selector):** only pursue if S\* beats the simple
+  Union-above-reliability-threshold heuristic; if heuristic ~95% as good, the null is the finding.
+  > **Cautions (write into the protocol):** (1) ceiling is on the same synthetic generator →
+  > "optimal *given correct constraints*", same caveat as oracle, not "provably optimal";
+  > (2) ∏ r(f) assumes feature/error **independence** — direction/position errors correlate;
+  > model it or state as a limitation + sensitivity check; (3) needs **topology** computed
+  > (offline geometry or Neo4j) — no GPU, but not zero-dependency.
 
-### P2 — Confidence-gated deterministic position/size (supporting system result)
+### P2 — Confidence-gated deterministic specialists (supporting system result)
 Promote high-confidence OpenCV position / ResNet size from soft-rerank to *gated*
 constraints (hard if confident, soft otherwise). Fastest mover; GT-in-Pool must stay
 100%. Engineering, not a research claim.
+- **[NEW — Idea 2a] Segmentation/classification as a *routed* specialist (ADOPT, scoped).**
+  Same pattern as OpenCV/ResNet: a deterministic specialist that beats the VLM on its
+  sub-task, **emits its own confidence, feeds the contract, and is routed by P1** — NOT
+  dumped into the VLM prompt (a tool in the prompt ≠ a specialist in the architecture).
+  Aim it at the **22% storey/floor errors**: a floorplan/region segmenter (SAM-style mask →
+  region → storey/zone) with confidence. Hard storey filter if confident, soft prior else.
+  > **Caution:** SAM is heavier than OpenCV/ResNet (model + GPU) — it is *not* "fast pure
+  > engineering" like position/size gating; scope it as its own sub-task with the 22% metric.
+- **Idea 2b — Floorplan→graph (deriving topology from 2D): REJECTED (moat regression).**
+  The IFC graph is already zero-error ground-truth topology = the auditability moat. Parsing
+  topology from floorplans reintroduces the extraction error we eliminated. Floorplan stays
+  on the **evidence/input** side only (2a), never as a graph source.
 
 ### P1 — Calibrated field-routing + verified schema-alignment (HEADLINE)
 - Per-field confidence → role decision {hard filter / soft prior / drop / clarify};
@@ -160,7 +205,26 @@ Situational — adopt **only when the phase actually needs it**, and only if it 
 - **Repo-quality validation is not a skill** — it's `ruff` + a `pytest` parity-regression test
   + `/code-review` on new code.
 
-**Sequence:** Phase 0 → P2 → P1 (+calibration check) → P4. P3 (GNN) only optional ablation.
+### Execution order (each step gates the next; cheapest/framing-defining work before GPU spend)
+
+| # | Step | Phase | Why here / what it gates |
+|---|---|---|---|
+| 1 | Scaffold + **confidence contract** + larger held-out (n≈300) + leakage-safe split | Phase 0 | nothing is routable/measurable without the `{value,confidence,source}` contract and CI-usable test set. Pre-register `protocol.md`. |
+| 2 | **Idea 3a — offline optimal-fingerprint ceiling** | Phase 0 | highest ROI, before any training; produces the new ceiling + §4 spine figure; *defines the prize*; sets the 3b gate. |
+| 3 | **P2** — gate position/size + **Idea 2a** segmenter | P2 | fastest mover, GT-in-pool stays 100%; adds routable fields (incl. 22% storey fix) that P1 then routes → precedes P1. |
+| 4 | **P1** — calibrated field-routing + schema-alignment | P1 | the headline. Needs contract (1), prize gap (2), specialists (3). **Gate on ECE/reliability first.** |
+| 5 | **P1 adaptivity ablation** (static → learned → agent, Idea 1) | P1 | only after static router works (it's the baseline the agent must beat). Apply Guardrail 1 (steelman) + 2 (measure repeatability). |
+| 6 | **P4** — subtype-contrastive data aug | P4 | slowest loop; last; benefits from calibrated pipeline being in place. |
+| — | Idea 3b (learned fingerprint selector) | optional | only if step 2 shows S\* beats the simple heuristic. |
+| — | P3 (GNN rerank) | optional | demoted; low novelty + leakage risk. |
+
+**Cross-cutting (run alongside, required before submission):** ≥1 external baseline
+(Text-to-Cypher / dense-CLIP) + a small triage measurement.
+
+> **Note on actual order:** the live-closeout (Neo4j docker + IFC ingestion + model access)
+> is a parallel Phase-0 track gating `--live` and the retirement of `mscd_demo` (see
+> `STATUS.md` + `DATA_INVENTORY.md`); it is not in the research execution order above but
+> must land before any step that needs `--live` re-runs (P2 onward).
 
 ---
 
