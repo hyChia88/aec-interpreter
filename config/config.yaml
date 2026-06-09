@@ -1,0 +1,64 @@
+# =============================================================================
+# AEC Interpreter — runtime configuration (paths relative to repo root)
+# =============================================================================
+# Migrated from mscd_demo/config.yaml with paths corrected for the new layout.
+# Loaded explicitly by the live runner (pass config/config.yaml).
+
+# -----------------------------------------------------------------------------
+# IFC Model — AP is the canonical scope. BH/DXA NOT migrated (other buildings).
+# -----------------------------------------------------------------------------
+ifc:
+  model_path: "data/ifc_models/AdvancedProject.ifc"
+  models:
+    AP: "data/ifc_models/AdvancedProject.ifc"
+    # BH / DXA intentionally omitted — out of canonical AP scope.
+
+# -----------------------------------------------------------------------------
+# Neo4j (matches docker-compose.yml: neo4j/password on bolt://localhost:7687)
+# -----------------------------------------------------------------------------
+neo4j:
+  uri: "bolt://localhost:7687"
+  user: "neo4j"
+  password: "password"
+  enabled: true
+
+# -----------------------------------------------------------------------------
+# Retrieval backend — visual-specialist gating modes (P2 lives here)
+# -----------------------------------------------------------------------------
+retrieval:
+  # size_cluster (VLM, ~32% precision): soft = ORDER BY match, never excludes GT.
+  size_cluster_mode: "soft"
+  # size_band (ResNet 6-way, ~83% AP acc): hard = WHERE prefix match, confidence-gated.
+  size_band_mode: "hard"
+
+# -----------------------------------------------------------------------------
+# Test data — canonical AP held-out (n=60). Larger n≈300 held-out to be added.
+# -----------------------------------------------------------------------------
+ground_truth:
+  cases: "data/test_sets/cases_ap_heldout_e2e.jsonl"
+  # NOTE: case image paths inside the cases file point at synth_v0.5_ap/imgs
+  # (NOT migrated). Full --live with the VLM needs those images mounted/migrated;
+  # graph-build + retrieval validation (precomputed constraints) does not. TODO.
+  element_index: "data/references/element_index.jsonl"
+
+# -----------------------------------------------------------------------------
+# LLM (Gemini for rerank / zero-shot baseline; LoRA VLM handled separately)
+# -----------------------------------------------------------------------------
+llm:
+  model: "gemini-2.5-flash"
+  temperature: 0
+  max_retries: 2
+
+# -----------------------------------------------------------------------------
+# RQ2 schema-aware mapping & validation
+# -----------------------------------------------------------------------------
+rq2:
+  enabled: true
+  schema_path: "schemas/corenetx_min/v0.schema.json"
+
+# -----------------------------------------------------------------------------
+# Output
+# -----------------------------------------------------------------------------
+output:
+  evaluations_dir: "output"
+  logs_dir: "logs"

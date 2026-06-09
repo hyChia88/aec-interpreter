@@ -3,6 +3,7 @@ models/
 output/
 data/datasets/
 data/ifc_models/
+data/references/
 # keep small benchmark test sets in git:
 !data/test_sets/
 

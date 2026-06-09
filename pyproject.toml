@@ -13,8 +13,9 @@ dependencies = [
     "colorama>=0.4.6",
     "numpy>=1.24.0",
     "pillow>=10.0.0",
-    # ── IFC graph ──
+    # ── IFC graph + Neo4j ──
     "ifcopenshell>=0.7",
+    "py2neo>=2021.2",   # Neo4j client used by IFCEngine.export_to_neo4j + graph-build scripts
     # ── VLM extraction + visual specialists ──
     "transformers>=4.30.0",
     "torch>=2.0.0",

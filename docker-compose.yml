@@ -1,0 +1,29 @@
+# Neo4j for the live pipeline (--live). Plain Neo4j — no APOC/GDS needed.
+# Credentials match config/config.yaml (bolt://localhost:7687, neo4j/password).
+#
+#   docker compose up -d        # start
+#   docker compose down         # stop (keeps data volume)
+#   docker compose down -v      # stop + wipe the graph
+#
+# Browser UI: http://localhost:7474   |   Bolt: bolt://localhost:7687
+services:
+  neo4j:
+    image: neo4j:5.26
+    container_name: aec-neo4j
+    ports:
+      - "7474:7474"   # HTTP browser
+      - "7687:7687"   # Bolt (py2neo / drivers)
+    environment:
+      NEO4J_AUTH: neo4j/password
+      NEO4J_server_memory_heap_max__size: 2G
+      NEO4J_server_memory_pagecache_size: 1G
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  neo4j_data:
