@@ -29,8 +29,15 @@ docs/                  ROADMAP · DATA_INVENTORY · REPO_MAP · results_ledger
 
 ## Status
 
-**Phase 0 — Foundation (in progress).** Skeleton scaffolded. Next: migrate canonical
-code, build `service/` + `eval/run_benchmark.py`, regenerate a larger clean held-out.
+**Phase 0 — Foundation (in progress).** Skeleton + code/asset migration done (installable
+via `uv`, 42/43 modules import clean). `eval/run_benchmark.py --from-traces` built and
+**thesis-parity validated** (G8 reproduces all 7 Track-B metrics exactly, now with bootstrap
+CIs). Next: live-closeout (dockerize Neo4j + migrate IFC model + model access) → `service/`
+→ larger clean held-out.
+
+```bash
+python eval/run_benchmark.py --variant g8_posctx_dim   # offline parity, no Neo4j/GPU
+```
 
 Plan and rationale: [`docs/ROADMAP.md`](docs/ROADMAP.md).
 Canonical vs deprecated data/models: [`docs/DATA_INVENTORY.md`](docs/DATA_INVENTORY.md).

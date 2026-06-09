@@ -73,10 +73,12 @@ Top-1 at small n). Latency/cost tracked first-class. Top-1 reported but demoted.
   Live extraction needs the Qwen2.5-VL LoRA (GPU) or an API path. Precomputed artifacts
   exist for every variant: Track-A extraction `output/.../gN__ap_eval.jsonl` and Track-B
   per-case e2e `…/ap_e2e_phase5_g8/g8_posctx_dim/traces_*.jsonl` + `metrics/*_metrics.json`.
-- **Baseline-reproduction (immediate):** `--from-traces` over the migrated G8 e2e trace,
-  cross-checked against `g8_posctx_dim__ap_e2e_phase5_metrics.json` —
-  target `Top-10 30.0% · MRR 0.1104 · GT-in-pool 100% · final pool median 76 / mean 118.4`.
-  Match ⇒ harness validated + parity established. Add bootstrap CIs (new vs thesis).
+- **Baseline-reproduction — ✅ DONE (2026-06-08).** `eval/run_benchmark.py --from-traces`
+  (+ `--variant`, `experiments.yaml`) reproduces G8 with **all 7 Track-B metrics exact**
+  (Top-10 30.0% · MRR 0.1104 · GT-in-pool 100% · pool median 76 / mean 118.4), now with
+  bootstrap 95% CIs. Harness validated. CIs empirically confirm Top-1 6.7% [1.7, 13.3] is
+  unprovable at n=60 → lead with pool/MRR, regen n≈300. (gemini gt_in_pool has a documented
+  reference-side ±2-case nuance; all ranking metrics match.) See `results_ledger.md`.
 - **🚪 Publication gate — closing `mscd_demo`:** because the goal is to publish ONLY this
   repo, the old repo can be retired *only after* `--live` runs **fully self-contained from
   this repo**. That requires, still TODO: (1) **dockerize Neo4j** (`docker-compose`) +

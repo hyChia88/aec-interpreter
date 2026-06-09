@@ -1,0 +1,108 @@
+{
+  "group": "gemini_ap_v2",
+  "display_name": "Gemini AP v2",
+  "traces_path": "output/lora6_v2_ap_20260331/ap_e2e_phase5_g8/gemini_ap_v2/traces_20260407_235044_v2_lora_p0_union_p1.jsonl",
+  "precomputed_path": "output/lora6_v2_ap_20260331/gemini_ap_v2__ap_eval.jsonl",
+  "overall": {
+    "n": 60,
+    "gt_in_pool": 55,
+    "gt_in_pct": 91.7,
+    "top1": 1,
+    "top1_pct": 1.7,
+    "top5": 8,
+    "top5_pct": 13.3,
+    "top10": 11,
+    "top10_pct": 18.3,
+    "mrr": 0.0557,
+    "avg_pool": 110.3,
+    "p0_fired": 40,
+    "p0_pct": 66.7,
+    "sr_extracted": 40,
+    "sr_pct": 66.7
+  },
+  "pool_stats": {
+    "avg_initial_pool": 1666.0,
+    "median_initial_pool": 1666.0,
+    "avg_final_pool": 110.3,
+    "median_final_pool": 76.0,
+    "avg_search_space_reduction": 0.9338
+  },
+  "field_accuracy": {
+    "storey_acc": 96.7,
+    "ifc_class_acc": 100.0,
+    "sr_rate": 68.3,
+    "n": 60
+  },
+  "by_ifc_model": {
+    "AP": {
+      "n": 60,
+      "gt_in_pool": 55,
+      "gt_in_pct": 91.7,
+      "top1": 1,
+      "top1_pct": 1.7,
+      "top5": 8,
+      "top5_pct": 13.3,
+      "top10": 11,
+      "top10_pct": 18.3,
+      "mrr": 0.0557,
+      "avg_pool": 110.3,
+      "p0_fired": 40,
+      "p0_pct": 66.7,
+      "sr_extracted": 40,
+      "sr_pct": 66.7
+    }
+  },
+  "by_tier": {
+    "T1": {
+      "n": 0,
+      "gt_in_pool": 0,
+      "gt_in_pct": 0,
+      "top1": 0,
+      "top1_pct": 0,
+      "top5": 0,
+      "top5_pct": 0,
+      "top10": 0,
+      "top10_pct": 0,
+      "mrr": 0,
+      "avg_pool": 0,
+      "p0_fired": 0,
+      "p0_pct": 0,
+      "sr_extracted": 0,
+      "sr_pct": 0
+    },
+    "T2": {
+      "n": 0,
+      "gt_in_pool": 0,
+      "gt_in_pct": 0,
+      "top1": 0,
+      "top1_pct": 0,
+      "top5": 0,
+      "top5_pct": 0,
+      "top10": 0,
+      "top10_pct": 0,
+      "mrr": 0,
+      "avg_pool": 0,
+      "p0_fired": 0,
+      "p0_pct": 0,
+      "sr_extracted": 0,
+      "sr_pct": 0
+    },
+    "T3": {
+      "n": 60,
+      "gt_in_pool": 55,
+      "gt_in_pct": 91.7,
+      "top1": 1,
+      "top1_pct": 1.7,
+      "top5": 8,
+      "top5_pct": 13.3,
+      "top10": 11,
+      "top10_pct": 18.3,
+      "mrr": 0.0557,
+      "avg_pool": 110.3,
+      "p0_fired": 40,
+      "p0_pct": 66.7,
+      "sr_extracted": 40,
+      "sr_pct": 66.7
+    }
+  }
+}

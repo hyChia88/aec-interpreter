@@ -1,0 +1,19 @@
+# Variant registry for eval/run_benchmark.py
+#
+# Offline (--from-traces / --variant): each variant points at a frozen per-case
+# e2e trace JSONL fixture + the frozen thesis metrics JSON to parity-check against.
+# These reproduce the thesis Track-B numbers with NO Neo4j / NO GPU.
+#
+# Live variants (Neo4j + model) will be added once the Phase 0 live-closeout lands
+# (dockerize Neo4j + migrate IFC model + model-adapter access).
+
+variants:
+  g8_posctx_dim:
+    display_name: "G8 PosCtx+Dim (thesis canonical, Track B best)"
+    trace: eval/fixtures/traces/g8_posctx_dim.jsonl
+    reference: eval/fixtures/metrics/g8_posctx_dim.json
+
+  gemini_ap_v2:
+    display_name: "Gemini zero-shot (AP, v2 prompt) — external-ish baseline"
+    trace: eval/fixtures/traces/gemini_ap_v2.jsonl
+    reference: eval/fixtures/metrics/gemini_ap_v2.json
