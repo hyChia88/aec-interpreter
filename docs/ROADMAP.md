@@ -103,6 +103,21 @@ routing recovers a measurable fraction of the oracle–realized gap.*
 - **SAM** = framing discipline only (one task, one representation); the technical analogy is visual
   place recognition, not segmentation (we have no SAM-scale data engine — synthetic n≈300).
 
+**"Why not end-to-end matching?" — the central baseline (thesis section drafted 2026-06-10):**
+the #1 reviewer question (why decompose into a structured address vs. train a cross-attention
+reranker?) is answered, not avoided, in `docs/thesis/why_not_end_to_end.md`. Four grounds, three
+empirical: (1) candidates are **graph nodes not pixels** — image-space matching stops at the
+image↔graph boundary, only a coordinate-free relational address crosses it; (2) the discriminator
+is **relational not pixel-local** — a black-box matcher must reconstruct the topology anyway,
+unreliably + unauditably; (3) **the end-to-end matcher IS our baseline and plateaus** — G8 Top-1
+6.7 / Top-10 30 with GT-in-pool 100%, while oracle address → 78.5 / 98.1 (the diagnostic names the
+missing ingredient); (4) **convenience ≠ the requirement** — auditability / calibration /
+cross-project transfer need the structured intermediate. Honest bound: we do **not** claim to beat
+end-to-end on raw accuracy in the large-data limit; the claim is on data-regime + deployment +
+scientific-knowledge axes. **Run G8 explicitly as the labelled baseline; the objection becomes the
+motivation + Figure 1.** Same image↔graph argument also rebuts "just localize patch-by-patch"
+(localization ablation: precision-hungry, complementary only on walls).
+
 **Phase-0 measured diagnostics (2026-06-09)** — all offline, AP held-out n=60; full numbers in
 `results_ledger.md`, figures in `output/`:
 - **Soft-rerank prize (real pools, GT-in-pool 100%):** two complementary, currently-unextracted
