@@ -388,6 +388,14 @@ Situational — adopt **only when the phase actually needs it**, and only if it 
   deliverable** (evidence → predicted address layers → ranked pool; doubles as research-debug
   tool + figure factory + demo). **Out of MVP** (→ future work / optional): extractors for *all*
   descriptor families, the agent-adaptivity ablation, P4 retraining.
+  - **Interface mock v0 BUILT (2026-06-10, `eval/build_demo.py` → `output/demo/case_*.png`).**
+    Per-case 3×3 dashboard, every panel epistemic-status-tagged: REAL (site photo + marked plan,
+    GT spatial address, expected local FILLS/NEXT_TO graph, \|C\| collapse, per-case expected
+    Top-1) · ORACLE (the "predicted address" = perfect extraction, **not** learned yet) · REALIZED
+    (G8's actual extraction from the trace — shows the discriminating field left empty: the gap) ·
+    PENDING (attention-heatmap + segmentation tiles reserved for the P2 learned extractor). Offline,
+    no GPU/ifcopenshell (edges from `position_index`). Doubles as thesis Fig + the live-demo skeleton;
+    swap the ORACLE panel for the learned extractor once M1 lands.
 - Large-file strategy: gitignore + documented paths now; DVC/LFS later if needed. (default)
 - **Venue:** synthetic-only likely too weak for *Automation in Construction* (applied).
   Either get a 20–30 case real "case study" (easier than a benchmark) to unlock AuC, or
