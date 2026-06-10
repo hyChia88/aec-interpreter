@@ -72,12 +72,20 @@
 **oracle ceiling 91.0**; decomposition says **the ordering index *i* is the bigger+harder lever**
 (oracle-i 29.5 > oracle-M 18.8). Also: networkx pinned in pyproject; interface mock `build_demo.py`.
 
-### ▶️ NEXT: M1b — the image slot detector (Arm A marked plan / Arm B mark-free)
-Plug a real predictor into `slot_extractor_m1.PREDICTORS`: read the host-wall openings off the
-image, order them, recover *(i, M)*. Spend the budget on **exact-*i*** (M is ~free once the host
-wall is known). Score on the same harness (intrinsic + downstream Top-k) vs floor 2.4 / ceiling 91.
-Arm A (marked plan, target known) first as the easier ceiling; Arm B (mark-free photo+clean plan)
-= the honest autonomous number; **A−B = value of the mark.**
+### 🟡 M1b probed (2026-06-10) — detector reshaped; ONE coverage decision pending
+`eval/m1b_probe.py`. Findings: (1) the **marked patch occludes openings** (solid red/orange fill)
+→ slot not readable from it; (2) the **clean plan color-codes openings** (window=blue, door=green)
+→ directly color-segmentable, detector feasible; (3) **coverage = 3/7 storeys = 17/35 fillers**
+(a deliberate scope cut in `3c_render_full_storeys.py` L155-166, not a limit). Detector design:
+color-detect openings → group collinear per host wall → order → (i, M), scored on the M1a harness.
+
+**▶️ DECISION before building (see AskUser / ledger M1b probe):**
+- **(A) regenerate the 4 missing storeys' clean plans** (edit the renderer's storey list, re-run) →
+  unlocks all 35 fillers + the demo's honest arm. Touches the frozen `master_thesis` dataset; may
+  hit the author's "multi-storey wall" caveat.
+- **(B) build the color detector on the 17-filler covered subset now** → real but partial number.
+- **(C) pivot to the learned/site-photo arm** (M4) — but site photo alone can't give M (Risk #4).
+Then: Arm A (marked → host + target loc) vs Arm B (mark-free) ; **A−B = value of the mark.**
 
 ### (was) NEXT: position-slot structured extractor (P2) — the MVP-defining build
 Scoped in `docs/specs/position_slot_extractor.md`. Turns oracle Top-1 56.5 / 78.5 into a

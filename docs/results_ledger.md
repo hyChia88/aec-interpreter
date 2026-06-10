@@ -333,3 +333,27 @@ under the prior. ⇒ **M1b should spend its budget on the visual *i*-ordering al
 > candidate's *true* slot against the *predicted* key (no self-match artefact); abstain falls back
 > to G8's realised ranking. Leakage exclusion (`leakage_excluded_train_ids.txt`) does not touch
 > these 35 (0 overlap) — it binds only the M4 *training* set.
+
+---
+
+## M1b probe — what's detectable for the image slot detector (2026-06-10)
+`eval/m1b_probe.py`. Empirical characterization done *before* building the detector. Three
+findings:
+1. **Marked patch occludes openings.** `floorplans/<id>_floorplan.png` paints the target wall
+   SOLID red (anchor solid orange) — windows/doors are covered (window-glyphs visible inside the
+   patch ≈ 0). ⇒ the slot cannot be read from the marked patch; it gives host-wall identity +
+   target location only.
+2. **Clean plan color-codes openings** (window=blue, door=green) as discrete segments →
+   directly color-segmentable, no fragile gap-detection. Counts: First Floor 46w/70d, Level 1
+   31w/45d, Garage 0w/45d. Detector is **feasible** here.
+3. **Coverage = 3/7 storeys → 17/35 fillers.** Only First Floor / Garage / Level 1 have a clean
+   plan — a *deliberate* 3-storey scope cut in the dataset renderer
+   (`data_curation/scripts/synth/3c_render_full_storeys.py` L155-166, "Phase 6 T1 scope"),
+   deferred as F2 future work, **not** a fundamental limit. The other 18 fillers (Second/Third/
+   Fourth/Fifth Floor) have no clean plan.
+
+**M1b reshape:** the detector is a COLOR-based opening finder (blue/green) on the clean plan →
+group collinear openings per host wall → order along wall axis → (i, M), scored on the
+`slot_extractor_m1` harness. **Open coverage decision** (regenerate the 4 missing storeys' clean
+plans — cheap, unlocks all 35 + the demo's honest arm — vs build on the 17-subset now vs pivot to
+the learned/site-photo arm). Site photo alone can't give M (perspective/occlusion — spec Risk #4).
