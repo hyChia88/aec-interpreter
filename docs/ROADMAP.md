@@ -22,6 +22,46 @@ have the BIM, not a labeled photo dataset.
 
 ---
 
+## RQ — Research questions (thesis lineage → current, locked 2026-06-10)
+
+**Original thesis RQs (preserved as the lineage anchor):**
+- **Overarching:** How can AI act as an *interpreter middleware* to reliably align
+  unstructured site evidence with project data in AEC workflows?
+- **RQ1 (Multimodal Grounding under Ambiguity):** how can multimodal site evidence be
+  reliably grounded to specific IFC entities amidst **geometric repetition** and noisy data?
+- **RQ2 (Ontology-Driven Retrieval):** how can domain-specific ontological constraints (IFC
+  type hierarchies + spatial relationships) transform probabilistic neural outputs into
+  deterministic retrieval results to mitigate hallucination?
+
+**Current RQs (the sharpened, *measurable* form of the same questions, organized around the
+representation):**
+
+| # | Question | Maps to | Status |
+|---|---|---|---|
+| **RQ1 (Representation, HEADLINE)** | For visually-alike IFC elements, what is the *minimal sufficient spatial address* — smallest descriptor set that uniquely IDs within the visual-confusable set, is IFC-computable, and is evidence-recoverable? Is it element-class-conditional? | orig RQ1 ("geometric repetition" = the confusable set) | **answered (oracle):** class-conditional; type-conditional address oracle Top-1 78.5 |
+| **RQ2 (Mechanism / reliability)** | How to use the partly-extractable address without losing recall, and how much of the oracle ceiling is *realizable* under measured reliability + calibration? | orig RQ2 + orig RQ1's "noise" | **open = the real work** (P1/P2) |
+| **RQ3 (Depth / architecture)** | Inference-time relational extraction vs precompute-time node feature? | architectural principle under RQ2 | **answered:** saturates at depth-1 → compile depth into the node |
+| **RQ4 (Adaptivity, secondary)** | Does a learned router / agent beat a static calibrated threshold at equal budget? | §2.0 policy-adaptivity layer | **open** ablation (likely "no" = finding) |
+
+**Two refinements the measurements force (state explicitly in the paper):**
+1. **"Deterministic retrieval results" (orig RQ2) → "auditable EXECUTION + calibrated SOFT
+   ranking."** Hard/deterministic filtering destroys recall (∏r collapses, evicts GT; cut-3).
+   Determinism lives in the *executor* (deterministic given the structured record); ranking is
+   calibrated-soft inside a recall-fixed pool. This *refines your own RQ2* — report it as a finding.
+2. **Ontology vs topology = roles, not peers (position locked 2026-06-10).**
+   **Ontology = the floor + the guardrail:** IFC type hierarchy as coarse filter + the
+   *vocabulary-constrained* neural→symbolic adapter that cannot invent a type — this **is** orig
+   RQ2's real win (hallucination mitigation + auditability). **Topology = the engine:** the
+   spatial address that beats geometric repetition — orig RQ1's answer; where the discrimination
+   and the novelty live (measured: position-slot → Top-1, wall fingerprint → walls).
+   **Synthesis:** the contribution is one **ontology-grounded, topology-derived spatial address.**
+   Weighting **~70% topology** (headline + the one extractor we build) / **~30% ontology** (kept
+   as substrate, NOT researched for novelty — shallow type hierarchy = low return; do not build
+   formal ontology / OWL / SHACL). One-liner: *ontology is the floor and the guardrail; topology
+   is the engine.*
+
+---
+
 ## 1. Diagnostic (from thesis Ch.7) — drives everything
 
 - Symbolic backend essentially solved: oracle 100% GT-in-Pool; oracle Top-10 58% (L3),
