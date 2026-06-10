@@ -256,3 +256,50 @@ Candidate descriptor families:
 Planned output: `eval/spatial_address_ceiling.py` with `coverage`, `median pool`,
 `Top-k/MRR rerank prize`, `extractability proxy`, and `stability risk`. This diagnostic
 decides which address fields enter P2 specialists and P1 calibrated routing.
+
+### FIRST CUT (2026-06-09) — wall/non-filler fingerprint + unified type-conditional address
+
+`eval/wall_fingerprint.py` + `eval/spatial_address_ceiling.py`. The 60 held-out targets
+split: **35 fillers** (window/door, addressed by `position_context` slot, cut-3) · **22 walls**
+· **3 other**. Walls are hosts (no position-slot) → needed their own descriptor. The **wall
+fingerprint** = `(connection_degree, hosted_opening_count, length_band, is_external)` — all
+IFC-computable *and* photo/floorplan-recoverable (count a wall's junctions + openings, judge
+length + interior/exterior).
+
+**Wall |C| ceiling (within same-storey walls, 22 wall targets):**
+
+| within same-storey walls | median |C| | uniquely ID'd |
+|---|---|---|
+| coarse | 110 | — |
+| + object_type | 26 | 0/22 |
+| **+ wall fingerprint** | **2** | **10/22** |
+
+→ the wall fingerprint discriminates where `object_type` cannot (0/22 unique).
+
+**Unified type-conditional spatial address — oracle Top-k on real pools (60 targets):**
+
+| scheme (oracle r=1) | Top-1 | Top-5 | Top-10 | MRR |
+|---|---|---|---|---|
+| realized (G8) | 6.7 | 16.7 | 30.0 | 0.110 |
+| coarse storey+class | 4.9 | 17.9 | 31.5 | 0.137 |
+| + object_type | 18.1 | 53.6 | 76.3 | 0.352 |
+| **+ spatial address (type-conditional)** | **78.5** | **94.2** | **98.1** | **0.854** |
+| + both | 82.4 | 94.6 | 98.3 | 0.878 |
+
+By subgroup (spatial address): **fillers** Top-1 91.0 / Top-10 100.0 (position-slot);
+**walls** Top-1 64.2 / Top-10 97.4 (wall fingerprint, vs object_type 11.4 / 62.9).
+
+**Finding:** the *type-conditional* visual-topological spatial address — position-slot for
+fillers, connection/opening/length/external fingerprint for walls — takes oracle Top-1 from
+4.9 → **78.5** and Top-10 → **98.1**. This is the full spatial-address contribution: **every
+element class now has a discriminative, IFC-computable, evidence-recoverable address.** Walls
+were the open piece; they're closed. Remaining: the 3 "other" targets, a *realistic*
+(non-oracle) row per descriptor (needs the structured extractors = P2), and the full 3c
+descriptor sweep (junction-type / generated-cell / landmark) + extractability/stability scoring.
+
+> **Caveats:** (1) oracle r=1 — realizable needs the structured extractors (position-slot +
+> wall connection/opening counts); all are photo/floorplan-recoverable by construction (the 3c
+> criterion). (2) wall fingerprint reconstructed offline from `IfcRelConnectsPathElements` +
+> FILLS reverse + IFC Length; `connection_degree`/`hosted_opening_count` are the dominant
+> descriptors. (3) stability risk (e.g. `connection_degree` sensitivity to model authoring)
+> not yet scored — part of the full 3c sweep.

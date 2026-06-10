@@ -31,6 +31,14 @@
   routing.** Calibrated `object_type` routing alone: coarse 46→25.4. Figure + ledger + 3 tests.
   Also: full `IfcRel*` census (no untapped relation; `IfcRelSpaceBoundary`=0 → room-feature
   is the real-data revisit target) + 2-lever correction (soft rerank, not hard filter).
+- **Idea 3c first cut (spatial-address ceiling — wall/non-filler fingerprint, offline)** —
+  `eval/wall_fingerprint.py` + `eval/spatial_address_ceiling.py`. Closed the open wall subgroup:
+  wall fingerprint `(connection_degree, hosted_opening_count, length_band, is_external)` →
+  same-storey-wall \|C\| 110→**2** (10/22 unique, object_type 0/22). **Unified type-conditional
+  spatial address** (position-slot for 35 fillers + wall-fp for 22 walls) → oracle **Top-1
+  4.9→78.5, Top-10 31.5→98.1**; walls 11→64 Top-1. The full spatial-address contribution: every
+  element class now has a discriminative, IFC-computable, evidence-recoverable address. Ledger +
+  3 tests (23 total). Next: realistic (non-oracle) rows + full descriptor sweep + 3 "other".
 - **Idea 3a third cut (soft-rerank prize on Top-k/MRR, offline) — CORRECTED w/ position_context** —
   `eval/rerank_prize.py` + `eval/reconstruct_position_index.py` (offline NEXT_TO slot, 321
   fillers, 35/60 targets addressable). Coarse saturated (31.5≈30). **Two complementary
