@@ -87,10 +87,16 @@ coverage needs real multi-storey-wall→floor reconstruction, **not** a flag-fli
 color detector on the 17 fully-covered fillers now** (First Floor 6 + Garage 3 + Level 1 8 — same
 detector regardless); regeneration to all 35 stays quantified F2 work.
 
-### ▶️ NEXT: M1b detector build (`eval/slot_detector_cv.py`) on the 17 covered fillers
-Color-detect openings (blue=window/green=door) → estimate host-wall axis (PCA of nearby openings)
-→ order along axis → (i, M). Score on the M1a harness as a new predictor. First number sits between
-oracle-M 18.8 and oracle-full 91 (the "can CV read the slot given the plan?" lever).
+### ✅ M1b v0+v1 done (2026-06-10) — `eval/slot_detector_cv.py`
+Color-detect openings (blue=window/green=door) → wall axis from the target opening's elongation →
+**orientation resolved** by a global-sign convention (`axis·(1,0.3)>0`, oracle-neutral, validated
+91.0) → (i, M). **Filler Top-1: floor 2.4 → v0 4.9 → v1 9.1** (orientation now zero-loss). 32 tests.
+
+### ▶️ NEXT: M1b v2 — M-counting robustness (now the bottleneck)
+exact_M 4/17: long/curved walls over/under-count (perp-band misses bends / grabs parallel walls).
+Fix ideas: trace the wall band (poché) instead of a straight perp-band; RANSAC the axis; merge
+split glyphs. Then the F2 multi-storey re-render for the 18 uncovered fillers. Lever order: M-count
+→ coverage. (i is free once M+host wall are right — M1a.)
 
 ### (was) NEXT: position-slot structured extractor (P2) — the MVP-defining build
 Scoped in `docs/specs/position_slot_extractor.md`. Turns oracle Top-1 56.5 / 78.5 into a
