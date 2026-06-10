@@ -4,7 +4,11 @@
 > **audit first, do NOT refactor the data_curation pipeline or regenerate n≈300** unless the
 > audit exposes a real defect. It did expose one (fixable, cheap). Verdict below.
 
-## ✅ VERDICT: GO — with one required fix (element-disjoint split) before any learned extractor
+## ✅ VERDICT: GO — with TWO required fixes before any *image-consuming* model
+1. element-disjoint split (train/test target leakage, §2); 2. **honest floorplan input
+(image-annotation leak, §5) — found while scoping the extractor.** Both are cheap. The oracle
+diagnostics (3a/3c/depth/rerank) are **unaffected by either** (they compute over the IFC, read
+no image); only *learned extractors* are.
 
 - **Held-out integrity:** ✅ the repo held-out (`data/test_sets/cases_ap_heldout_e2e.jsonl`,
   60) **is** the dataset's canonical eval split (`lora6_v2_ap_eval_canonical_m.jsonl`) — 60/60
@@ -75,6 +79,28 @@ eval split; the thesis G8 numbers were measured on it, so our parity/oracle work
   over-supervision already flagged (depth policy: stop training it; see ROADMAP).
 
 ---
+
+### 5. ⚠️ Image-annotation leak in the per-case floorplan patch (found 2026-06-10, scoping)
+The held-out `inputs.floorplan_patch` → `floorplans/AP_SK_*_floorplan.png` is **GT-annotated
+and target-centered**: the target element is highlighted (red "TARGET"), the host/anchor is
+highlighted (orange), and the crop is centered on the target (`floorplans_v2/*.json`:
+`crop_center ≈ target_center`, rendered from the GT `target_guid`). The same holds for
+`floorplans_v2/` (745). So **the per-case floorplan encodes the answer** — any image model that
+reads it is reading the GT, not grounding.
+- **Honest image sources:** `floorplans_full/` (7 *clean* per-storey plans, no target mark) and
+  `imgs/*_site.png` (raw site photos, unmarked — verified on AP_SK_022). Site photo is the
+  realistic primary; clean storey plan is the honest top-down source.
+- **Why G8's parity is still OK:** G8 received the annotated patch yet scored Top-1 6.7% → it
+  did not (or could not) exploit the highlight. Incidental, not by design — **we must not rely on
+  that for any new model.**
+- **Interpretation (resolve with dataset intent):** the highlight may be the *intended*
+  "floorplan-markup" modality (Idea 2b — subcontractor circles the area). If so it is a
+  **legitimate but easier, human-in-the-loop capability** and must be reported **separately**
+  from autonomous grounding; even then, target-centering makes it near-trivial, so it is an
+  upper-bound track, not the RQ1/RQ2 number.
+- **Required fix:** for measuring *autonomous* grounding (RQ1/RQ2), feed the extractor the **site
+  photo (primary) + clean `floorplans_full` plan**, never the annotated per-case patch. Swap or
+  drop `inputs.floorplan_patch` → annotated-patch in the held-out for image-consuming runs.
 
 ## Actions for the extractor build (next)
 1. **Use the element-disjoint train set:** drop `leakage_excluded_train_ids.txt` (12 ids) from
