@@ -357,3 +357,29 @@ group collinear openings per host wall → order along wall axis → (i, M), sco
 `slot_extractor_m1` harness. **Open coverage decision** (regenerate the 4 missing storeys' clean
 plans — cheap, unlocks all 35 + the demo's honest arm — vs build on the 17-subset now vs pivot to
 the learned/site-photo arm). Site photo alone can't give M (perspective/occlusion — spec Risk #4).
+
+---
+
+## M1b v0 — deterministic color-based slot detector (2026-06-10)
+`eval/slot_detector_cv.py` (+ 3 tests). Honest image extractor (no IFC answer): project target →
+plan pixel → color-detect openings (window=blue, door=green) → wall axis from the **target
+opening's own elongation** (junction-robust) → order along axis → (i, M). Covered fillers = the 17
+on clean-plan storeys; abstains on the 18 un-rendered (Floors 2-5).
+
+| over all 35 fillers | coverage | exact_i | exact_M | joint | **Top-1** | Top-10 |
+|---|--:|--:|--:|--:|--:|--:|
+| realized floor (G8) | 0% | 0% | 0% | 0% | 2.4 | 24.4 |
+| **M1b CV v0** | 49% | 9% | 14% | 3% | **4.9** | 26.0 |
+| oracle full | 100% | 100% | 100% | 100% | 91.0 | 100.0 |
+
+On the **covered 17** (orientation-agnostic): exact_M 5/17, exact_i 7/17 — the detector genuinely
+reads clean small-M walls (e.g. AP_SK_234: 3-window wall, M✓ i✓). **Top-1 doubles (2.4→4.9).**
+
+**Findings / bottlenecks (the honest realizable picture).** (1) **Wall orientation is the dominant
+loss:** canonical exact_i 9% vs orientation-agnostic ~41% on covered — the image can't tell which
+wall-end is index 0 (the IFC local +X frame is not image-recoverable); resolving it needs an extra
+cue (e.g. a corner/anchor reference). (2) **Long walls over/under-count** (M=14 → ±2) — the
+perp-band picks up/loses openings where walls bend or run close to a parallel wall. (3) **Coverage
+18/35** blocked by the F2 multi-storey re-render. ⇒ next: orientation resolution (biggest lever),
+then long-wall robustness; M is otherwise free once the host wall is known (M1a). This is the RQ2
+"oracle 91 → realizable" gap, with its bottleneck named and measured.

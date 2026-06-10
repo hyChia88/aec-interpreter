@@ -79,13 +79,18 @@
 (a deliberate scope cut in `3c_render_full_storeys.py` L155-166, not a limit). Detector design:
 color-detect openings → group collinear per host wall → order → (i, M), scored on the M1a harness.
 
-**▶️ DECISION before building (see AskUser / ledger M1b probe):**
-- **(A) regenerate the 4 missing storeys' clean plans** (edit the renderer's storey list, re-run) →
-  unlocks all 35 fillers + the demo's honest arm. Touches the frozen `master_thesis` dataset; may
-  hit the author's "multi-storey wall" caveat.
-- **(B) build the color detector on the 17-filler covered subset now** → real but partial number.
-- **(C) pivot to the learned/site-photo arm** (M4) — but site photo alone can't give M (Risk #4).
-Then: Arm A (marked → host + target loc) vs Arm B (mark-free) ; **A−B = value of the mark.**
+**DECISION (2026-06-10): (A) regenerate chosen — but found EXPENSIVE, so building (B) first.**
+Quantified the under-reporting: **Floors 2-5 each have 46 windows but 0 storey-contained walls**
+(multi-storey walls are contained in "Level 1"), so a naive full-storey re-render yields wall-less
+plans (no wall to order along, no doors) — confirming the author's "F2 future work" deferral. Full
+coverage needs real multi-storey-wall→floor reconstruction, **not** a flag-flip. ⇒ **Build the
+color detector on the 17 fully-covered fillers now** (First Floor 6 + Garage 3 + Level 1 8 — same
+detector regardless); regeneration to all 35 stays quantified F2 work.
+
+### ▶️ NEXT: M1b detector build (`eval/slot_detector_cv.py`) on the 17 covered fillers
+Color-detect openings (blue=window/green=door) → estimate host-wall axis (PCA of nearby openings)
+→ order along axis → (i, M). Score on the M1a harness as a new predictor. First number sits between
+oracle-M 18.8 and oracle-full 91 (the "can CV read the slot given the plan?" lever).
 
 ### (was) NEXT: position-slot structured extractor (P2) — the MVP-defining build
 Scoped in `docs/specs/position_slot_extractor.md`. Turns oracle Top-1 56.5 / 78.5 into a
