@@ -49,6 +49,12 @@
   P2→P1. ⚠️ Earlier cut-2 "feature saturated" / cut-3 "object_type is the prize" SUPERSEDED
   (had omitted position_context — only in the enriched graph, not element_index). Figure +
   ledger + 5 tests (19 total).
+- **Data audit (2026-06-10) — VERDICT: GO with one fix** (`docs/data_audit.md`). Held-out =
+  canonical eval split (60/60 ✅); region-disjoint ✅; **but 12/59 held-out target elements leak
+  into train** (region-disjoint ≠ element-disjoint) → fix = drop 12 ids
+  (`data/test_sets/leakage_excluded_train_ids.txt`, 4% of train). Money-feature GT validated
+  (wall `connection_degree` 14/14 vs skeleton). Held-out is **Tier-3-only** (explains low Top-1)
+  + 60 cases/59 elements (1 dup). **No regenerate / no pipeline refactor needed.**
 - **Live-closeout prep (docker-independent)** — `docker-compose.yml` (Neo4j 5.26, no APOC), `scripts/graph_build/` (01 export / 02 topology / 03 views) + runbook, AP IFC model + element_index migrated, `config/config.yaml`, py2neo dep (`1a9487a`).
 
 ## 🟡 In progress / partial (§2.1 step 1)
@@ -60,22 +66,10 @@
 
 ## ⬜ Next (§2.1 order)
 
-### ▶️ NEXT SESSION: DATA AUDIT (cheap, offline; gates the position-slot extractor)
-Scope decided 2026-06-10: audit first, do NOT refactor the data_curation pipeline or
-regenerate n≈300 unless the audit exposes a real defect (Top-1 demoted → n=60 is fine for
-pool/MRR/per-field). Concrete checklist:
-1. **Leakage-safe split** — verify/define disjoint **elements/regions** (not just case-IDs)
-   between train (`synth_v0.5_ap/train/*.jsonl`) and the AP held-out (60). Document the split.
-   Critical before ANY learned extractor.
-2. **Verify the money-feature GT** — spot-check that the generator's labels for the two
-   discriminators are correct: `position_context` (the NEXT_TO slot / "Nth of M") and
-   `object_type`. Cross-check a sample against `element_index.jsonl` + the reconstructed
-   `position_index.jsonl` / `wall_fingerprint.jsonl`. These now carry the headline result.
-3. **Label/distribution spot-check** — class balance (22 wall / 30 window / 8 door in held-out),
-   storey coverage, any degenerate/duplicate cases; confirm `synth_v0.5_ap` is the clean canonical.
-4. Output: a short `docs/data_audit.md` (findings + go/no-go on regenerate) + leakage-split file.
-→ Then (if audit clean): build the **position-slot structured extractor** (P2) = turns oracle
-  Top-1 56.5/78.5 into a realizable number (the MVP-defining build).
+### ▶️ NEXT: position-slot structured extractor (P2) — the MVP-defining build
+Turns oracle Top-1 56.5 / 78.5 into a realizable number. **Use the element-disjoint train
+set:** drop `data/test_sets/leakage_excluded_train_ids.txt` (12 ids) from training. Report
+**n = 60 cases / 59 elements, Tier-3 only**.
 
 ### Backlog
 1. finish step 1: confidence contract (done) → leakage split (audit above) → n≈300 (DEMOTED).
