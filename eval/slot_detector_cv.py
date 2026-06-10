@@ -38,6 +38,42 @@ NEAR_R = 320      # radius for estimating the wall axis (PCA of nearby openings)
 PERP_TOL = 26     # max perpendicular distance from the axis line to count as same-wall
 MATCH_MAX = 70    # max dist target-pixel -> nearest opening to accept a match
 
+# Orientation convention (resolves the arbitrary PCA/IFC sign). Order along the wall
+# axis with the sign fixed by a GLOBAL world reference, so GT and the image detector
+# agree without any per-wall IFC info. Validated to preserve the oracle ceiling (91.0).
+GLOBAL_REF = np.array([1.0, 0.3])
+
+
+def orient_axis_world(a):
+    """Sign-fix a wall axis given in WORLD xy by the global reference (⊥ -> point -Y)."""
+    a = np.asarray(a, float)
+    d = float(a @ GLOBAL_REF)
+    if abs(d) < 1e-9:
+        return a if a[1] <= 0 else -a
+    return a if d > 0 else -a
+
+
+def build_global_slot(idx, pos):
+    """Re-label every filler's (i, M) under the global-sign convention, offline from
+    element_index world centroids (no ifcopenshell). Same groups/M as position_index,
+    only i is reindexed consistently -> the detector can match it from the image."""
+    from collections import defaultdict
+    byw = defaultdict(list)
+    for g, p in pos.items():
+        e = idx.get(g)
+        if e and e.get("centroid"):
+            byw[p["wall_guid"]].append((g, e["centroid"]["x"], e["centroid"]["y"]))
+    out = {}
+    for items in byw.values():
+        P = np.array([[x, y] for _, x, y in items], float)
+        axis = np.linalg.svd(P - P.mean(0))[2][0]
+        axis = orient_axis_world(axis)
+        order = np.argsort(P @ axis)
+        M = len(items)
+        for ni, k in enumerate(order):
+            out[items[k][0]] = {"wall_position_index": int(ni), "wall_child_total": M}
+    return out
+
 
 def _plan_for_storey(storey_name: str):
     for jf in glob.glob(str(FULL / "*.json")):
@@ -116,7 +152,11 @@ def detect(target_world, storey_name):
             pts = cents[on_wall]
             v = np.linalg.svd(pts - pts.mean(0))[2][0]
             axis = v / np.linalg.norm(v)
-    proj = (cents[on_wall] - tc) @ axis
+    # resolve orientation: sign-fix the (pixel) axis via the global rule applied in WORLD
+    # xy (affine: world+X->pixel+x, world+Y->pixel-y, so flip y to go pixel<->world).
+    aw = orient_axis_world(np.array([axis[0], -axis[1]]))
+    axis_ord = np.array([aw[0], -aw[1]])             # back to pixel space, sign-fixed
+    proj = (cents[on_wall] - tc) @ axis_ord
     order = on_wall[np.argsort(proj)]
     seq = list(order)
     i_pred = seq.index(ti)
@@ -181,24 +221,31 @@ def main():
         for cid in sys.argv[2:]:
             viz(cid, idx, cases, pos)
         return
-    # intrinsic check over covered fillers (exact with orientation-agnostic i)
+    import slot_extractor_m1 as m1
     fill = [c for c in cases if c["scenario"]["ground_truth"]["target_guid"] in pos]
+    gslot = build_global_slot(idx, pos)              # global-sign convention (detector + GT agree)
     pred = make_predictor(idx)
-    cov = ei = eM = 0
-    n = 0
+    # covered-subset detail: exact_i now ORIENTATION-RESOLVED (vs global GT, no mirror)
+    cov = ei = eM = ei_agn = 0
     for c in fill:
         gt = c["scenario"]["ground_truth"]["target_guid"]
-        g = pos[gt]
-        e = idx[gt]
-        cc = e["centroid"]
+        e = idx[gt]; cc = e["centroid"]
         r = detect((cc["x"] / 1000.0, cc["y"] / 1000.0), e["storey_name"])
         if r is None:
             continue
-        n += 1
-        ok_i = (r["i"] == g["wall_position_index"]) or (r["i_mirror"] == g["wall_position_index"])
-        ei += ok_i; eM += (r["M"] == g["wall_child_total"])
-    print(f"=== M1b CV detector — covered fillers with a detection: {n}/{len(fill)} ===")
-    print(f"exact_M = {eM}/{n}   exact_i (orientation-agnostic) = {ei}/{n}")
+        cov += 1
+        gi = gslot[gt]["wall_position_index"]
+        ei += (r["i"] == gi); eM += (r["M"] == gslot[gt]["wall_child_total"])
+        ei_agn += (r["i"] == gi) or (r["i_mirror"] == gi)
+    intr = m1.intrinsic(pred, fill, gslot)
+    down = m1.downstream(pred, fill, idx, gslot)
+    print(f"=== M1b CV detector (orientation-resolved) — {len(fill)} fillers ===")
+    print(f"covered detections: {cov}/{len(fill)}   "
+          f"exact_M {eM}/{cov}   exact_i RESOLVED {ei}/{cov}   (agnostic {ei_agn}/{cov})")
+    print(f"over all fillers:  exact_i={intr['exact_i']*100:.0f}%  exact_M={intr['exact_M']*100:.0f}%"
+          f"  joint={intr['joint']*100:.0f}%")
+    print(f"downstream:  Top-1 {down['top1']:.1f}   Top-10 {down['top10']:.1f}"
+          f"   (floor 2.4 / oracle 91.0)")
 
 
 if __name__ == "__main__":

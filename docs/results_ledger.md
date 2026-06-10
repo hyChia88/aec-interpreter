@@ -383,3 +383,29 @@ perp-band picks up/loses openings where walls bend or run close to a parallel wa
 18/35** blocked by the F2 multi-storey re-render. ⇒ next: orientation resolution (biggest lever),
 then long-wall robustness; M is otherwise free once the host wall is known (M1a). This is the RQ2
 "oracle 91 → realizable" gap, with its bottleneck named and measured.
+
+---
+
+## M1b v1 — wall-orientation resolution (2026-06-10)
+The v0 bottleneck was the arbitrary PCA/IFC axis SIGN (canonical exact_i 9% vs orientation-agnostic
+~41%): the image can't see the IFC wall's local +X. **Diagnosis:** along any global world direction
+walls are monotonic but the sign is split per-wall (~9 fwd / 15 rev for +X) — `wdir`'s sign is an
+arbitrary authoring choice, not globally predictable, and the orientation-invariant "fold" slot
+`min(i,M-1-i)` craters the ceiling (91→51). **Fix:** order along the wall's own axis with the sign
+fixed by a GLOBAL world reference (`axis·(1,0.3)>0`) — a convention both GT and the image detector
+can apply. Validated **discrimination-neutral: oracle filler Top-1 stays 91.0** under the relabel
+(`build_global_slot`, offline from element_index — no ifcopenshell; canonical `position_index`
+untouched).
+
+| filler Top-1 | Top-10 | note |
+|---|--:|---|
+| realized floor (G8) | 2.4 / 24.4 | slot empty |
+| M1b v0 (orientation arbitrary) | 4.9 / 26.0 | mirror ambiguity |
+| **M1b v1 (orientation resolved)** | **9.1 / 32.0** | sign fixed by global ref |
+| oracle | 91.0 / 100.0 | |
+
+**Result:** orientation now contributes **zero** loss — on the covered 17, `exact_i (resolved) ==
+exact_i (agnostic) == exact_M` (every correct-count case also gets i right, no mirror). Top-1
+nearly doubled again (4.9→9.1). **The bottleneck has shifted to M-counting** (exact_M 4/17:
+long/curved walls over/under-count) and coverage (17/35). Next levers: M-count robustness, then the
+F2 re-render for the 18 uncovered fillers.

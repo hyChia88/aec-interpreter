@@ -39,9 +39,20 @@ def test_covers_only_clean_storeys():
     assert 0 < cov < len(fill)               # some covered, some abstain (17/35 today)
 
 
-def test_downstream_beats_realized_floor():
-    """Even partial, the detected slot lifts filler Top-1 above the realized floor (2.4)."""
+def test_orientation_resolution_lifts_downstream():
+    """With orientation resolved (global-sign convention), the detected slot lifts filler
+    Top-1 well above the realized floor (2.4) — measured ~9."""
     idx, cases, pos = _ctx()
     fill = [c for c in cases if c["scenario"]["ground_truth"]["target_guid"] in pos]
-    down = m1.downstream(cv.make_predictor(idx), fill, idx, pos)
-    assert down["top1"] > 2.4
+    gslot = cv.build_global_slot(idx, pos)
+    down = m1.downstream(cv.make_predictor(idx), fill, idx, gslot)
+    assert down["top1"] > 6.0
+
+
+def test_global_relabel_preserves_oracle_ceiling():
+    """The orientation convention is discrimination-neutral: oracle filler Top-1 stays 91."""
+    idx, cases, pos = _ctx()
+    fill = [c for c in cases if c["scenario"]["ground_truth"]["target_guid"] in pos]
+    gslot = cv.build_global_slot(idx, pos)
+    oracle = m1.oracle_full(gslot)
+    assert m1.downstream(oracle, fill, idx, gslot)["top1"] > 88.0
