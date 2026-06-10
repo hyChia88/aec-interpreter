@@ -303,3 +303,33 @@ descriptor sweep (junction-type / generated-cell / landmark) + extractability/st
 > FILLS reverse + IFC Length; `connection_degree`/`hosted_opening_count` are the dominant
 > descriptors. (3) stability risk (e.g. `connection_degree` sensitivity to model authoring)
 > not yet scored — part of the full 3c sweep.
+
+---
+
+## M1a — position-slot extractor: intrinsic harness + floor/ceiling baselines (2026-06-10)
+`eval/slot_extractor_m1.py` · `output/slot_extractor_m1.png` · 5 tests. Held-out **35 fillers**
+(Tier-3, = thesis "pool=1 for 35 cases"; 0 leaked-id fillers → eval set intact). The M1 build's
+measurement scaffold — the image detector (Arm A marked plan / Arm B mark-free) is M1b and plugs
+a predictor into `PREDICTORS`.
+
+| predictor | cov | exact_i | exact_M | joint | ±1_i | **Top-1** | Top-10 |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| prior (modal i,M) — FLOOR | 100% | 23% | 29% | 6% | 54% | 6.6 | 27.6 |
+| text-parse (honest query) | 0% | 0% | 0% | 0% | 0% | **2.4** | 24.4 |
+| G8 realized `position_context` | 0% | 0% | 0% | 0% | 0% | **2.4** | 24.4 |
+| oracle M (host known), prior i | 100% | 23% | 100% | 23% | 54% | 18.8 | 39.9 |
+| oracle i, prior M | 100% | 100% | 29% | 29% | 100% | 29.5 | 45.9 |
+| oracle full (i,M) — CEILING | 100% | 100% | 100% | 100% | 100% | **91.0** | 100.0 |
+
+**Findings.** (1) **The entire 2.4→91 filler gap is the *unextracted* slot:** G8 emits
+`position_context` for **0/35** fillers, and the NL query carries storey+class only (no positional
+cue) → the slot is a *genuinely visual* target (no text shortcut; justifies the M1b image
+detector). (2) **Decomposition — *i* is the bigger and harder lever:** knowing the ordering index
+alone (oracle-i) lifts Top-1 to **29.5** vs **18.8** for the count *M* alone; *M* is partly a prior
+(modal=17 covers 10/35) and free once the host wall is identified, whereas exact-*i* sits at 23%
+under the prior. ⇒ **M1b should spend its budget on the visual *i*-ordering along the host wall.**
+
+> Caveats: prior is in-sample modal (a floor reference, mildly optimistic). Downstream scores each
+> candidate's *true* slot against the *predicted* key (no self-match artefact); abstain falls back
+> to G8's realised ranking. Leakage exclusion (`leakage_excluded_train_ids.txt`) does not touch
+> these 35 (0 overlap) — it binds only the M4 *training* set.

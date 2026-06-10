@@ -66,7 +66,20 @@
 
 ## ⬜ Next (§2.1 order)
 
-### ▶️ NEXT: position-slot structured extractor (P2) — the MVP-defining build
+### ✅ M1a done (2026-06-10) — slot harness + floor/ceiling baselines
+`eval/slot_extractor_m1.py` (+ fig + 5 tests, 28 total). 35 held-out fillers. **Realized floor
+2.4** (G8 emits `position_context` 0/35; query has no positional cue → slot is purely visual),
+**oracle ceiling 91.0**; decomposition says **the ordering index *i* is the bigger+harder lever**
+(oracle-i 29.5 > oracle-M 18.8). Also: networkx pinned in pyproject; interface mock `build_demo.py`.
+
+### ▶️ NEXT: M1b — the image slot detector (Arm A marked plan / Arm B mark-free)
+Plug a real predictor into `slot_extractor_m1.PREDICTORS`: read the host-wall openings off the
+image, order them, recover *(i, M)*. Spend the budget on **exact-*i*** (M is ~free once the host
+wall is known). Score on the same harness (intrinsic + downstream Top-k) vs floor 2.4 / ceiling 91.
+Arm A (marked plan, target known) first as the easier ceiling; Arm B (mark-free photo+clean plan)
+= the honest autonomous number; **A−B = value of the mark.**
+
+### (was) NEXT: position-slot structured extractor (P2) — the MVP-defining build
 Scoped in `docs/specs/position_slot_extractor.md`. Turns oracle Top-1 56.5 / 78.5 into a
 realizable number. **From the audit:** (1) *fix* — element-disjoint train set, drop
 `data/test_sets/leakage_excluded_train_ids.txt` (12 ids); (2) *input clarification (§5,
