@@ -52,6 +52,30 @@ routing recovers a measurable fraction of the oracle–realized gap.*
 > liability-heavy vertical (AEC), an auditable deterministic decision trace + calibrated
 > confidence is a genuine differentiator.
 
+**SPINE DECISION (2026-06-09) — one line, not three pillars.** Rank by epistemic status:
+- **Spatial address = the CONTRIBUTION / headline.** Grounding = *predict a visual-topological
+  spatial address* (IFC-computable ∧ image-recoverable) in a known BIM map — image-to-map
+  localization / visual place recognition. Most novel, domain-defensible, not "applied calibration."
+- **Confidence routing = the MECHANISM** (predicts the address under uncertainty; soft rerank
+  primary, calibration supporting). Do NOT lead with calibration (ECE-failure contingency makes
+  it fragile as a headline).
+- **Agent orchestration = an ABLATION arm** of routing (the card most likely to lose), not a pillar.
+- **SAM** = framing discipline only (one task, one representation); the technical analogy is visual
+  place recognition, not segmentation (we have no SAM-scale data engine — synthetic n≈300).
+
+**Phase-0 measured diagnostics (2026-06-09)** — all offline, AP held-out n=60; full numbers in
+`results_ledger.md`, figures in `output/`:
+- **Soft-rerank prize (real pools, GT-in-pool 100%):** two complementary, currently-unextracted
+  discriminators — `position_context` (the `ifc_engine` NEXT_TO slot, 35/60 targets) drives **Top-1**
+  (oracle 4.9→**56.5**, = thesis L4 "pool=1 for 35 cases"); `object_type` drives **Top-10** (30→**76**).
+  Both oracle → Top-1 61.7 / Top-10 85.6. Realistic `object_type` (r=0.625) ≈ doubles Top-10 (30→59.5).
+  Soft rerank ⇒ zero recall cost. (Earlier cuts missed `position_context` — it lives only in the
+  enriched graph, not `element_index`.)
+- **Depth saturation (measured, not asserted):** realizable median |C| by relational depth =
+  13 (attr) → **8.2 (1 hop)** → 8.1 → 8.1. Oracle WL → 1 (info says deeper is unique) but per-hop
+  reliability (0.40/0.05/0) caps realizable gain at **depth-1** (≈ oracle-L3 9). → **extract at
+  depth ≤1; go richer at depth-1, never deeper.** (`eval/depth_saturation.py`)
+
 ---
 
 ## 2. Phases
@@ -71,10 +95,10 @@ capability." If it doesn't map to a layer, it broadens → cut.
 
 | Layer | Decision | Enhancement | Status |
 |---|---|---|---|
-| Policy-adaptivity | how smart must the router be? | agent vs learned vs static (Idea 1) | P1 ablation arm |
-| **Routing** *(headline)* | per-field confidence → {hard/soft/drop/clarify} | P1 calibrated field-routing | HEADLINE |
+| **Feature/addressing** *(HEADLINE)* | which IFC-derived spatial address uniquely+reliably IDs an element within its visual-confusable set | visual-topological spatial address + fingerprint diagnostics (Idea 3a/3c) | **HEADLINE = the contribution** |
+| **Routing** *(mechanism)* | per-field confidence → {hard/soft/drop/clarify}; soft rerank primary | P1 calibrated, vocabulary-constrained neural→symbolic interface | MECHANISM (predicts the address under uncertainty) |
 | Evidence | which deterministic specialists feed the contract | segmentation/classification / floorplan-address specialist (Idea 2a) | P2 extension |
-| Feature/addressing | which IFC-derived spatial address uniquely+reliably IDs an element | visual-topological address + optimal fingerprint diagnostics (Idea 3) | Phase 0/1 research module |
+| Policy-adaptivity | how smart must the router be? | agent vs learned vs static (Idea 1) | P1 ablation arm (likely to lose; not a pillar) |
 
 ### Phase 0 — Foundation (new clean monorepo + harness)  ← CURRENT
 - New clean monorepo (datagen + system + eval + demo). Old 3 components frozen as
@@ -195,9 +219,22 @@ constraints (hard if confident, soft otherwise). Fastest mover; GT-in-Pool must 
   floorplan patch / annotation → evidence-side local graph or spatial-address observation
   aligned to the IFC graph (`cell`, `host_axis_s`, `ordinal_slot`, `landmark`, confidence).
 
-### P1 — Calibrated field-routing + verified schema-alignment (HEADLINE)
+### P1 — Calibrated field-routing + verified schema-alignment (MECHANISM under the spatial-address headline)
 - Per-field confidence → role decision {hard filter / soft prior / drop / clarify};
   threshold-calibration first, optional tiny learned router.
+- **Learned neural→symbolic interface ablation (where does learning pay?).** Make the
+  probabilistic-extraction → strict-schema station an *ablatable stack*: Arm0 deterministic
+  schema-alignment (Gusarov) · Arm1 **[A]** learned schema-constrained extractor (emits
+  position-slot/object_type directly) · Arm2 **[B]** learned MLP adapter (raw VLM → calibrated
+  schema fields) · Arm3 both. Score per-field acc + Top-k/MRR + **ECE** + repeatability;
+  "[B] adds nothing once [A] is structured" is as publishable as the opposite. **Two rules keep
+  it auditable:** (i) audit boundary = the structured `{field,value,confidence,source}` record
+  (executor deterministic on it), not model internals; (ii) the learned layer is
+  **constrained to the graph-attested vocabulary** (select/rank valid terms + emit confidence,
+  cannot invent values) — this reconciles "learned" with "faithful execution" and upgrades
+  schema-alignment to a *calibrated, vocabulary-constrained neural→symbolic adapter*. Order:
+  [A] first (cut-3's binding gap), [B] after (may be redundant — test, don't assume).
+  **[E] learned fusion/rerank (GNN-style) stays OUT** (gap isn't in fusion; auditability + leakage cost).
 - **Two levers — the SOFT one is dominant (Idea-3a 2nd-cut correction, 2026-06-09).**
   The ∏r recall collapse binds **hard filtering only** (wrong hard filter evicts GT). The
   **soft confidence-weighted rerank** keeps GT in pool (recall stays 100%) and spends the
@@ -234,6 +271,10 @@ constraints (hard if confident, soft otherwise). Fastest mover; GT-in-Pool must 
 Add hard-negative subtype contrasts to the Blender pipeline; retrain a LoRA variant.
 Frame around the **multi-task capacity tension** the thesis found (r=16 degrades
 ifc_class when adding spatial supervision) — makes it a finding, not just augmentation.
+- **Depth-policy synergy (measured):** the depth-saturation result says depth≥2 spatial
+  supervision is wasted (realizable Δ≈0) and actively costs `ifc_class` capacity. So P4's
+  first move is *subtractive*: drop depth≥2 chains, reallocate capacity to ifc_class +
+  depth-1 descriptor (position-slot) extraction. Cheaper and better-motivated than adding aug.
 
 ### Cross-cutting (from red-team)
 - **≥1 external baseline** (Text-to-Cypher à la Auto-Cypher/Gusarov, or dense/CLIP
@@ -260,15 +301,16 @@ Situational — adopt **only when the phase actually needs it**, and only if it 
 
 | # | Step | Phase | Why here / what it gates |
 |---|---|---|---|
-| 1 | Scaffold + **confidence contract** + larger held-out (n≈300) + leakage-safe split | Phase 0 | nothing is routable/measurable without the `{value,confidence,source}` contract and CI-usable test set. Pre-register `protocol.md`. |
-| 2 | **Idea 3a — offline optimal-fingerprint ceiling** ✅ DONE (both cuts, 2026-06-09) | Phase 0 | produced the low-order ceiling (coarse 46→13, +implemented topology→12); defined the current prize as **reliability-bound**; low-order Idea 3b gate fired → SKIP. |
+| 1 | Scaffold + **confidence contract** + leakage-safe split + **DATA AUDIT** | Phase 0 | contract is the routing substrate. **n≈300 regeneration demoted** (Top-1 demoted → pool/MRR/per-field fine at n=60); audit first (leakage + verify `position_context`/`object_type` GT), regenerate/refactor only if the audit exposes a real defect. Pre-register `protocol.md`. |
+| 2 | **Idea 3a — fingerprint ceiling** ✅ DONE (3 cuts + depth-saturation, 2026-06-09) | Phase 0 | two complementary discriminators (`position_context`→Top-1, `object_type`→Top-10), both unextracted-as-structured; discrimination saturates at **depth-1**. See §1 measured block + `results_ledger.md`. |
 | 3 | **Idea 3c — visual-topological spatial address ceiling** | Phase 0/1 | compute host-axis ordinal, junction/corner, generated cell, landmark/grid/facade-bay descriptors before training; decide which address fields deserve P2/P1 support. |
 | 4 | **P2** — gate position/size + **Idea 2a** segmentation/floorplan-address specialist | P2 | adds routable fields (storey/zone/cell/host-axis slot/landmark/object_type); GT-in-pool stays 100%; precedes P1. |
 | 5 | **P1** — calibrated field-routing + schema-alignment | P1 | the headline. Needs contract (1), prize gaps (2–3), specialists (4). **Gate on ECE/reliability first.** |
 | 6 | **P1 adaptivity ablation** (static → learned → agent, Idea 1) | P1 | only after static router works (it's the baseline the agent must beat). Apply Guardrail 1 (steelman) + 2 (measure repeatability). |
 | 7 | **P4** — subtype-contrastive data aug | P4 | slowest loop; last; benefits from calibrated pipeline being in place. |
-| — | Idea 3b (learned fingerprint/address selector) | optional / gated | low-order selector retired by 3a, but a learned address selector is only considered if 3c shows hand-built descriptors + thresholds leave a real gap. |
-| — | P3 (GNN rerank) | optional | demoted; low novelty + leakage risk. |
+| + | **Depth policy (measured): inference extract at depth ≤1** | Phase 0/P2 | depth-saturation: realizable discrimination saturates at depth-1. Stop training depth≥2 chains (frees adapter capacity → recovers `ifc_class`); compile depth into node-level spatial address. Allow depth-1-to-landmark only when the anchor is independently grounded. |
+| — | ~~Idea 3b (learned feature *selector*)~~ **RETIRED** | — | features are known/named (`position_context`, `object_type`) → no need for a learned *selector* to discover them. 3c's address-family search (walls/non-filler fingerprints) is separate and continues at step 3. |
+| — | P3 (GNN rerank) / learned fusion [E] | optional / out | demoted; low novelty + leakage risk; cut-3 shows the gap is extraction, not fusion. |
 
 **Cross-cutting (run alongside, required before submission):** ≥1 external baseline
 (Text-to-Cypher / dense-CLIP) + a small triage measurement.
@@ -308,6 +350,9 @@ as a future real-data collection funnel. Grasshopper plugin = optional, not prim
 - Floorplan topology analogue: https://arxiv.org/abs/2204.12338
 - SAM as segmentation candidate, not novelty claim: https://arxiv.org/abs/2304.02643
 - Calibration basis for P1: https://arxiv.org/abs/1706.04599
+- Multi-hop KGQA error compounding (justifies depth ≤1): https://arxiv.org/abs/2404.19234
+- Neuro-symbolic division of labor — neural perception + symbolic executor (Mao NS-CL,
+  justifies "compile depth into the node, extract shallow"): https://arxiv.org/abs/1904.12584
 
 ---
 
@@ -323,4 +368,8 @@ as a future real-data collection funnel. Grasshopper plugin = optional, not prim
 See the ARCHIVE section of the planning note (`AEC Interpreter - enhanced module.md`)
 for every dropped idea with its reason (agent-as-grounding, agent spectrum study as
 headline, GNN headline, schema-alignment as novelty, SpatialVQA reframe, bigger backbone,
-MLP-in-symbolic, constrained decoding, P0 real-data, 116-unified).
+MLP-in-symbolic, constrained decoding, P0 real-data, 116-unified). **Added 2026-06-09:**
+deep multi-hop extraction at inference (depth≥2 — measured: realizable Δ≈0 beyond depth-1,
+hop-2 extraction 5%, hurts −13pp); learned feature *selector* (Idea 3b — features are
+known/named); learned fusion layer [E] (gap is extraction, not fusion); three co-equal
+spine pillars (scope-creep → one line: address=headline, routing=mechanism, agent=ablation).
