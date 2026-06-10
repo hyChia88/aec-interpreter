@@ -26,6 +26,12 @@ have the BIM, not a labeled photo dataset.
 
 - Symbolic backend essentially solved: oracle 100% GT-in-Pool; oracle Top-10 58% (L3),
   100% at L4 (58% cov).
+- **Correction / sharpening (2026-06-09):** do not read the latest repo cuts as
+  "topology enrichment does not matter." Thesis Ch.7 says the opposite: coarse
+  relation type (`predicate + object`, L2) compresses weakly, but richer fingerprints
+  (`direction + subtype + material + distance + connection_degree`, L3) drive the
+  oracle jump, and exact position slots (L4) are decisive when extractable. The prize is
+  a **visual-topological spatial address**, not just adding more edge labels.
 - Realized system is weak at **ranking**: pool ~76, Top-10 ~30%, Top-1 ~6.7%, MRR ~0.11.
   GT-in-Pool already 100% → remaining gains are *ranking/compression*, not recall.
 - Live planner falls back to the P1 attribute pool (~76) instead of consuming the L3
@@ -67,8 +73,8 @@ capability." If it doesn't map to a layer, it broadens → cut.
 |---|---|---|---|
 | Policy-adaptivity | how smart must the router be? | agent vs learned vs static (Idea 1) | P1 ablation arm |
 | **Routing** *(headline)* | per-field confidence → {hard/soft/drop/clarify} | P1 calibrated field-routing | HEADLINE |
-| Evidence | which deterministic specialists feed the contract | segmentation/classification specialist (Idea 2a) | P2 extension |
-| Feature-selection | which feature *subset* uniquely+reliably IDs an element | optimal discriminative fingerprint (Idea 3) | Phase 0 (3a) + theory of P1 |
+| Evidence | which deterministic specialists feed the contract | segmentation/classification / floorplan-address specialist (Idea 2a) | P2 extension |
+| Feature/addressing | which IFC-derived spatial address uniquely+reliably IDs an element | visual-topological address + optimal fingerprint diagnostics (Idea 3) | Phase 0/1 research module |
 
 ### Phase 0 — Foundation (new clean monorepo + harness)  ← CURRENT
 - New clean monorepo (datagen + system + eval + demo). Old 3 components frozen as
@@ -137,11 +143,39 @@ closeout (Neo4j docker + IFC migration + model access) = the gate to retire `msc
     ∏r collapses to 0.009 if all hard-filtered → the 76→~13 gap is **reliability-bound**.
     **Idea-3b GATE RESULT = SKIP** (no feature-selection prize for a learned selector; the
     lever is P1 calibrated routing). Numbers + caveats in `results_ledger.md`.
+    **Interpretation correction:** "feature space saturated" here means *the low-order
+    relation-type features implemented in this AP export* are saturated. It does **not**
+    retire richer spatial addressing. Thesis L3/L4 show that direction/subtype/distance/
+    connection-degree/position-slot features remain the real topology prize.
   > **Cautions (write into the protocol):** (1) ceiling is on the same synthetic generator →
   > "optimal *given correct constraints*", same caveat as oracle, not "provably optimal";
   > (2) ∏ r(f) assumes feature/error **independence** — direction/position errors correlate;
   > model it or state as a limitation + sensitivity check; (3) needs **topology** computed
   > (offline geometry or Neo4j) — no GPU, but not zero-dependency.
+
+- **[NEW — Idea 3c] Visual-topological spatial address (graph enrichment as a research module).**
+  Research question: *Can we derive a canonical, graph-computable spatial address for each
+  IFC element that is discriminative in BIM and recoverable from site image/floorplan
+  evidence?* The unit of enrichment is no longer "more edge types"; it is a descriptor
+  family with three tests: **IFC-computable**, **visually/floorplan recoverable**, and
+  **information-bearing** over the confusable set.
+  - **Descriptor families to test:** (1) anchor chains
+    (`target → opening/host → host wall/slab → connected wall / generated cell / facade bay`);
+    (2) ordinal / curvilinear coordinates (`host_axis_s`, rank from left/right, distance to
+    nearest wall end/corner, between junctions, near T/L-junction); (3) local k-hop typed
+    ego-graph signatures with distance/angle/degree/material/subtype bins; (4) landmark
+    coordinates to stairs/elevators/core/gridlines/facade boundaries/corners/door clusters;
+    (5) generated space cells from wall loops / floorplan segmentation, using
+    `IfcRelSpaceBoundary` directly when exported and geometry-derived cells when not.
+  - **Deliverable:** `eval/spatial_address_ceiling.py` reporting descriptor `coverage`,
+    `median pool`, `Top-k/MRR rerank prize`, `extractability proxy`, and `stability risk`,
+    plus a "spatial-address Pareto frontier" figure.
+  - **Priority order:** host-axis ordinal/address slot → corner/junction/connection-degree
+    + angle → generated cell/boundary → landmark/grid/facade bay → existing
+    CONNECTS/ADJACENT/CONTINUOUS with distance/angle/subtype attributes.
+  - **P1 integration:** descriptors enter the same confidence contract and are used as
+    soft rerank / selective hard filters. A floorplan crop is an evidence-side noisy
+    observation of this address, not a replacement for the IFC graph.
 
 ### P2 — Confidence-gated deterministic specialists (supporting system result)
 Promote high-confidence OpenCV position / ResNet size from soft-rerank to *gated*
@@ -151,14 +185,15 @@ constraints (hard if confident, soft otherwise). Fastest mover; GT-in-Pool must 
   Same pattern as OpenCV/ResNet: a deterministic specialist that beats the VLM on its
   sub-task, **emits its own confidence, feeds the contract, and is routed by P1** — NOT
   dumped into the VLM prompt (a tool in the prompt ≠ a specialist in the architecture).
-  Aim it at the **22% storey/floor errors**: a floorplan/region segmenter (SAM-style mask →
-  region → storey/zone) with confidence. Hard storey filter if confident, soft prior else.
+  Aim it at the **22% storey/floor errors** and the new spatial-address observations:
+  a floorplan/region segmenter (SAM-style mask → region → storey/zone/generated cell/
+  host-axis slot/landmark) with confidence. Hard storey filter if confident, soft prior else.
   > **Caution:** SAM is heavier than OpenCV/ResNet (model + GPU) — it is *not* "fast pure
   > engineering" like position/size gating; scope it as its own sub-task with the 22% metric.
-- **Idea 2b — Floorplan→graph (deriving topology from 2D): REJECTED (moat regression).**
-  The IFC graph is already zero-error ground-truth topology = the auditability moat. Parsing
-  topology from floorplans reintroduces the extraction error we eliminated. Floorplan stays
-  on the **evidence/input** side only (2a), never as a graph source.
+- **Idea 2b — Floorplan→graph needs precise wording.** REJECTED: deriving the
+  authoritative topology graph from a 2D floorplan as a replacement for IFC. ADOPTED:
+  floorplan patch / annotation → evidence-side local graph or spatial-address observation
+  aligned to the IFC graph (`cell`, `host_axis_s`, `ordinal_slot`, `landmark`, confidence).
 
 ### P1 — Calibrated field-routing + verified schema-alignment (HEADLINE)
 - Per-field confidence → role decision {hard filter / soft prior / drop / clarify};
@@ -226,12 +261,13 @@ Situational — adopt **only when the phase actually needs it**, and only if it 
 | # | Step | Phase | Why here / what it gates |
 |---|---|---|---|
 | 1 | Scaffold + **confidence contract** + larger held-out (n≈300) + leakage-safe split | Phase 0 | nothing is routable/measurable without the `{value,confidence,source}` contract and CI-usable test set. Pre-register `protocol.md`. |
-| 2 | **Idea 3a — offline optimal-fingerprint ceiling** ✅ DONE (both cuts, 2026-06-09) | Phase 0 | produced the ceiling (coarse 46→13, +topology→12 = saturated) + §4 figures; defined the prize as **reliability-bound**; gate fired → **Idea 3b SKIP**. |
-| 3 | **P2** — gate position/size + **Idea 2a** segmenter | P2 | fastest mover, GT-in-pool stays 100%; adds routable fields (incl. 22% storey fix) that P1 then routes → precedes P1. |
-| 4 | **P1** — calibrated field-routing + schema-alignment | P1 | the headline. Needs contract (1), prize gap (2), specialists (3). **Gate on ECE/reliability first.** |
-| 5 | **P1 adaptivity ablation** (static → learned → agent, Idea 1) | P1 | only after static router works (it's the baseline the agent must beat). Apply Guardrail 1 (steelman) + 2 (measure repeatability). |
-| 6 | **P4** — subtype-contrastive data aug | P4 | slowest loop; last; benefits from calibrated pipeline being in place. |
-| — | Idea 3b (learned fingerprint selector) | ❌ RETIRED (2026-06-09) | step-2 gate fired SKIP: feature space saturated (attr-oracle 13 ≈ attr+topo 12), so no feature-selection prize; the recoverable gap is reliability-bound → P1's job, not a learned selector. |
+| 2 | **Idea 3a — offline optimal-fingerprint ceiling** ✅ DONE (both cuts, 2026-06-09) | Phase 0 | produced the low-order ceiling (coarse 46→13, +implemented topology→12); defined the current prize as **reliability-bound**; low-order Idea 3b gate fired → SKIP. |
+| 3 | **Idea 3c — visual-topological spatial address ceiling** | Phase 0/1 | compute host-axis ordinal, junction/corner, generated cell, landmark/grid/facade-bay descriptors before training; decide which address fields deserve P2/P1 support. |
+| 4 | **P2** — gate position/size + **Idea 2a** segmentation/floorplan-address specialist | P2 | adds routable fields (storey/zone/cell/host-axis slot/landmark/object_type); GT-in-pool stays 100%; precedes P1. |
+| 5 | **P1** — calibrated field-routing + schema-alignment | P1 | the headline. Needs contract (1), prize gaps (2–3), specialists (4). **Gate on ECE/reliability first.** |
+| 6 | **P1 adaptivity ablation** (static → learned → agent, Idea 1) | P1 | only after static router works (it's the baseline the agent must beat). Apply Guardrail 1 (steelman) + 2 (measure repeatability). |
+| 7 | **P4** — subtype-contrastive data aug | P4 | slowest loop; last; benefits from calibrated pipeline being in place. |
+| — | Idea 3b (learned fingerprint/address selector) | optional / gated | low-order selector retired by 3a, but a learned address selector is only considered if 3c shows hand-built descriptors + thresholds leave a real gap. |
 | — | P3 (GNN rerank) | optional | demoted; low novelty + leakage risk. |
 
 **Cross-cutting (run alongside, required before submission):** ≥1 external baseline
@@ -256,6 +292,22 @@ Situational — adopt **only when the phase actually needs it**, and only if it 
 Web live demo from old `mscd_demo/demo`, refactored into a thin front-end over
 `src/aec_interpreter/service`. Input image/text → highlighted element + heatmap. Doubles
 as a future real-data collection funnel. Grasshopper plugin = optional, not primary.
+
+---
+
+## Source Anchors
+- Thesis: `D:\ahYen Workspace\ahYen Work\CMU_academic\MSCD_Thesis\final_submit\Chia Hui Yen_MSCD_Thesis.pdf`,
+  especially Ch.6.1.3 (IFC enrichment), Ch.7.1.2 / Table 7.1 (oracle ladder), Ch.7.2.2
+  (topology interpretation), and Ch.8.4 (floorplan patches as bridge modality).
+- buildingSMART `IfcRelSpaceBoundary`: element-space boundary + optional boundary geometry.
+  https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcRelSpaceBoundary.htm
+- buildingSMART `IfcRelConnectsPathElements`: path-element connectivity with connection
+  type/geometry. https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcRelConnectsPathElements.htm
+- buildingSMART `IfcRelFillsElement`: opening/filling relation for doors/windows.
+  https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcRelFillsElement.htm
+- Floorplan topology analogue: https://arxiv.org/abs/2204.12338
+- SAM as segmentation candidate, not novelty claim: https://arxiv.org/abs/2304.02643
+- Calibration basis for P1: https://arxiv.org/abs/1706.04599
 
 ---
 

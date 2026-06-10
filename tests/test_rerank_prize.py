@@ -9,7 +9,9 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 def _run():
     idx = rp.load_index(REPO_ROOT / "data" / "references" / "element_index.jsonl")
     cases = rp.load_cases(REPO_ROOT / "eval" / "fixtures" / "traces" / "g8_posctx_dim.jsonl")
-    return rp.run(idx, cases)
+    from reconstruct_position_index import load_position_index
+    pos = load_position_index(REPO_ROOT / "data" / "references" / "position_index.jsonl")
+    return rp.run(idx, cases, pos)
 
 
 def test_realized_parity():
@@ -53,3 +55,19 @@ def test_calibration_helps_in_controlled_setting():
     the confidence-blind rerank — the calibration prize, isolated."""
     m = _run()["metrics"]
     assert m["calibrated_storey_class"]["top10"] > m["blind_storey_class"]["top10"]
+
+
+def test_position_context_is_the_top1_prize():
+    """CORRECTION (vs the element_index-only cuts): position_context — the ifc_engine NEXT_TO
+    slot, omitted from element_index — is the dominant Top-1 discriminator (the thesis L4
+    'pool=1 for 35 cases' unlock), complementary to object_type (which lifts Top-5/10)."""
+    res = _run()
+    assert res["n_addressable_position"] == 35  # multi-filler-wall targets
+    m = res["metrics"]
+    # position dominates Top-1 (far beyond object_type and coarse)
+    assert m["oracle_plus_position"]["top1"] >= 50
+    assert m["oracle_plus_position"]["top1"] > m["oracle_plus_object_type"]["top1"]
+    assert m["oracle_plus_position"]["top1"] - m["oracle_storey_class"]["top1"] >= 40
+    # the two discriminators are complementary → both together beat either alone
+    assert m["oracle_all"]["top1"] >= m["oracle_plus_position"]["top1"]
+    assert m["oracle_all"]["top10"] >= m["oracle_plus_object_type"]["top10"]

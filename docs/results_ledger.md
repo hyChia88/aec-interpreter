@@ -90,15 +90,26 @@ topology features (ADJACENT_TO neighbour-class signature + CONTINUOUS spanning, 
 geometry as `scripts/graph_build/02_add_topology_edges.py`) and per-field extraction
 reliability r(f) from `mscd_demo/results.md` U3/Group-3.
 
-**Oracle ceiling — feature space is SATURATED:**
+> ⚠️ **SUPERSEDED (2026-06-09) — this cut omitted `position_context`.** The "saturated"
+> claim below is over `element_index.jsonl` features + my re-derived ADJACENT_TO/CONTINUOUS
+> **only**. It missed the `ifc_engine` NEXT_TO position-slot (`wall_position_index` /
+> `wall_child_total` = `position_context`), which lives only in the enriched Neo4j graph,
+> not the flat index. The THIRD CUT (corrected) shows position_context is in fact the
+> dominant Top-1 discriminator (thesis L4 "pool=1 for 35 cases"). So the feature space is
+> **NOT** saturated, and the gap is **feature-AND-reliability bound** (the discriminators
+> exist — object_type, position slot — but the model doesn't extract them as structured
+> fields). The "∏r reliability bind" finding (below) still stands for *hard filtering*; the
+> soft-rerank lever is where position_context pays off.
+
+**Oracle ceiling over element_index attributes + low-order topology (position_context EXCLUDED):**
 
 | pool (60 held-out targets, r=1) | median |
 |---|---|
 | coarse (storey+class) | 46 |
 | attribute-optimal | 13 |
-| **attr + topology (full oracle)** | **12** |
+| **attr + ADJACENT_TO/CONTINUOUS (full)** | **12** |
 
-- Topology adds only **1** element of shrinkage over attributes (13→12).
+- Within *this* (incomplete) feature set, topology adds only **1** element of shrinkage (13→12).
 - **FILLS / CONNECTS_TO are type-level homogeneous** (389 FILLS = all windows/doors→walls;
   686 CONNECTS = all wall↔wall) → zero discrimination at the granularity a photo can
   extract. ADJACENT_TO is sparse (36/60 targets have **no** neighbour; 12 distinct
@@ -124,11 +135,13 @@ a feature subset is hard-filtered ≈ ∏r(f):
   E[|C|] = 0.625·13 + 0.375·46 = **25.4** (coarse 46 → 25 ≈ half the 46→13 gap). Every
   other feature recovers 0 (no power or r≤0.5).
 
-**Idea-3b GATE → SKIP.** The feature space is saturated (attr-oracle 13 ≈ attr+topo-oracle
-12), so there is no feature-*selection* prize for a learned selector to win. The entire
-recoverable gap (76 → ~13) is **reliability-bound**, so the correct lever is **P1
-calibrated routing** (hard-filter per-instance only when confidence warrants), not Idea 3b.
-This is the decisive output of the cut: it retires Idea 3b and points all effort at P1.
+**Idea-3b GATE → still SKIP, but for a CORRECTED reason (2026-06-09).** Original (wrong)
+reason: "feature space saturated." Corrected reason: the discriminative features are now
+**known and named** — `object_type` (attribute) and `position_context` (the NEXT_TO slot,
+thesis L4) — and both are already wired into the retrieval Cypher + reranker. So there is no
+need for a *learned selector to DISCOVER* unknown features (Idea 3b); the lever is **extract
+them as structured fields (P2 specialists) + calibrated soft rerank (P1)**. 3b stays deferred
+not because no feature helps, but because *which* features help is already established.
 
 > **Caveats:** (1) r(f) are best-available per-field proxies (LoRA5 / Group-3 MC, n=70; G8
 > not separately tabulated) — they set the *shape*, the live ECE study (P1) replaces them
@@ -140,17 +153,21 @@ This is the decisive output of the cut: it retires Idea 3b and points all effort
 Figure: `output/fingerprint_reliability.png` (oracle pool ↓ vs joint recall ∏r ↓ along the
 greedy frontier — the scissors crossing = the reliability bind) → §4 core figure.
 
-**Raw-IFC relationship census (does saturation hold against ALL physical relations?):**
+**Raw-IFC relationship census (does low-order saturation hold against implemented physical relations?):**
 full `IfcRel*` census of `AdvancedProject.ifc`: material 1345 (have), CONNECTS_TO 686
 (have, all wall↔wall), FILLS 389 (have, all window/door→wall), type 202 (have →
 object_type), MEP ports 139 (irrelevant), aggregates 17 (tiny), storey-containment 10
 (have). **`IfcRelSpaceBoundary` = 0; only 8 `IfcSpace`s with non-semantic names
-("3ROK"/"5ROK"/"Area").** → no untapped discriminative+extractable relation in this file;
-saturation holds **for this building**. ⚠️ **Caveat (threats-to-validity):** saturation is
-a property of this homogeneous synthetic mock-up with *no exported space boundaries*, not
-of the method. On a real project IFC with `IfcRelSpaceBoundary` + named rooms,
-"element bounds room X" would be discriminative **and** photo-extractable — the first
-feature to revisit on real data, and the reason `space_name` is 0% here.
+("3ROK"/"5ROK"/"Area").** → no untapped discriminative+extractable **low-order
+relationship type** in this file; saturation holds **for this AP export and this descriptor
+granularity**. ⚠️ **Caveat / correction (2026-06-09):** this does **not** mean topology
+enrichment is exhausted. Thesis Table 7.1 shows L3/L4 gains come from richer fingerprints
+(`direction`, `subtype`, `material`, `distance`, `connection_degree`, exact position slot),
+not from predicate-object edges alone. On a real project IFC with `IfcRelSpaceBoundary` +
+named rooms, "element bounds room X" could be discriminative **and** photo-extractable.
+Even when spaces are unnamed (as in AP), geometry-derived cells, host-axis position,
+junction/corner descriptors, and landmark/grid/facade-bay addresses remain open
+spatial-address features to test.
 
 **Two levers, and |C| under-counts the prize — correction to the prize-gap above.** The
 ∏r collapse binds **hard filtering only** (a wrong hard filter evicts GT → recall loss).
@@ -172,37 +189,70 @@ expected Top-k/MRR with analytic tie handling. This sizes the prize on the *bind
 (ranking) instead of |C|. **Observed extraction reliability from the traces: storey 0.52,
 ifc_class 0.82** (real G8 per-set numbers; refines cut-2's documented LoRA5 proxies 0.66/0.50).
 
+**CORRECTED (2026-06-09)** to include `position_context` — the `ifc_engine` NEXT_TO slot
+reconstructed offline (`eval/reconstruct_position_index.py`, 321 fillers on multi-filler
+walls; **35/60 held-out targets addressable**). The original table credited only object_type
+and wrongly called it "the prize."
+
 | scheme (60 cases) | Top-1 | Top-5 | Top-10 | MRR |
 |---|---|---|---|---|
-| realized (G8) | 6.7 | 16.7 | **30.0** | 0.110 |
-| blind rerank (storey+class, 2-field) | 3.3 | 9.8 | 15.7 | 0.084 |
-| calibrated rerank (zero wrong fields) | 3.7 | 11.8 | 19.6 | 0.098 |
+| realized (G8) | 6.7 | 16.7 | 30.0 | 0.110 |
 | oracle storey+class (perfect coarse) | 4.9 | 17.9 | 31.5 | 0.137 |
-| **realistic +object_type (r=0.625)** | **13.2** | **40.2** | **59.5** | **0.271** |
-| oracle +object_type (r=1 ceiling) | 18.1 | 53.6 | 76.3 | 0.352 |
+| oracle +object_type (r=1) | 18.1 | 53.6 | 76.3 | 0.352 |
+| **oracle +position_context (r=1)** | **56.5** | 69.1 | 75.6 | **0.632** |
+| **oracle all (both)** | **61.7** | **76.8** | **85.6** | **0.692** |
+| realistic +object_type (r=0.625) | 13.2 | 40.2 | 59.5 | 0.271 |
 
-- **Coarse is saturated:** oracle storey+class (31.5) ≈ realized (30.0) — perfecting the
-  fields the model already extracts barely moves Top-10. Consistent with cut-1 (coarse pool 46).
-- **The prize is object_type** (cut-2's sole discriminator, which the pipeline does NOT yet
-  extract): oracle +object_type lifts Top-10 30→**76** (+45pp ceiling), Top-1 6.7→18.
-- **Realistic estimate** (object_type specialist at r=0.625 + calibrated soft rerank;
-  E = r·oracle + (1−r)·coarse): Top-10 **59.5** (≈2× realized), Top-1 **13.2** (≈2×), MRR
-  0.271 (2.5×) — **with zero recall cost** (soft rerank never evicts GT).
-- **Calibration prize, isolated** (controlled 2-field): zeroing wrong-extraction weights
-  beats confidence-blind rerank by **+3.9pp** Top-10 — small here because only storey+class
-  participate, but it's the real per-field effect P1 calibration exploits across all fields.
+- **Coarse is saturated:** oracle storey+class (31.5) ≈ realized (30.0).
+- **Two complementary discriminators, both currently unextracted-as-structured:**
+  - **`position_context` dominates Top-1**: +51.6pp over coarse → Top-1 **56.5%** (≈ the
+    35/60 addressable targets going to pool≈1 — the thesis L4 "pool=1 for 35 cases" unlock,
+    `results.md:413`). It nails *precision* (exact slot → unique on the host wall).
+  - **`object_type` lifts Top-5/10 broadly**: Top-10 30→76 (+45pp). It improves *recall into
+    the shortlist* (family-type narrows the field) but barely moves Top-1.
+  - **Combined (oracle all): Top-1 61.7, Top-10 85.6, MRR 0.692** — they stack.
+- **All gains are soft-rerank gains → zero recall cost** (GT never evicted).
+- The realistic object_type row (r=0.625) stays as a defensible single-feature estimate
+  (Top-10 59.5 ≈ 2×). A realistic position_context row awaits a *structured* slot extractor —
+  G8 emits position as free text, not an integer (`results.md:453`), which is exactly why
+  realized Top-1 is only 6.7% despite the 56.5% oracle. **That structured extractor is the
+  single highest-value P2 specialist.**
 
-> **Caveats:** (1) blind/calibrated rows use ONLY storey+class to isolate the calibration
-> effect → they sit *below* realized_g8, which uses the full pipeline (spatial relations +
-> Gemini rerank + name hints); do NOT read blind<realized as "rerank hurts". (2) object_type
-> oracle r=1 is a ceiling; r=0.625 is the cut-2 proxy (Revit family-type string, hard to read
-> from a photo) — the realistic row is the defensible number. (3) the realistic-row fallback
-> assumes calibration is good enough to revert to coarse when object_type is wrong (rather
-> than be misled) — that is exactly the P1 premise, gated on the ECE study.
+> **Caveats:** (1) position_context oracle r=1 is a ceiling; the realizable number needs a
+> structured slot specialist (the open thesis unlock) — but even partial extraction helps via
+> soft rerank with no recall cost. (2) position-slot reconstruction replicates
+> `ifc_engine._create_next_to_edges` (wall-axis projection of co-fillers); the live OpenCV
+> path computes it from the photo. (3) blind/calibrated 2-field rows (see JSON) sit below
+> realized_g8 by construction — do not read as "rerank hurts".
 
-**Net story (cuts 1–3):** grounding is reliability-bound, not feature-bound; the one
-discriminator (object_type) is unextracted; extracting it (**P2 specialist**) + calibrated
-**soft rerank** (**P1**) ≈ doubles Top-10/Top-1 with no recall loss. This is the paper's
-money figure and the justification for the P2→P1 order. Idea 3b stays retired.
+**Net story (cuts 1–3, corrected):** the bottleneck is *ranking*, and it is **both** a
+feature-availability and a reliability problem — the two discriminators that solve it
+(`position_context` for Top-1, `object_type` for Top-5/10) **exist in the IFC graph but are
+not extracted as structured fields**. Extracting them (**P2 specialists**, position-slot
+first) + calibrated **soft rerank** (**P1**) takes the oracle to Top-1 62 / Top-10 86 with
+zero recall loss. This is the paper's money figure and the justification for the P2→P1 order.
+Idea 3b (learned feature *selector*) stays deferred — the features are known, not to be
+discovered. (`Idea 3c` will widen the position-slot into a general visual-topological address.)
 
-Figure: `output/rerank_prize.png` (Top-1/Top-10 across schemes — the elbow at object_type).
+Figure: `output/rerank_prize.png` (Top-1/Top-10 across schemes — position_context is the
+Top-1 elbow; object_type the Top-10 elbow).
+
+## Idea 3c — visual-topological spatial address (planned diagnostic)
+
+New research module opened after reviewing the thesis + 3a caveats. The goal is not to
+add arbitrary relationship labels, but to compute canonical IFC-derived descriptors that are
+both discriminative in the BIM graph and recoverable from site image/floorplan evidence.
+
+Candidate descriptor families:
+- host/anchor chain: target → opening/host → host wall/slab → generated cell / connected
+  wall / facade bay;
+- ordinal/curvilinear host coordinate: `host_axis_s`, rank from left/right, distance to
+  nearest wall end/corner, between junctions, near T/L-junction;
+- local typed ego-graph signature with distance/angle/degree/material/subtype bins;
+- landmark coordinates to stairs/elevators/core/gridlines/facade/corners/door clusters;
+- generated unnamed space cells from wall loops / floorplan segmentation, using
+  `IfcRelSpaceBoundary` directly if exported.
+
+Planned output: `eval/spatial_address_ceiling.py` with `coverage`, `median pool`,
+`Top-k/MRR rerank prize`, `extractability proxy`, and `stability risk`. This diagnostic
+decides which address fields enter P2 specialists and P1 calibrated routing.

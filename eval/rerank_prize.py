@@ -68,15 +68,20 @@ def load_cases(path: Path) -> list[dict]:
 
 # ── candidate feature accessors (mix trace-taxonomy + element_index) ──
 
-def cand_feats(guid: str, trace_cand: dict, idx: dict) -> dict:
+def cand_feats(guid: str, trace_cand: dict, idx: dict, pos: dict | None = None) -> dict:
     """Feature vector for a pool candidate. storey/ifc_class use the trace's own taxonomy
-    (ref_storey/ref_type — consistent with the extractor's vocabulary); object_type etc.
-    come from element_index (the extractor doesn't emit them yet)."""
+    (ref_storey/ref_type — consistent with the extractor's vocabulary); object_type comes
+    from element_index; position_slot comes from the offline-reconstructed NEXT_TO table
+    (ifc_engine enrichment that is NOT in element_index — see reconstruct_position_index.py).
+    """
     e = idx.get(guid, {})
+    p = (pos or {}).get(guid)
     return {
         "storey": _storey_key(trace_cand.get("ref_storey") or e.get("storey_name")),
         "ifc_class": trace_cand.get("ref_type") or trace_cand.get("type") or e.get("ifc_class"),
         "object_type": e.get("object_type"),
+        # position_context = "Nth filler of M on the host wall" (the thesis L4 unlock):
+        "position_slot": (p["wall_position_index"], p["wall_child_total"]) if p else None,
     }
 
 
@@ -112,14 +117,14 @@ def _mrr(h: int, t: int) -> float:
 
 
 def score_pool(pool: dict[str, dict], idx: dict, gt: str,
-               weights: dict[str, float]) -> dict[str, float]:
+               weights: dict[str, float], pos: dict | None = None) -> dict[str, float]:
     """score(c) = Σ_f w_f · [feature_f(c) == feature_f(GT)]. Weights select which fields
     (and how strongly) participate; the 'target value' is GT's own feature value (oracle
     extraction). For realistic rows the caller zeroes/sets weights per the scheme."""
-    gf = cand_feats(gt, pool[gt], idx)
+    gf = cand_feats(gt, pool[gt], idx, pos)
     out: dict[str, float] = {}
     for guid, tc in pool.items():
-        cf = cand_feats(guid, tc, idx)
+        cf = cand_feats(guid, tc, idx, pos)
         out[guid] = sum(w * (cf.get(f) is not None and cf.get(f) == gf.get(f))
                         for f, w in weights.items())
     return out
@@ -144,12 +149,14 @@ def aggregate(rows: list[tuple[int, int]]) -> dict:
     }
 
 
-def run(idx: dict, cases: list[dict]) -> dict:
+def run(idx: dict, cases: list[dict], pos: dict | None = None) -> dict:
     schemes: dict[str, list[tuple[int, int]]] = {
         "realized_g8": [], "blind_storey_class": [], "calibrated_storey_class": [],
         "oracle_storey_class": [], "oracle_plus_object_type": [],
+        "oracle_plus_position": [], "oracle_all": [],
     }
     n_storey_wrong = n_class_wrong = 0
+    n_addressable_position = 0
 
     for case in cases:
         gt = case["scenario"]["ground_truth"]["target_guid"]
@@ -157,7 +164,8 @@ def run(idx: dict, cases: list[dict]) -> dict:
         if gt not in pool:
             continue
         con = case["internals"].get("constraints") or {}
-        gf = cand_feats(gt, pool[gt], idx)
+        gf = cand_feats(gt, pool[gt], idx, pos)
+        n_addressable_position += gf["position_slot"] is not None
 
         # was the model's extraction correct for this case? (real reliability)
         ext_storey = _storey_key(con.get("storey_name"))
@@ -180,11 +188,19 @@ def run(idx: dict, cases: list[dict]) -> dict:
         calib = _score_vs_extracted(pool, idx, ef, cw)
         schemes["calibrated_storey_class"].append(_rank_stats(calib, gt))
         # oracle extraction: perfect storey+class.
-        osc = score_pool(pool, idx, gt, {"storey": 1.0, "ifc_class": 1.0})
+        osc = score_pool(pool, idx, gt, {"storey": 1.0, "ifc_class": 1.0}, pos)
         schemes["oracle_storey_class"].append(_rank_stats(osc, gt))
-        # oracle + object_type (the cut-2 discriminator under perfect extraction).
-        oot = score_pool(pool, idx, gt, {"storey": 1.0, "ifc_class": 1.0, "object_type": 1.0})
+        # oracle + object_type (the cut-2 attribute discriminator under perfect extraction).
+        oot = score_pool(pool, idx, gt, {"storey": 1.0, "ifc_class": 1.0, "object_type": 1.0}, pos)
         schemes["oracle_plus_object_type"].append(_rank_stats(oot, gt))
+        # oracle + position_context (the ifc_engine NEXT_TO slot — the thesis L4 unlock that
+        # the earlier cuts OMITTED because it isn't in element_index).
+        opp = score_pool(pool, idx, gt, {"storey": 1.0, "ifc_class": 1.0, "position_slot": 1.0}, pos)
+        schemes["oracle_plus_position"].append(_rank_stats(opp, gt))
+        # oracle all (both discriminators).
+        oal = score_pool(pool, idx, gt,
+                         {"storey": 1.0, "ifc_class": 1.0, "object_type": 1.0, "position_slot": 1.0}, pos)
+        schemes["oracle_all"].append(_rank_stats(oal, gt))
 
     n = len(schemes["realized_g8"])
     pool_sizes = [len(pool_candidates(c)) for c in cases
@@ -206,10 +222,11 @@ def run(idx: dict, cases: list[dict]) -> dict:
     return {
         "n_cases": n,
         "pool_median": statistics.median(pool_sizes),
+        "n_addressable_position": n_addressable_position,
         "note": "blind/calibrated rows use ONLY storey+class (2 fields) to isolate the "
-                "calibration effect; they sit below realized_g8, which uses the full "
-                "pipeline (spatial relations + Gemini rerank + name hints). The headline is "
-                "oracle_plus_object_type and its realistic (r=0.625) discount.",
+                "calibration effect; they sit below realized_g8 (full pipeline). The two "
+                "discriminators are object_type (attribute) and position_context (the "
+                "ifc_engine NEXT_TO slot, reconstructed offline — the thesis L4 unlock).",
         "extraction_reliability_observed": {
             "storey_correct": round(1 - n_storey_wrong / n, 3),
             "ifc_class_correct": round(1 - n_class_wrong / n, 3),
@@ -235,10 +252,10 @@ def make_figure(metrics: dict, out_path: Path) -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    order = ["realized_g8", "blind_storey_class", "calibrated_storey_class",
-             "oracle_storey_class", "realistic_object_type_r0.625", "oracle_plus_object_type"]
-    labels = ["realized\n(G8)", "blind\nrerank", "calibrated\nrerank",
-              "oracle\nstorey+class", "realistic\n+obj_type\n(r=.625)", "oracle\n+object_type"]
+    order = ["realized_g8", "oracle_storey_class", "oracle_plus_object_type",
+             "oracle_plus_position", "oracle_all"]
+    labels = ["realized\n(G8)", "oracle\nstorey+class", "oracle\n+object_type",
+              "oracle\n+position\n(L4 unlock)", "oracle\nall"]
     top1 = [metrics[k]["top1"] for k in order]
     top10 = [metrics[k]["top10"] for k in order]
     x = range(len(order))
@@ -263,13 +280,17 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--index", type=Path, default=DEFAULT_INDEX)
     ap.add_argument("--traces", type=Path, default=DEFAULT_TRACES)
+    ap.add_argument("--position", type=Path, default=REPO_ROOT / "data" / "references" / "position_index.jsonl",
+                    help="offline-reconstructed NEXT_TO slot table (reconstruct_position_index.py)")
     ap.add_argument("--out", type=Path, default=REPO_ROOT / "output" / "rerank_prize.json")
     ap.add_argument("--fig", type=Path, help="save the Top-k prize figure (PNG)")
     args = ap.parse_args()
 
     idx = load_index(args.index)
     cases = load_cases(args.traces)
-    res = run(idx, cases)
+    from reconstruct_position_index import load_position_index
+    pos = load_position_index(args.position)
+    res = run(idx, cases, pos)
 
     m = res["metrics"]
     print(f"\n=== Idea 3a THIRD CUT — soft-rerank prize on Top-k/MRR "
@@ -277,19 +298,20 @@ def main() -> None:
     rel = res["extraction_reliability_observed"]
     print(f"observed extraction reliability (from traces): storey {rel['storey_correct']}, "
           f"ifc_class {rel['ifc_class_correct']}")
+    print(f"  position_context addressable (multi-filler-wall targets): {res['n_addressable_position']}/{res['n_cases']}")
     print(f"\n  {'scheme':<30}{'Top-1':<9}{'Top-5':<9}{'Top-10':<9}{'MRR'}")
     print("  " + "-" * 58)
     for k in ["realized_g8", "blind_storey_class", "calibrated_storey_class",
-              "oracle_storey_class", "realistic_object_type_r0.625", "oracle_plus_object_type"]:
+              "oracle_storey_class", "realistic_object_type_r0.625", "oracle_plus_object_type",
+              "oracle_plus_position", "oracle_all"]:
         d = m[k]
         print(f"  {k:<30}{d['top1']:<9}{d['top5']:<9}{d['top10']:<9}{d['mrr']}")
-    cal = round(m["calibrated_storey_class"]["top10"] - m["blind_storey_class"]["top10"], 1)
     obj = round(m["oracle_plus_object_type"]["top10"] - m["oracle_storey_class"]["top10"], 1)
-    realn = round(m["realistic_object_type_r0.625"]["top10"] - m["realized_g8"]["top10"], 1)
-    print(f"\n  CALIBRATION PRIZE (calibrated − blind, 2-field, Top-10) : +{cal} pp")
-    print(f"  object_type specialist prize (oracle ceiling, Top-10)   : +{obj} pp")
-    print(f"  REALISTIC object_type+rerank vs realized (Top-10)       : +{realn} pp "
-          f"(30.0 -> {m['realistic_object_type_r0.625']['top10']})")
+    posp = round(m["oracle_plus_position"]["top1"] - m["oracle_storey_class"]["top1"], 1)
+    print(f"\n  object_type prize (oracle, Top-10)   : +{obj} pp over coarse")
+    print(f"  position_context prize (oracle, Top-1): +{posp} pp over coarse "
+          f"(thesis L4 'pool=1 for 35 cases' unlock)")
+    print(f"  oracle_all (both discriminators) Top-1 {m['oracle_all']['top1']} / Top-10 {m['oracle_all']['top10']}")
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(res, indent=2) + "\n")

@@ -31,11 +31,16 @@
   routing.** Calibrated `object_type` routing alone: coarse 46→25.4. Figure + ledger + 3 tests.
   Also: full `IfcRel*` census (no untapped relation; `IfcRelSpaceBoundary`=0 → room-feature
   is the real-data revisit target) + 2-lever correction (soft rerank, not hard filter).
-- **Idea 3a third cut (soft-rerank prize on Top-k/MRR, offline)** — `eval/rerank_prize.py`:
-  reranks the real trace pools by feature agreement. Coarse is saturated (oracle storey+class
-  31.5 ≈ realized 30); the prize is **object_type** — realistic specialist (r=0.625) +
-  calibrated soft rerank **≈ doubles Top-10 (30→59.5) and Top-1 (6.7→13.2), zero recall cost**.
-  Money figure for the paper; justifies P2→P1 order. Figure + ledger + 4 tests (18 total).
+- **Idea 3a third cut (soft-rerank prize on Top-k/MRR, offline) — CORRECTED w/ position_context** —
+  `eval/rerank_prize.py` + `eval/reconstruct_position_index.py` (offline NEXT_TO slot, 321
+  fillers, 35/60 targets addressable). Coarse saturated (31.5≈30). **Two complementary
+  discriminators, both unextracted-as-structured:** `position_context` dominates **Top-1**
+  (oracle 4.9→**56.5**, the thesis L4 "pool=1 for 35 cases"), `object_type` lifts **Top-10**
+  (30→76); combined oracle **Top-1 61.7 / Top-10 85.6**, zero recall cost. Extract them (P2
+  specialists, position-slot first) + calibrated soft rerank (P1) = money figure, justifies
+  P2→P1. ⚠️ Earlier cut-2 "feature saturated" / cut-3 "object_type is the prize" SUPERSEDED
+  (had omitted position_context — only in the enriched graph, not element_index). Figure +
+  ledger + 5 tests (19 total).
 - **Live-closeout prep (docker-independent)** — `docker-compose.yml` (Neo4j 5.26, no APOC), `scripts/graph_build/` (01 export / 02 topology / 03 views) + runbook, AP IFC model + element_index migrated, `config/config.yaml`, py2neo dep (`1a9487a`).
 
 ## 🟡 In progress / partial (§2.1 step 1)
