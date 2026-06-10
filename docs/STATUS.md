@@ -68,12 +68,15 @@
 
 ### ▶️ NEXT: position-slot structured extractor (P2) — the MVP-defining build
 Scoped in `docs/specs/position_slot_extractor.md`. Turns oracle Top-1 56.5 / 78.5 into a
-realizable number. **Two binding constraints from the audit:** (1) element-disjoint train set —
-drop `data/test_sets/leakage_excluded_train_ids.txt` (12 ids); (2) **honest inputs only** — the
-per-case floorplan patch leaks the answer (GT-annotated + target-centered), so use **site photo +
-clean `floorplans_full`**, never `floorplans/`/`floorplans_v2/`. Report **n=60 cases / 59
-elements, Tier-3 only**. Build order: M1 deterministic on honest inputs (offline) → M2 feed slot
-→ soft-rerank filler Top-k (the realizable number) → M3 calibrate → M4 learned head only if M1<oracle.
+realizable number. **From the audit:** (1) *fix* — element-disjoint train set, drop
+`data/test_sets/leakage_excluded_train_ids.txt` (12 ids); (2) *input clarification (§5,
+supersedes earlier "leak")* — the marked per-case patch `floorplans/` is a **designed
+human-marking input**, not a leak. Run **two input arms, fenced:** **Arm A** = marked plan +
+photo + text (mark gives identity; slot still read from layout; eval on **address + GUID**, never
+target detection — it's target-centered) vs **Arm B** = mark-free `imgs/*_site.png` + clean
+`floorplans_full` + text (the hard autonomous RQ1 number). A−B = value of the mark. Report **n=60
+cases / 59 elements, Tier-3 only**. Build order: M1 deterministic, both arms (offline) → M2 feed
+slot → soft-rerank filler Top-k (the realizable number) → M3 calibrate → M4 learned head only if M1<oracle.
 
 ### Backlog
 1. finish step 1: confidence contract (done) → leakage split (audit above) → n≈300 (DEMOTED).

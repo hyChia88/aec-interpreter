@@ -4,11 +4,13 @@
 > **audit first, do NOT refactor the data_curation pipeline or regenerate n≈300** unless the
 > audit exposes a real defect. It did expose one (fixable, cheap). Verdict below.
 
-## ✅ VERDICT: GO — with TWO required fixes before any *image-consuming* model
-1. element-disjoint split (train/test target leakage, §2); 2. **honest floorplan input
-(image-annotation leak, §5) — found while scoping the extractor.** Both are cheap. The oracle
-diagnostics (3a/3c/depth/rerank) are **unaffected by either** (they compute over the IFC, read
-no image); only *learned extractors* are.
+## ✅ VERDICT: GO — one required fix + one input-protocol clarification
+1. **(fix)** element-disjoint split (train/test target leakage, §2) — cheap, drop 12 ids.
+2. **(clarified, not a defect)** the per-case floorplan markup is a **designed human-marking
+input**, not a leak (§5, confirmed with the dataset author). It is honest *as a marked-plan arm*
+under two rules (eval on address+GUID not detection; mark-free photo+text arm reported
+separately). The oracle diagnostics (3a/3c/depth/rerank) are **unaffected by either** (they
+compute over the IFC graph, read no image); only *learned extractors* touch the split.
 
 - **Held-out integrity:** ✅ the repo held-out (`data/test_sets/cases_ap_heldout_e2e.jsonl`,
   60) **is** the dataset's canonical eval split (`lora6_v2_ap_eval_canonical_m.jsonl`) — 60/60
@@ -80,27 +82,43 @@ eval split; the thesis G8 numbers were measured on it, so our parity/oracle work
 
 ---
 
-### 5. ⚠️ Image-annotation leak in the per-case floorplan patch (found 2026-06-10, scoping)
-The held-out `inputs.floorplan_patch` → `floorplans/AP_SK_*_floorplan.png` is **GT-annotated
-and target-centered**: the target element is highlighted (red "TARGET"), the host/anchor is
-highlighted (orange), and the crop is centered on the target (`floorplans_v2/*.json`:
-`crop_center ≈ target_center`, rendered from the GT `target_guid`). The same holds for
-`floorplans_v2/` (745). So **the per-case floorplan encodes the answer** — any image model that
-reads it is reading the GT, not grounding.
-- **Honest image sources:** `floorplans_full/` (7 *clean* per-storey plans, no target mark) and
-  `imgs/*_site.png` (raw site photos, unmarked — verified on AP_SK_022). Site photo is the
-  realistic primary; clean storey plan is the honest top-down source.
-- **Why G8's parity is still OK:** G8 received the annotated patch yet scored Top-1 6.7% → it
-  did not (or could not) exploit the highlight. Incidental, not by design — **we must not rely on
-  that for any new model.**
-- **Interpretation (resolve with dataset intent):** the highlight may be the *intended*
-  "floorplan-markup" modality (Idea 2b — subcontractor circles the area). If so it is a
-  **legitimate but easier, human-in-the-loop capability** and must be reported **separately**
-  from autonomous grounding; even then, target-centering makes it near-trivial, so it is an
-  upper-bound track, not the RQ1/RQ2 number.
-- **Required fix:** for measuring *autonomous* grounding (RQ1/RQ2), feed the extractor the **site
-  photo (primary) + clean `floorplans_full` plan**, never the annotated per-case patch. Swap or
-  drop `inputs.floorplan_patch` → annotated-patch in the held-out for image-consuming runs.
+### 5. ✅ Floorplan markup = designed human-marking input (clarified 2026-06-10 with dataset author; supersedes the earlier "leak" reading)
+The per-case `floorplans/AP_SK_*_floorplan.png` patch is **GT-derived**: target rendered red
+("TARGET"), host/anchor orange, crop centered on the target (`floorplans_v2/*.json`:
+`crop_center ≈ target_center`, from the GT `target_guid`; same for `floorplans_v2/`, 745).
+**This is by design, not a defect.** The dataset models a workflow where a human marks the target
+area on the plan, and the task is to **extract the target's spatial address/relationships** given
+that mark — *not* to detect the target from scratch. The reconciliation that keeps this honest:
+
+- **Two representational spaces, joined only by the address.** The mark lives in *image space*
+  (it tells the extractor *which* element to describe). Disambiguation lives in *graph space*
+  (the extracted address is matched against the ~76 RAG-retrieved IFC candidates). The floorplan/
+  photo are **not coordinate-registered** to the live graph, so the image-space mark **cannot
+  prune the graph pool**. ⇒ the |C| 110→2 / Top-1 4.9→78.5 oracle diagnostics remain valid — they
+  measure graph-space disambiguation, which the mark cannot short-circuit.
+- **The mark does not give the address.** "Which element is red" ≠ "3rd of 5 on host wall,
+  degree-3, external" — the slot/fingerprint still must be *read from the layout*. Slot extraction
+  is a real task even with the mark.
+- **Residual caveats (load-bearing — these gate the claims):**
+  1. **Don't claim autonomous target *detection* from the marked plan** — centering + red give
+     identity for free. Claims/eval are on **address accuracy + downstream GUID match**, never
+     "found the target in the image."
+  2. **Patch↔full-plan localization** (compare marked patch to clean `floorplans_full`) recovers
+     *where the crop sits on the floor* = template matching. Useful for localization; since the
+     crop is target-centered it is **not** evidence of target-finding. Report as localization.
+  3. **Mark-free arm = the hard, honest headline track:** site photo (`imgs/*_site.png`, unmarked
+     — on-site you realistically can't mark anyway) + text (names the target) + cross-attention →
+     spatial clues. This is the autonomous RQ1 number, reported **separately** from the
+     marked-plan-assisted arm.
+- **Honest sources for the mark-free arm:** `floorplans_full/` (clean per-storey, shared across
+  cases → cannot encode a per-case answer) + `imgs/*_site.png` (verified unmarked on AP_SK_022).
+- **Why G8's parity is still OK:** G8 received the marked patch yet scored Top-1 6.7% → it did not
+  exploit the highlight (the graph-space matching is the bottleneck, as above).
+- **Independent issue:** the element-disjoint train leak (12/59, §2) is unrelated to the markup and
+  **still stands** for any *learned* extractor.
+
+**Two tracks, three modalities:** (A) marked plan + photo + text → address extraction *given* the
+mark; (B) mark-free photo + text → autonomous, harder. Report both, fenced.
 
 ## Actions for the extractor build (next)
 1. **Use the element-disjoint train set:** drop `leakage_excluded_train_ids.txt` (12 ids) from

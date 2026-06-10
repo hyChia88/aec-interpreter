@@ -12,18 +12,29 @@ field `{wall_position_index i, wall_child_total M}` ("the *i*-th of *M* fillers 
 wall"). Feed it into the deterministic symbolic layer + calibrated soft rerank to *realize* the
 oracle Top-1 lift, with zero recall cost (soft, never evicts GT).
 
-> ⚠️ **BINDING CONSTRAINT (data audit §5): the per-case floorplan patch leaks the answer.**
-> `floorplans/` and `floorplans_v2/` are GT-annotated (target highlighted + crop centered on the
-> target). Feeding them = reading the GT, not grounding. **Honest inputs only:** `imgs/*_site.png`
-> (raw site photo, primary) + `floorplans_full/` (7 clean per-storey plans, top-down). The
-> annotated patch is at most a **separate "floorplan-markup" upper-bound track** (human-in-the-loop),
-> reported apart from the autonomous RQ1/RQ2 number.
+> ✅ **INPUT-MODALITY CLARIFICATION (data audit §5, supersedes the earlier "leak" reading).** The
+> marked per-case patch (`floorplans/`/`floorplans_v2/`, red TARGET + target-centered) is a
+> **designed human-marking input**: the task is to *extract the target's spatial address* given the
+> human's mark, not to detect the target from scratch. It is honest because the mark (image space)
+> and the disambiguation (graph space, ~76 RAG candidates, unregistered to the plan) are different
+> spaces joined only by the extracted address — the mark cannot prune the graph pool, so the oracle
+> Top-1 lift is graph-space and uncheatable. **Two rules keep it fair:** (1) claims/eval are on
+> **address accuracy + downstream GUID**, never "detected the target in the image" (centering gives
+> identity); (2) the **mark-free arm** — site photo + text + cross-attention, no mark — is the
+> harder autonomous track, reported separately. ⚠️ The *element-disjoint train leak* (12/59, audit
+> §2) is a separate issue and still applies to any learned arm.
 
 ## 2. I/O contract (feeds the per-field confidence contract)
-- **Input (HONEST):** `site_photo` (primary — for window/door fillers the wall's openings are
-  visible and countable) + **clean** `floorplans_full` storey plan (top-down, no target mark).
-  **NOT** the annotated per-case patch. The query/anchor indicates the target region.
-- **Output:** `FieldValue{ value=(i, M), confidence∈[0,1], source="floorplan_slot"|"vlm_slot", role=unset }`
+**Two arms (report both, fenced):**
+- **Arm A — marked-plan (given the human mark):** the per-case `floorplans/` patch (red TARGET,
+  target-centered) + `floorplans_full` + text. The mark gives *which* element; the extractor must
+  still *read the slot* (count fillers, find the ordinal) from the layout — the mark does not hand
+  it the address. Eval on **slot accuracy + downstream GUID**, never on target detection.
+- **Arm B — mark-free (autonomous, the hard headline):** `imgs/*_site.png` (raw, primary — for
+  fillers the wall's openings are visible and countable) + **clean** `floorplans_full` (no target
+  mark) + text (names the target). Cross-attention from text → site-photo clues. The query/anchor
+  indicates the target region.
+- **Output (both arms):** `FieldValue{ value=(i, M), confidence∈[0,1], source="floorplan_slot"|"vlm_slot", role=unset }`
   conforming to `src/aec_interpreter/schema/contract.py`. Routed by P1 (soft prior by default;
   selective hard filter only when calibrated-confident).
 - **Label space (measured, small/discrete):** `M ∈ {2,3,4,5,6,9,10,14,17}`, `i ∈ {0..16}` (low-
@@ -36,16 +47,20 @@ oracle Top-1 lift, with zero recall cost (soft, never evicts GT).
   geometry; validated 14/14 against skeleton GT for the wall analog — high confidence).
 - **Eval:** AP held-out fillers (n≈35, element-disjoint, **Tier-3 only** — report as such).
 
-## 4. Approach — two arms (this IS the learned-interface ablation)
-- **Arm 0 — deterministic specialist on HONEST inputs (build FIRST; no GPU).** From the **site
-  photo**: detect the openings on the visible wall, order them, locate the target's *i* / count
-  *M*. And/or from the **clean storey plan**: once the host wall is identified, count its fillers
-  and read the slot. Confidence from detection-count stability / ordering margin. (Thesis OpenCV
-  element-count ~27% is the prior; honest inputs make this *harder* than the leaky patch, not
-  easier — that is the point.)
-- **Arm 1 — learned head (only if Arm 0 < oracle).** Fine-tune a small VLM / vision head on the
-  floorplan-patch crop to predict `(i, M)` (LoRA via `/peft` + `/trl-fine-tuning`, or a light
-  CNN/ViT head). Softmax → confidence. Trained on the element-disjoint set.
+## 4. Approach — method axis × input axis
+**Method axis (this IS the learned-interface ablation):**
+- **Arm 0 — deterministic specialist (build FIRST; no GPU).** From the **site photo** (Arm B):
+  detect the openings on the visible wall, order them, locate the target's *i* / count *M*. And/or
+  from the **storey plan**: once the host wall is identified, count its fillers and read the slot.
+  Confidence from detection-count stability / ordering margin. (Thesis OpenCV element-count ~27% is
+  the prior.)
+- **Arm 1 — learned head (only if Arm 0 < oracle).** Fine-tune a small VLM / vision head to predict
+  `(i, M)` (LoRA via `/peft` + `/trl-fine-tuning`, or a light CNN/ViT head). Softmax → confidence.
+  Trained on the element-disjoint set.
+
+**Input axis (run on both, report fenced — see §2):** **Arm A** = marked plan (mark gives identity,
+slot still read from layout; eval address+GUID only) vs **Arm B** = mark-free photo+text (the hard
+autonomous number). The **A − B gap** = the value of the human mark.
 - **Vocabulary-constrained:** outputs are constrained to valid `(i, M)` ranges per the host
   wall's known filler count — cannot emit an impossible slot (the auditability rule).
 
@@ -58,10 +73,12 @@ oracle Top-1 lift, with zero recall cost (soft, never evicts GT).
 - **Calibration:** reliability diagram + ECE; temperature-scale if needed (gates P1 routing).
 
 ## 6. Risks
-0. **Annotation leak (binding, see top + audit §5)** — never use the GT-annotated/target-centered
-   per-case floorplan for the autonomous number. Honest inputs make the task genuinely hard; the
+0. **Markup discipline (see top + audit §5)** — the marked patch is a *designed input* (Arm A),
+   not a leak, BUT it is target-centered, so: never report it as autonomous *target detection*;
+   eval Arm A on address+GUID only. Arm B (mark-free) is the genuinely-hard autonomous number; its
    *honest realizable fraction* is the RQ2 finding (a modest number is still publishable — it
-   characterizes the oracle→realizable gap and its bottleneck).
+   characterizes the oracle→realizable gap and its bottleneck). The Arm A − Arm B gap quantifies
+   the value of the human mark.
 1. **Host-wall identification** — the slot is relative to the *correct* host wall; on honest
    inputs this is itself part of the grounding problem (somewhat circular: to read the slot you
    must first find the element). Mitigation: use the query anchor + storey to narrow the wall;
@@ -76,7 +93,7 @@ oracle Top-1 lift, with zero recall cost (soft, never evicts GT).
 ## 7. Milestones (de-risk cheap → expensive)
 | M | step | cost | gate |
 |---|---|---|---|
-| M1 | Arm 0 deterministic slot on **honest inputs** (site photo + clean storey plan) + intrinsic eval | offline, no GPU | measures the *honest* realizable floor (the RQ2 number) |
+| M1 | Arm 0 deterministic slot, **both input arms** (A marked plan / B mark-free photo+plan) + intrinsic eval | offline, no GPU | A = marked ceiling; B = *honest* realizable floor (the RQ2 number); A−B = mark value |
 | M2 | feed Arm 0 slot → soft rerank → filler Top-k | offline | **converts oracle 56.5 → realized #** |
 | M3 | calibration (ECE) + contract wiring | offline | gates P1 |
 | M4 | Arm 1 learned head **only if** Arm 0 < oracle | GPU/training | the "does learning pay?" finding |
