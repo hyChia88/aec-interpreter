@@ -323,6 +323,16 @@ Situational — adopt **only when the phase actually needs it**, and only if it 
 ---
 
 ## 3. Open decisions
+- **✅ RESOLVED (2026-06-10) — Spatial address = INTERMEDIATE.** Task + metric stay GUID
+  grounding (Top-k/MRR/pool); the address is the internal representation that makes it work
+  (preserves the IFC-graph retrieval moat; oracle ceilings translate straight into the metric).
+- **✅ RESOLVED (2026-06-10) — Paper scope = Diagnostic + PARTIAL system + a live demo/interface.**
+  MVP proves: RQ1 spatial-address diagnostic (oracle ✓) **+ realizable demo on the ONE
+  highest-value extractor = the position-slot**; RQ3 depth law (✓); RQ2 calibrated soft-rerank
+  on the realizable address + ECE sanity-check; **the interface panel is a first-class
+  deliverable** (evidence → predicted address layers → ranked pool; doubles as research-debug
+  tool + figure factory + demo). **Out of MVP** (→ future work / optional): extractors for *all*
+  descriptor families, the agent-adaptivity ablation, P4 retraining.
 - Large-file strategy: gitignore + documented paths now; DVC/LFS later if needed. (default)
 - **Venue:** synthetic-only likely too weak for *Automation in Construction* (applied).
   Either get a 20–30 case real "case study" (easier than a benchmark) to unlock AuC, or
@@ -330,10 +340,12 @@ Situational — adopt **only when the phase actually needs it**, and only if it 
 
 ---
 
-## 4. Deferred — storytelling / demo (technical first)
-Web live demo from old `mscd_demo/demo`, refactored into a thin front-end over
-`src/aec_interpreter/service`. Input image/text → highlighted element + heatmap. Doubles
-as a future real-data collection funnel. Grasshopper plugin = optional, not primary.
+## 4. Demo / interface — NOW IN MVP SCOPE (resolved 2026-06-10)
+Minimal **evidence → predicted spatial-address layers (seg / classification / slot) →
+ranked candidate pool** visualizer. Built as the research-debug tool (drives paper figures)
+that also serves as the live demo + future real-data collection funnel. Refactor the thin
+front-end over `src/aec_interpreter/service`. Keep it minimal; not a product. Grasshopper
+plugin = optional, not primary. (Polished storytelling pass still deferred.)
 
 ---
 
