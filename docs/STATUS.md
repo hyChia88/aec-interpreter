@@ -92,11 +92,18 @@ Color-detect openings (blue=window/green=door) → wall axis from the target ope
 **orientation resolved** by a global-sign convention (`axis·(1,0.3)>0`, oracle-neutral, validated
 91.0) → (i, M). **Filler Top-1: floor 2.4 → v0 4.9 → v1 9.1** (orientation now zero-loss). 32 tests.
 
-### ▶️ NEXT: M1b v2 — M-counting robustness (now the bottleneck)
-exact_M 4/17: long/curved walls over/under-count (perp-band misses bends / grabs parallel walls).
-Fix ideas: trace the wall band (poché) instead of a straight perp-band; RANSAC the axis; merge
-split glyphs. Then the F2 multi-storey re-render for the 18 uncovered fillers. Lever order: M-count
-→ coverage. (i is free once M+host wall are right — M1a.)
+### ✅ M1b v2 done (2026-06-10) — M-counting robustness
+Fixed a GT bug (`build_global_slot` merged multi-storey walls → inflated M) + added **wall-continuity
+truncation** (collinear ≠ same wall; corridor gaps break the run). **exact_M 5→12/17, Top-1
+9.1→20.1, Top-10 32→43.** 34 tests. Residual bounded: 4× +1 corner end-effect, 1 corridor case,
+~3-case orientation sign ambiguity.
+
+### ▶️ NEXT: coverage is now the dominant loss (17/35), not M-counting
+Two tracks: (a) **F2 multi-storey re-render** so the 18 uncovered fillers (Floors 2-5, host walls
+live in "Level 1") get a clean plan — needs the host-wall→floor reconstruction the dataset author
+deferred; (b) optional detector polish (corner detection to kill the +1s). Lever order: **coverage
+first** (doubles the n that the detector can score). Then wall-fingerprint detector (the other
+address class) + P1 calibrated soft-rerank/ECE.
 
 ### (was) NEXT: position-slot structured extractor (P2) — the MVP-defining build
 Scoped in `docs/specs/position_slot_extractor.md`. Turns oracle Top-1 56.5 / 78.5 into a
