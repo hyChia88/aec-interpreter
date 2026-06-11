@@ -167,6 +167,18 @@ scientific-knowledge axes. **Run G8 explicitly as the labelled baseline; the obj
 motivation + Figure 1.** Same image↔graph argument also rebuts "just localize patch-by-patch"
 (localization ablation: precision-hungry, complementary only on walls).
 
+**RQ2 — calibrated soft-routing (thesis section drafted 2026-06-11):**
+`docs/thesis/rq2_calibrated_routing.md` — how much of the oracle ceiling is *realizable*, and how
+a noisy address is used without losing recall. Spine: (i) recall forbids hard filtering (∏r≈0.009)
+→ the address is a **soft prior in a recall-fixed pool**, determinism in the *executor*; (ii) one
+real extractor closes most of the gap (filler Top-1 **6.6→67.6**); (iii) the ECE gate **passes**
+(AUROC 0.80, ECE 0.206→0.172 via temperature) — premise holds, L188 contingency named not invoked;
+(iv) honest no-op — soft reweighting == hard (slot is the finest tiebreaker); (v) the payoff is
+**selective prediction** (defer ~20% → Top-1 67.6→**80.6**), the triage value prop + coverage-
+accuracy curve (L102/L183); (vi) realizability needs an **image-recoverable** index convention
+(gslot, not wdir-sign) or apparent accuracy halves 74→34. Figures: `output/{pipeline,
+calibration_diag,calibrate_rerank}.png` + DEFER card `output/demo/case_AP_SK_092.png`.
+
 **Phase-0 measured diagnostics (2026-06-09)** — all offline, AP held-out n=60; full numbers in
 `results_ledger.md`, figures in `output/`:
 - **Soft-rerank prize (real pools, GT-in-pool 100%):** two complementary, currently-unextracted

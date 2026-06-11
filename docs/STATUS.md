@@ -136,12 +136,18 @@ vs **LIVE** (fills the slot, calibrated, defer-aware). Two showcase cards: `AP_S
 conf 0.29→**0.05** → defers instead of confidently-wrong). Auto-disables if `slot_detector_cv.FULL`
 absent. GT slot display + addr_str now use the `gslot` convention (lock). 48 tests.
 
-### ▶️ NEXT: RQ2 write-up
-- **RQ2 section:** the mechanism story = "the calibrated address is a *selective* predictor"
-  (coverage-accuracy: defer bottom 20% → Top-1 67.6→80.6), NOT "we reweighted the rerank" (no-op).
-  Lead with deferral (L183), calibration supports (L102). The DEFER demo card (AP_SK_092) is the
-  figure: wrong-but-low-confidence → deferred = the triage value prop made concrete.
-- DEFER (post-MVP): (1) wall-fingerprint detector ("all-descriptor", out of scope), (3) detector polish,
+### ✅ RQ2 write-up — DRAFTED (2026-06-11)
+`docs/thesis/rq2_calibrated_routing.md` — mechanism chapter section (sibling of
+`why_not_end_to_end.md`). Spine: soft prior in a recall-fixed pool (not hard filter, ∏r≈0.009) →
+one extractor 6.6→67.6 → ECE gate passes (AUROC 0.80) → soft==hard no-op → selective prediction
+(defer 20% → 80.6) → image-recoverable convention prerequisite. Leads with deferral (L183),
+calibration supports (L102); honest boundary (n=35, one extractor, no-op reported not buried).
+Pulls figures `output/{pipeline,calibration_diag,calibrate_rerank}.png` + DEFER card.
+
+### ▶️ NEXT: pick up the writing thread or build
+- **Thesis:** RQ1 representation section (oracle address) + RQ3 depth law are the remaining
+  draftable sections; or polish `[CITE]` markers across the three drafted sections.
+- **Build (post-MVP, deferred):** (1) wall-fingerprint detector, (3) detector polish,
   Arm-B patch↔plan localization (autonomous track).
 
 ### (archived) NEXT: (2) P1 calibrated soft-rerank + ECE — *in MVP scope; recommended*
