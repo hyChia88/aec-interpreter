@@ -74,6 +74,19 @@ representation):**
   - **other** (3 targets) / room-based → **not yet covered** (future work).
 - **fingerprint** = the **wall-class** instance of the address (a part-of, NOT a synonym).
   **position-slot** = the **filler-class** instance. Both are *the address* for their type.
+- **⚠️ Position-slot `i` ordering convention (LOCKED 2026-06-11) — `gslot`, never `pos`.**
+  The slot index `i` ("which-th along the wall") is only **image-recoverable** under an
+  *image-coordinate* orientation rule: the detector and the GT both orient the host-wall axis by
+  the same world reference (`GLOBAL_REF=(1,0.3)`, `orient_axis_world`) and number from that end.
+  The raw `position_index.jsonl` (`pos`, `reconstruct_position_index.py`) numbers `i` by the wall's
+  **IFC local-X sign** — an **arbitrary modelling artefact invisible in the image** — so it disagrees
+  with the detector on **16/35 fillers (all exact mirrors `i↦M-1-i`; M identical)**. **Therefore the
+  canonical GT for the position-slot is `slot_detector_cv.build_global_slot` (`gslot`), NOT `pos`.**
+  Always score the detector / collect calibration pairs against `gslot`. (Scoring against `pos`
+  spuriously halves joint accuracy 74%→34% and inverts confidence AUROC 0.80→0.31 — a same-day eval
+  bug, now fenced in `field_contract.collect_pairs` + tests.) This is also why `i` survives the
+  patch-upload future: a north-up patch encodes the GLOBAL_REF orientation; the IFC local-X sign
+  never appears in any image. (`M` always from the full plan — patches crop/occlude.)
 - **Dual representation (depth-1).** The address has two equivalent forms: **(A) sub-graph** —
   target node + its **depth-1** typed neighborhood + edge types (the *source*; computed/visualized,
   e.g. the demo local-graph panel); **(B) node.val attributes** — the distilled values hung on the

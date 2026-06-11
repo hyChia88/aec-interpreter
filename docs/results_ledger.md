@@ -464,3 +464,72 @@ cluttered-floor 39.1** (floor 2.4 → 39.1 = 16× on realistic plans; aggregate 
 half-sparse test set — report the split, not the aggregate alone). A fully-realistic upper-floor
 render needs the multi-storey-wall→floor assignment (genuine future work). Full M1b arc on realistic
 plans: floor 2.4 → 39.1.
+
+---
+
+## P1 Step B (diagnostic) — ECE gate on raw M1b confidence (2026-06-11, exploratory)
+
+`eval/calibration_diag.py` (+ `eval/field_contract.py`, Step A contract bridge). Ran the
+calibration gate (enhanced-module L180) on the raw M1b slot confidence over the 35 held-out
+fillers, BEFORE any routing. Confidence = `min(1, len(seq)/max(spread/40,1))`
+(`slot_detector_cv.py:202`). **Scored against the convention-consistent GT `gslot`
+(`build_global_slot`), the same GLOBAL_REF orientation the detector uses.**
+
+| metric | value | reading |
+|---|--:|---|
+| n (non-abstain fillers) | 35 | full coverage post-F2 |
+| joint (i,M) accuracy vs gslot | 0.743 | exact_M 83% · exact_i 74% |
+| **ECE** (5 equal-width bins) | **0.206** | moderately mis-calibrated, monotone-usable |
+| **AUROC** P[conf(correct)>conf(wrong)] | **0.80** | **+correlated** (≫0.5) |
+| mean conf — correct / wrong | 0.63 / 0.46 | higher conf ⇒ more likely correct |
+
+**Verdict — GATE PASSES.** The raw confidence is positively discriminative (AUROC 0.80) and
+only moderately mis-calibrated (ECE 0.206) → temperature scaling is applicable; Step C proceeds
+with calibrate → soft-rerank (no L188 contingency, no geometry-margin swap needed). Figure:
+`output/calibration_diag.png`. 3 tests.
+
+> ⚠️ **Eval-harness bug found & fixed same-day (do not repeat).** A first pass scored the pairs
+> against the raw wdir-based `position_index` (`pos`), not `gslot`. The two disagree on **16/35**
+> fillers because `wall_position_index` is defined by the wall's **IFC local-X sign** — an
+> arbitrary modelling artefact the image cannot recover — whereas the detector and `gslot` both
+> orient by the image-recoverable GLOBAL_REF rule. That mismatch spuriously reported joint 0.343 /
+> ECE 0.409 / AUROC 0.31 ("anti-correlated"). **Lesson: the position-slot address is only
+> image-recoverable under the GLOBAL_REF convention; always evaluate i against `gslot`, never the
+> wdir `pos`.** Codified in `field_contract.collect_pairs` (now requires `gslot`) + 2 regression tests.
+
+---
+
+## P1 Step C — calibrated soft-rerank + selective prediction (2026-06-11, exploratory)
+
+`eval/calibrate_rerank.py`. RQ2 mechanism on the position-slot, scored against `gslot` (n=35
+fillers, GT-in-pool). Temperature scaling (pure-python NLL min) → recall-safe soft-rerank →
+selective prediction.
+
+| | Top-1 | Top-10 | note |
+|---|--:|--:|---|
+| floor (prior) | 6.6 | 27.6 | |
+| hard slot-match | **67.6** | 80.9 | the slot evidence itself (floor 6.6 → 67.6) |
+| raw-soft (w=conf) | 67.6 | 80.9 | = hard |
+| calib-soft (w=σ(logit(c)/T)) | 67.6 | 80.9 | = hard |
+
+Calibration: T=0.30 (genuine NLL min), **ECE 0.206 → 0.172** (modest; small-n).
+
+**Finding 1 — soft-rerank == hard (no gain, no harm).** The slot is the *finest* tiebreaker
+(storey+class are +1 each; the slot term breaks ties within a storey×class bucket). Any
+**positive** weight boosts a slot-matching candidate identically, so continuous reweighting
+cannot reorder — only *removing* the term (deferral) changes the result. So the calibrated
+confidence's value is NOT in the rerank weight.
+
+**Finding 2 — selective prediction is where calibration pays (the practical story, L183).**
+Deferring the least-confident cases lifts Top-1 on the answered subset:
+
+| coverage | τ (calib conf) | Top-1 on answered |
+|--:|--:|--:|
+| 1.00 | 0.00 | 67.6 |
+| 0.91 | ~0.10 | 74.0 |
+| **0.80** | **0.40** | **80.6** |
+
+(Below cov 0.5 the curve is noisy — n=35.) **Headline operating point: defer the bottom ~20%
+→ Top-1 67.6 → 80.6 (+13pp).** This matches L102 (don't lead with calibration; soft-rerank is
+the frame) + L183 (defer = first-class outcome, the clearest triage value prop). Figure:
+`output/calibrate_rerank.png`. 4 tests (46 total).

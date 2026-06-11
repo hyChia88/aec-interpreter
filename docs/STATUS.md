@@ -114,7 +114,37 @@ optimistic; the realistic number is 39.1** (floor 2.4 → 39.1 = 16× on clutter
 > **Arm-B (autonomous) = future track:** anchor by **patch↔plan localization** (the demoted
 > localization work returns here) instead of known coords; **A − B = value of knowing the location.**
 
-### ▶️ NEXT: (2) P1 calibrated soft-rerank + ECE — *in MVP scope; recommended*
+### ✅ (2) P1 calibrated soft-rerank + ECE — DONE (2026-06-11), Steps A/B/C
+`eval/field_contract.py` (A: contract bridge `FieldValue{value,conf,source=opencv}` + `collect_pairs`),
+`eval/calibration_diag.py` (B: ECE gate), `eval/calibrate_rerank.py` (C: temperature + soft-rerank +
+selective). **All scored vs `gslot`, NOT `pos`** (convention lock — see ROADMAP glossary).
+- **B — gate PASSES:** raw M1b conf is +correlated (AUROC **0.80**), moderately mis-calibrated (ECE
+  **0.206**), joint 74% (exact_M 83% / exact_i 74%). ⇒ no L188 contingency, no geometry-margin swap.
+  ⚠️ A first pass scored vs `pos` (wdir local-X sign, image-non-recoverable) → 16/35 mirror disagreement
+  → spurious anti-correlation (0.31 / ECE 0.41); **fixed same-day, fenced in `collect_pairs`** (requires gslot).
+- **C — two findings:** (1) **soft-rerank == hard** (Top-1 **67.6**, floor 6.6) — the slot is the finest
+  tiebreaker, any positive weight reorders identically, so reweighting is a no-op; (2) **selective
+  prediction is the payoff** (L183): defer bottom ~20% → coverage 0.80, **Top-1 67.6 → 80.6 (+13pp)**.
+  Calibration T=0.30, ECE 0.206→0.172. Figures: `output/calibration_diag.png`, `output/calibrate_rerank.png`. 46 tests.
+
+### ✅ Demo live arm — DONE (2026-06-11)
+`eval/build_demo.py` predicted panel now has a **LIVE** epistemic tag: the M1b position-slot
+prediction + raw→temperature-calibrated confidence + selective **ANSWER/DEFER** decision (τ=0.40),
+judged against `gslot`. The card now contrasts **G8 REALIZED** (leaves `position_context` empty)
+vs **LIVE** (fills the slot, calibrated, defer-aware). Two showcase cards: `AP_SK_102` = ANSWER
+(predicted 2/17, ✓ match, conf 0.52→0.57) ; `AP_SK_092` = DEFER (predicted 1/10 but GT 8/10 ✗,
+conf 0.29→**0.05** → defers instead of confidently-wrong). Auto-disables if `slot_detector_cv.FULL`
+absent. GT slot display + addr_str now use the `gslot` convention (lock). 48 tests.
+
+### ▶️ NEXT: RQ2 write-up
+- **RQ2 section:** the mechanism story = "the calibrated address is a *selective* predictor"
+  (coverage-accuracy: defer bottom 20% → Top-1 67.6→80.6), NOT "we reweighted the rerank" (no-op).
+  Lead with deferral (L183), calibration supports (L102). The DEFER demo card (AP_SK_092) is the
+  figure: wrong-but-low-confidence → deferred = the triage value prop made concrete.
+- DEFER (post-MVP): (1) wall-fingerprint detector ("all-descriptor", out of scope), (3) detector polish,
+  Arm-B patch↔plan localization (autonomous track).
+
+### (archived) NEXT: (2) P1 calibrated soft-rerank + ECE — *in MVP scope; recommended*
 The locked MVP scope = **the ONE extractor (position-slot, done) + calibrated soft-rerank + ECE +
 interface panel**; **"all-descriptor extractors" (incl. the wall detector) are explicitly OUT**. So:
 - **DO NOW (2):** wire the per-field `{value,confidence,source}` contract on the M1b slot outputs →
