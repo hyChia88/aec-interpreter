@@ -144,9 +144,20 @@ one extractor 6.6→67.6 → ECE gate passes (AUROC 0.80) → soft==hard no-op �
 calibration supports (L102); honest boundary (n=35, one extractor, no-op reported not buried).
 Pulls figures `output/{pipeline,calibration_diag,calibrate_rerank}.png` + DEFER card.
 
+### ✅ Citations verified + RQ1 drafted (2026-06-11)
+- **Citations:** `docs/thesis/references.bib` — all external `\cite{}` keys programmatically
+  verified (arXiv id_list + doi.org BibTeX + URL HTTP-200): `guo2017calibration`,
+  `geifman2017selective`, `sutton2019bitter`, `buildingsmart2024ifc4x3`. No BibTeX from memory.
+  `[CITE: thesis baseline]` reframed as internal cross-ref.
+- **RQ1 section:** `docs/thesis/rq1_spatial_address.md` — the representation headline. Confusable
+  set C(e); coarse floor saturates (oracle 4.9 ≈ realized 6.7); type-conditional address
+  (filler position-slot / wall fingerprint) → oracle Top-1 4.9→78.5 (fillers 91, walls 64.2);
+  depth-1 saturation (13→8.2→8.1); IFC-computable (14/14) ∧ image-recoverable. All numbers
+  trace to ledger; honest boundary (oracle r=1, "other" class, room gap, single project).
+
 ### ▶️ NEXT: pick up the writing thread or build
-- **Thesis:** RQ1 representation section (oracle address) + RQ3 depth law are the remaining
-  draftable sections; or polish `[CITE]` markers across the three drafted sections.
+- **Thesis:** RQ3 depth-law section is the remaining draftable RQ; or an intro/abstract that
+  threads RQ1→RQ2→RQ3; or resolve the `§[thesis baseline]` internal cross-ref.
 - **Build (post-MVP, deferred):** (1) wall-fingerprint detector, (3) detector polish,
   Arm-B patch↔plan localization (autonomous track).
 
