@@ -8,8 +8,9 @@
 > Numbers are held-out (Tier-3, n = 60 cases / 59 elements; 35 addressable fillers) and trace
 > to `docs/results_ledger.md` (P1 Steps B/C). Figures: `output/pipeline.png` (method spine),
 > `output/calibration_diag.png` (ECE gate), `output/calibrate_rerank.png` (soft-rerank +
-> selective prediction), `output/demo/case_AP_SK_092.png` (a worked DEFER case). `[CITE]`
-> marks references to fill. Prose is in thesis register — edit to taste.
+> selective prediction), `output/demo/case_AP_SK_092.png` (a worked DEFER case). External
+> citations are `\cite{}` keys verified in `references.bib` (`guo2017calibration`,
+> `geifman2017selective`). Prose is in thesis register — edit to taste.
 
 ---
 
@@ -78,7 +79,7 @@ delivered by a real detector rather than an oracle. The *count* is reliable; wha
 error remains is concentrated in the ordering index, not in the perception of the openings.
 
 **(2) The confidence is calibratable — the routing premise holds, and is not assumed.** Before
-any routing we gate on calibration `[CITE: Guo et al.]`: a routing layer is only legitimate if
+any routing we gate on calibration \cite{guo2017calibration}: a routing layer is only legitimate if
 its confidence tracks correctness. On the held-out fillers the raw detector confidence is
 positively discriminative (AUROC **0.80**: more-confident extractions are more often correct)
 and only moderately mis-calibrated (ECE **0.206**); temperature scaling reduces it to **0.172**
@@ -105,7 +106,7 @@ the truth is 8 of 10 — an error — but its calibrated confidence is **0.05**,
 the case routes to *defer* rather than to a confident mistake. For a triage tool whose output
 carries downstream consequence, "here are the nine candidates" at a known accuracy is the
 correct behavior, and the coverage–accuracy curve — not a single point estimate — is the honest
-way to report it `[CITE: selective prediction]`.
+way to report it \cite{geifman2017selective}.
 
 ## A representational prerequisite: the address must be image-recoverable, not model-arbitrary
 

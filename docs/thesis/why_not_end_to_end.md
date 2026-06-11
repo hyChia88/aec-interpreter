@@ -4,8 +4,10 @@
 > formulation / system overview, as the *motivating* argument for the structured
 > spatial-address decomposition (before the methods chapters). It pre-empts the single
 > most important reviewer question and converts it into the thesis motivation. Numbers
-> are the held-out (Tier-3, n=60 cases / 59 elements) measurements; `[CITE]` marks
-> references to fill. Prose is in thesis register — edit to taste.
+> are the held-out (Tier-3, n=60 cases / 59 elements) measurements. External citations are
+> `\cite{}` keys verified in `references.bib` (Sutton bitter lesson, Geifman & El-Yaniv selective
+> classification); the opening-count baseline is an internal cross-ref to the author's prior
+> thesis (`§[thesis baseline]`, to resolve). Prose is in thesis register — edit to taste.
 
 ---
 
@@ -21,7 +23,7 @@ obvious objection arises, and it is the strongest objection the design must answ
 > candidates directly and rank them end-to-end?*
 
 This is not a strawman. It is the natural reflex of any reader with a machine-learning
-background, and in its strongest "bitter-lesson" form [CITE: Sutton] it argues that
+background, and in its strongest "bitter-lesson" form \cite{sutton2019bitter} it argues that
 hand-engineered intermediate representations are an unnecessary bottleneck — that a
 sufficiently large model should learn whatever internal representation the task
 requires. We take the objection at full strength and answer it on four grounds, three
@@ -55,7 +57,8 @@ visually identical windows is not in either window's pixels; it is in the graph 
 ("the third of five fillers along an external wall", "a wall of connection degree three").
 A pixel-level matcher therefore has to *re-derive* this topological structure inside its
 own weights — the very thing that is hard to do reliably from images, as the classical
-opening-count baseline (~27% accuracy [CITE: thesis baseline]) illustrates. The
+opening-count baseline (~27% accuracy, reported in the author's prior thesis,
+§[thesis baseline]) illustrates. The
 structured decomposition does not avoid the difficulty; it relocates it into an explicit,
 inspectable, and reliable form. The contribution is to make explicit the relational
 feature that a black-box matcher would otherwise have to rediscover with no guarantee and
@@ -81,7 +84,7 @@ system on raw accuracy, a scalar matching score (e.g. 0.87) is not auditable, no
 correctable, and cannot be gated by per-field calibrated confidence. The structured
 address is the artefact that makes the rest of the architecture possible: a per-field
 `{value, confidence, source}` contract, selective prediction with an explicit
-coverage–accuracy trade-off [CITE: selective prediction], a symbolic guardrail that
+coverage–accuracy trade-off \cite{geifman2017selective}, a symbolic guardrail that
 cannot emit an element type absent from the ontology, and an explanation a domain user
 can verify ("selected because the evidence indicates the third of five windows on the
 external wall"). In a setting where element identification carries downstream
