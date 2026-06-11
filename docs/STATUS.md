@@ -4,8 +4,12 @@
 > [`ROADMAP.md`](ROADMAP.md) (plan), [`results_ledger.md`](results_ledger.md) (numbers),
 > [`DATA_INVENTORY.md`](DATA_INVENTORY.md) (assets), and `git log` (timeline).
 
-**Last updated:** 2026-06-09
-**Current position:** Phase 0 — step 1 (contract done), step 2 Idea 3a **first + second cut done** (Idea 3b retired by the 2nd-cut gate); live-closeout prepped (blocked on Docker).
+**Last updated:** 2026-06-11
+**Current position:** **MVP (locked scope) COMPLETE** — RQ1 oracle address (78.5), RQ2 ONE realized
+extractor + calibration + selective prediction (6.6→67.6, defer→80.6), RQ3 depth law; demo live arm +
+method-spine figure built; all 5 thesis sections drafted with verified citations + HTML project page.
+**Remaining build is optional/strengthening** (wall detector = 2nd extractor; live closeout blocked on
+Docker; leakage split = honesty fix not affecting the deterministic headline numbers).
 
 ---
 
