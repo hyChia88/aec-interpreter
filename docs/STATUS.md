@@ -155,9 +155,21 @@ Pulls figures `output/{pipeline,calibration_diag,calibrate_rerank}.png` + DEFER 
   depth-1 saturation (13→8.2→8.1); IFC-computable (14/14) ∧ image-recoverable. All numbers
   trace to ledger; honest boundary (oracle r=1, "other" class, room gap, single project).
 
-### ▶️ NEXT: pick up the writing thread or build
-- **Thesis:** RQ3 depth-law section is the remaining draftable RQ; or an intro/abstract that
-  threads RQ1→RQ2→RQ3; or resolve the `§[thesis baseline]` internal cross-ref.
+### ✅ RQ3 + intro/abstract drafted; thesis front-to-RQ3 complete (2026-06-11)
+- **RQ3 section:** `docs/thesis/rq3_depth_law.md` — the depth law. Information≠realizability:
+  oracle WL→1 (deeper unique) but per-hop reliability 0.40→0.05→0 caps realizable |C| at depth-1
+  (13→8.2→8.1→8.1); training-side corroboration from prior thesis (depth-≥2 wasted + costs
+  ifc_class, r=16, −13pp); answer = compile depth into the node, extract at depth ≤1.
+- **Intro/abstract:** `docs/thesis/00_intro_abstract.md` — Farquhar 5-sentence abstract + one-
+  sentence contribution + RQ1→2→3 threaded bullets + Figure 1 = pipeline.png + scope up front.
+- **Citations:** +`chakraborty2024multihop`, `mao2019nscl` (arXiv-verified), `chiahuiyen_mscd_thesis`
+  (self-cite; ⚠️ confirm title/year). `§[thesis baseline]` resolved → \cite. **All [CITE:] markers
+  gone; 7 keys used = 7 verified in references.bib.**
+
+### ▶️ NEXT: thesis assembly or build
+- **Thesis:** all four RQ sections + abstract/intro + baseline drafted (markdown). Remaining:
+  port to the LaTeX template, resolve `\cite{chiahuiyen_mscd_thesis}` title/year + the
+  hand-added venue fields, related-work section, limitations consolidation.
 - **Build (post-MVP, deferred):** (1) wall-fingerprint detector, (3) detector polish,
   Arm-B patch↔plan localization (autonomous track).
 

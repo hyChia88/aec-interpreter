@@ -6,8 +6,9 @@
 > most important reviewer question and converts it into the thesis motivation. Numbers
 > are the held-out (Tier-3, n=60 cases / 59 elements) measurements. External citations are
 > `\cite{}` keys verified in `references.bib` (Sutton bitter lesson, Geifman & El-Yaniv selective
-> classification); the opening-count baseline is an internal cross-ref to the author's prior
-> thesis (`§[thesis baseline]`, to resolve). Prose is in thesis register — edit to taste.
+> classification); the opening-count baseline cites the author's prior MSCD thesis
+> (`\cite{chiahuiyen_mscd_thesis}` — ⚠️ confirm title/year in the .bib). Prose is in thesis
+> register — edit to taste.
 
 ---
 
@@ -57,8 +58,8 @@ visually identical windows is not in either window's pixels; it is in the graph 
 ("the third of five fillers along an external wall", "a wall of connection degree three").
 A pixel-level matcher therefore has to *re-derive* this topological structure inside its
 own weights — the very thing that is hard to do reliably from images, as the classical
-opening-count baseline (~27% accuracy, reported in the author's prior thesis,
-§[thesis baseline]) illustrates. The
+opening-count baseline (~27% accuracy, reported in the author's prior thesis
+\cite{chiahuiyen_mscd_thesis}) illustrates. The
 structured decomposition does not avoid the difficulty; it relocates it into an explicit,
 inspectable, and reliable form. The contribution is to make explicit the relational
 feature that a black-box matcher would otherwise have to rediscover with no guarantee and
