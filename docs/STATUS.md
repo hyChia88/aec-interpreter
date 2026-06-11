@@ -105,12 +105,27 @@ sparse-new 94.6 / aggregate 67.6 (oracle 91). ⚠️ **The new plans are sparse 
 optimistic; the realistic number is 39.1** (floor 2.4 → 39.1 = 16× on cluttered plans). Full arc:
 **2.4 → 39.1 realistic** (67.6 aggregate). 34 tests.
 
-### ▶️ NEXT — pick one:
-1. **wall-fingerprint detector** (the OTHER address class — walls; currently only filler/slot is
-   imaged) → makes the spatial address image-realizable for both classes.
-2. **P1 calibrated soft-rerank + ECE** on the realized slot (the RQ2 mechanism + the demo's live arm).
-3. detector polish: realistic upper-floor clutter (multi-storey-wall→floor) to de-optimism the 94.6;
-   corner-detection for the +1s. Lower ROI than 1/2.
+> ⚠️ **HONESTY LABEL — M1b is Arm-A (coordinate-anchored), NOT autonomous.** The detector takes the
+> target's **known world centroid** (`detect(target_world, …)`) to anchor itself in the full plan,
+> then reads the slot. So **39.1 = "given the target's location (the human mark / known coords),
+> read its address from the image"** — like mscd_demo's predefined-coordinate approach. It is *not*
+> find-from-scratch grounding. M (total) always comes from the **full plan** (the marked patch is
+> cropped + occludes openings), so the only difference between arms is *how the host wall is found*.
+> **Arm-B (autonomous) = future track:** anchor by **patch↔plan localization** (the demoted
+> localization work returns here) instead of known coords; **A − B = value of knowing the location.**
+
+### ▶️ NEXT: (2) P1 calibrated soft-rerank + ECE — *in MVP scope; recommended*
+The locked MVP scope = **the ONE extractor (position-slot, done) + calibrated soft-rerank + ECE +
+interface panel**; **"all-descriptor extractors" (incl. the wall detector) are explicitly OUT**. So:
+- **DO NOW (2):** wire the per-field `{value,confidence,source}` contract on the M1b slot outputs →
+  calibrate (temperature) → reliability diagram + **ECE** → recall-safe soft-rerank + selective
+  prediction (defer on low conf). This is the **RQ2 mechanism** (determinism↔adaptivity) + the
+  **demo's live arm**. Self-contained on existing outputs. Build it **class-agnostic** so the wall
+  detector plugs in later for free.
+- **DEFER (1) wall-fingerprint detector → post-MVP** (it's "all-descriptor", out of locked scope;
+  partly reuses M1b opening-counting + adds junction detection for `connection_degree`).
+- **DEFER (3) detector polish** (de-optimism the 94.6 via realistic clutter; corner-detection) — low ROI.
+- **Arm-B localization anchoring** (above) — future autonomous track.
 
 ### (was) NEXT: position-slot structured extractor (P2) — the MVP-defining build
 Scoped in `docs/specs/position_slot_extractor.md`. Turns oracle Top-1 56.5 / 78.5 into a
