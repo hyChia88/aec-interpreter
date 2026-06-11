@@ -62,6 +62,42 @@ representation):**
 
 ---
 
+## Glossary — locked terminology (2026-06-10)
+
+- **Spatial address** *(umbrella term — use this)* — a per-element, **type-conditional**,
+  *minimal-sufficient* key that uniquely IDs an element within its visual-confusable set, and is
+  **IFC-computable ∧ image-recoverable**. Not a single field: a structured record, each field
+  `{value, confidence, source}`. Layered = coarse prefix (`storey`+`ifc_class`, the ontology floor)
+  **+** the type-conditional body:
+  - **filler** (window/door) → **position-slot `(i, M)`** = "i-th of M along the host wall".
+  - **wall** → **fingerprint** = `(connection_degree, hosted_opening_count, length_band, is_external)`.
+  - **other** (3 targets) / room-based → **not yet covered** (future work).
+- **fingerprint** = the **wall-class** instance of the address (a part-of, NOT a synonym).
+  **position-slot** = the **filler-class** instance. Both are *the address* for their type.
+- **Dual representation (depth-1).** The address has two equivalent forms: **(A) sub-graph** —
+  target node + its **depth-1** typed neighborhood + edge types (the *source*; computed/visualized,
+  e.g. the demo local-graph panel); **(B) node.val attributes** — the distilled values hung on the
+  target node (the *matched* form: coordinate-free, auditable, transferable). **We match on (B),
+  derive it from (A); depth-1 suffices** (discrimination saturates at depth-1 — measured) → no deep
+  graph / no GNN fusion.
+- **Relations.** `FILLS`,`NEXT_TO`,`CONNECTS_TO`,`ADJACENT_TO` are **sufficient for the two solved
+  classes** (filler: FILLS+NEXT_TO; wall: CONNECTS_TO + FILLS-reverse for openings; ADJACENT_TO =
+  generic proximity). The address is **relations(topology) + element attributes** (`length_band`,
+  `is_external` are attributes, not edges). **Known gap:** the raw-IFC `IfcRel*` census found no
+  other low-order discriminative relation **except `IfcRelSpaceBoundary` = 0** (rooms absent in this
+  synthetic model) → room/space addressing + the "other" class = future work; **not** a claim of
+  universal completeness.
+- **Provenance (validity).** All address features are **reconstructed from the RAW IFC**
+  (`AdvancedProject.ifc`, via ifcopenshell), **not** read from the pre-filtered dataset annotations
+  (cross-validated: reconstructed `connection_degree` == dataset skeleton GT 14/14). The dataset
+  (`synth_v0.5_ap`) only supplies the **task** (cases, target GUID, retrieval pool) + **images**;
+  it is Tier-3-filtered, so it biases *sample difficulty* (flagged), not *feature accuracy*.
+- **Deprecated:** ~~"spatial relationship" / "physical relationship"~~ — dropped as the umbrella
+  (the relations are the *source shown inside* the address, not the address itself). Say **spatial
+  address**.
+
+---
+
 ## 1. Diagnostic (from thesis Ch.7) — drives everything
 
 - Symbolic backend essentially solved: oracle 100% GT-in-Pool; oracle Top-10 58% (L3),

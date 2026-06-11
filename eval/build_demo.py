@@ -111,7 +111,8 @@ def _text_panel(ax, title, lines, tag):
 
 
 def graph_panel(ax, gt, universe, nbrs, pos, wallfp):
-    ax.set_title("Expected local graph (1-hop)", fontsize=11, fontweight="bold", loc="left")
+    ax.set_title("Spatial address — sub-graph (depth-1) → node.val", fontsize=11,
+                 fontweight="bold", loc="left")
     ax.axis("off")
     edges = nbrs.get(gt, [])[:8]
     G = nx.Graph()
@@ -132,14 +133,22 @@ def graph_panel(ax, gt, universe, nbrs, pos, wallfp):
                 color=EDGE_COLOR.get(d["etype"], "#555"), ha="center")
     for n, (x, y) in layout.items():
         is_t = n == gt
-        ax.scatter([x], [y], s=900 if is_t else 520,
+        ax.scatter([x], [y], s=1000 if is_t else 520,
                    c="#d62728" if is_t else "#cccccc",
                    edgecolors="black", zorder=3, linewidths=1.5)
         ax.text(x, y, short_cls(universe.get(n, {}).get("ifc_class")),
                 ha="center", va="center", fontsize=8,
                 fontweight="bold" if is_t else "normal", zorder=4)
-    ax.text(0.0, -0.02, "● target", transform=ax.transAxes, color="#d62728", fontsize=8)
-    ax.margins(0.18)
+    # node.val on the target = the distilled address (the matched form)
+    tx, ty = layout[gt]
+    nodeval = addr_str(gt, pos, wallfp).replace("\n", "  ")
+    ax.annotate("node.val = " + nodeval, (tx, ty), textcoords="offset points",
+                xytext=(0, -22), ha="center", fontsize=8.5, color="#9467bd",
+                fontweight="bold", zorder=5,
+                bbox=dict(boxstyle="round,pad=0.2", fc="#f1ecf9", ec="#9467bd", lw=0.8))
+    ax.text(0.0, -0.03, "● target   edges = depth-1 relations (FILLS/NEXT_TO…)",
+            transform=ax.transAxes, color="#555", fontsize=8)
+    ax.margins(0.22)
     _tag(ax, "REAL")
 
 
