@@ -15,10 +15,11 @@
 
 ## The question RQ2 must answer
 
-RQ1 establishes that a type-conditional spatial address — the position-slot `(i, M)` for a
-filler, the connectivity fingerprint for a wall — collapses the visual-confusable set almost
-completely *when supplied at an oracle level*: the retrieved pool reorders from a realized
-Top-1 of 6.7 % to **78.5 %** (fillers to 91 %), with the ground truth in the pool throughout.
+The representation chapter (RQ1) establishes that a type-conditional spatial address — the
+position-slot `(i, M)` for a filler, the connectivity fingerprint for a wall — collapses the
+visual-confusable set almost completely *when supplied at an oracle level*: the retrieved pool
+(median 76, ground truth in-pool 100 %) reorders from a realized Top-1 of 6.7 % to **78.5 %**
+(fillers to 91 %), with the ground truth in the pool throughout.
 That ceiling is a statement about *information*: the address, if known, suffices. It says
 nothing about whether the address can be **recovered** from a site photograph and a plan, nor
 how a *noisily* recovered address should be used. RQ2 is the gap between the two:
@@ -28,18 +29,20 @@ how a *noisily* recovered address should be used. RQ2 is the gap between the two
 > recall that the pool guarantees?*
 
 The honest baseline is stark. The thesis reranker (G8) emits the position field as free text
-and, on the held-out fillers, recovers a usable slot in **0 of 35** cases; with no slot signal
-the pool-ranking falls back to storey and class alone, a Top-1 floor of **6.6 %** (G8's
-overall held-out Top-1 is 6.7 %). The oracle says 91; the system delivers ~7. RQ2 is the work
-of closing that.
+and, on the held-out fillers, recovers a usable slot in **0 of 35** cases. With no slot signal
+the pool-ranking falls back to storey and class, a Top-1 of **2.4 %**; even a modal-prior slot
+guess — the most generous floor — reaches only **6.6 %** (G8's overall held-out Top-1 is 6.7 %).
+The oracle says 91; the system delivers single digits. RQ2 is the work of closing that.
 
 ## The recall constraint: why the address must be a soft prior, not a hard filter
 
 The intuitive way to use an extracted address is to *filter* the pool by it — keep only
 candidates whose slot matches. This is exactly wrong, and the measurement says why. Treating
 each extracted field as a hard constraint multiplies the per-field recall: with measured
-single-field reliabilities (storey ≈ 0.66, class ≈ 0.50, the slot lower still), the joint
-recall of a hard conjunction collapses toward **∏ r ≈ 0.009** — the filter evicts the ground
+single-field reliabilities (storey ≈ 0.66, class ≈ 0.50), the joint recall of a hard
+conjunction *over the measured attribute fields* collapses toward **∏ r ≈ 0.009**; the
+position-slot's own extraction reliability is unmeasured, but its realized 0-of-35 recovery
+makes it no exception. The filter evicts the ground
 truth from the pool far more often than it removes a distractor, and the 100 %-recall
 guarantee that made the task tractable is gone. Hard determinism and recall are in direct
 opposition.
@@ -54,7 +57,8 @@ section makes precise and measures.
 ## The mechanism: a per-field confidence contract, calibrated, routed
 
 Every extracted field is emitted as a uniform record `{value, confidence, source}` (the
-contract invariant; `[CITE: README limitations]`). The position-slot detector, a deterministic
+contract invariant; it closes the two extraction-confidence gaps noted in the system's own
+limitations — confidence underused, and no per-model calibration). The position-slot detector, a deterministic
 OpenCV specialist that color-segments the plan's openings and orders them along the host wall,
 produces `value = (i, M)`, a `confidence`, and `source = opencv`. A routing policy assigns each
 field a role and a weight; the recovered slot enters the rerank as a confidence-weighted prior,
@@ -68,7 +72,7 @@ We report four results.
 **(1) One realizable extractor closes most of the oracle gap.** The position-slot detector,
 scored against the image-recoverable convention (below), recovers the opening count exactly in
 **83 %** of cases (29/35) and the full slot in **74 %** (joint `(i, M)`). Fed into the soft
-rerank, it lifts filler Top-1 from the **6.6 %** realized floor to **67.6 %**, and Top-10 to
+rerank, it lifts filler Top-1 from the **6.6 %** modal-prior floor to **67.6 %**, and Top-10 to
 **80.9 %**, at zero recall cost — the floor-to-realized arc the oracle gap predicted, now
 delivered by a real detector rather than an oracle. The *count* is reliable; what residual
 error remains is concentrated in the ordering index, not in the perception of the openings.
@@ -123,7 +127,7 @@ reference orientation, whereas the IFC local axis never appears in any image.
 ## The honest boundary of the claim
 
 Three caveats bound the result. *Statistical power:* the calibration and coverage–accuracy
-estimates rest on 35 addressable fillers; the curve is clean down to ~50 % coverage and noisy
+estimates rest on 35 addressable fillers; the curve is clean down to ~0.74 coverage and noisy
 below, and the temperature estimate carries small-n uncertainty — we report the operating point
 (defer ~20 % → 80.6 %), not a precise optimal threshold. *Scope:* we realize and calibrate the
 single highest-value extractor (the position-slot); the wall fingerprint and the remaining

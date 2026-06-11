@@ -533,3 +533,13 @@ Deferring the least-confident cases lifts Top-1 on the answered subset:
 → Top-1 67.6 → 80.6 (+13pp).** This matches L102 (don't lead with calibration; soft-rerank is
 the frame) + L183 (defer = first-class outcome, the clearest triage value prop). Figure:
 `output/calibrate_rerank.png`. 4 tests (46 total).
+
+**Worked examples (for the demo cards + RQ2 section; reproducible via `eval/build_demo.py`).**
+| case | predicted (i,M) | GT (gslot) | raw conf → calibrated (T=0.30) | decision (τ=0.40) |
+|---|---|---|---|---|
+| AP_SK_102 (filler, Second Floor) | (2, 17) | (2, 17) ✓ | 0.52 → 0.57 | **ANSWER** (correct) |
+| AP_SK_092 (filler, First Floor) | (1, 10) | (8, 10) ✗ | 0.29 → 0.05 | **DEFER** (wrong-but-low-conf → abstains) |
+
+AP_SK_092 is the selective-prediction headline case: the extractor is wrong (1 of 10 vs GT 8 of
+10) but its calibrated confidence (0.05) is below τ, so the system defers and returns candidates
+rather than a confident wrong GUID. Cards: `output/demo/case_AP_SK_{102,092}.png`.
