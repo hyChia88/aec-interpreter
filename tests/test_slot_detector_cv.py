@@ -39,14 +39,37 @@ def test_covers_only_clean_storeys():
     assert 0 < cov < len(fill)               # some covered, some abstain (17/35 today)
 
 
-def test_orientation_resolution_lifts_downstream():
-    """With orientation resolved (global-sign convention), the detected slot lifts filler
-    Top-1 well above the realized floor (2.4) — measured ~9."""
+def test_downstream_lifts_well_above_floor():
+    """Orientation-resolved + wall-continuity M-count lifts filler Top-1 far above floor 2.4."""
     idx, cases, pos = _ctx()
     fill = [c for c in cases if c["scenario"]["ground_truth"]["target_guid"] in pos]
     gslot = cv.build_global_slot(idx, pos)
     down = m1.downstream(cv.make_predictor(idx), fill, idx, gslot)
-    assert down["top1"] > 6.0
+    assert down["top1"] > 14.0          # ~20 (v2)
+
+
+def test_global_slot_M_matches_canonical_position_index():
+    """build_global_slot must group by (wall, storey) like position_index — only i is
+    relabelled, M is identical (regression for the multi-storey M-inflation bug)."""
+    idx, cases, pos = _ctx()
+    g = cv.build_global_slot(idx, pos)
+    assert all(g[k]["wall_child_total"] == pos[k]["wall_child_total"] for k in pos if k in g)
+
+
+def test_wall_continuity_counts_M():
+    """Wall-continuity truncation gets M exactly right on most covered fillers (>=10/17)."""
+    idx, cases, pos = _ctx()
+    g = cv.build_global_slot(idx, pos)
+    fill = [c for c in cases if c["scenario"]["ground_truth"]["target_guid"] in pos]
+    exact = det = 0
+    for c in fill:
+        e = idx[c["scenario"]["ground_truth"]["target_guid"]]; cc = e["centroid"]
+        r = cv.detect((cc["x"] / 1000.0, cc["y"] / 1000.0), e["storey_name"])
+        if r is None:
+            continue
+        det += 1
+        exact += (r["M"] == g[c["scenario"]["ground_truth"]["target_guid"]]["wall_child_total"])
+    assert exact >= 10
 
 
 def test_global_relabel_preserves_oracle_ceiling():

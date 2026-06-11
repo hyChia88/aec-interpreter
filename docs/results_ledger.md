@@ -409,3 +409,32 @@ exact_i (agnostic) == exact_M` (every correct-count case also gets i right, no m
 nearly doubled again (4.9→9.1). **The bottleneck has shifted to M-counting** (exact_M 4/17:
 long/curved walls over/under-count) and coverage (17/35). Next levers: M-count robustness, then the
 F2 re-render for the 18 uncovered fillers.
+
+---
+
+## M1b v2 — M-counting robustness (2026-06-10)
+Diagnosing the v1 M-count bottleneck surfaced **two** issues:
+
+1. **GT bug (fixed):** `build_global_slot` grouped fillers by `wall_guid` only, merging multi-storey
+   walls across floors → inflated GT M (85/50/20 vs canonical 17/10/4). The First-Floor "massive
+   under-counts" were a GT artefact. Fixed to group by **(wall, storey)** like `position_index`
+   (regression test: M now == canonical for all fillers). *(v1's Top-1 9.1 was partly against the
+   inflated GT — superseded.)*
+2. **Detector over-counting (fixed):** with correct GT, **every** error was an over-count —
+   collinear ≠ same wall. The straight perp-band grabbed openings from *different* walls that line
+   up along a corridor (AP_SK_078: a 2-filler wall read as the whole corridor door-run). **Fix:**
+   **wall-continuity truncation** — keep only the run around the target where consecutive openings
+   are joined by continuous wall poché (a corridor/junction gap = open floor = break).
+
+| filler Top-1 | Top-10 | exact_M (covered) |
+|---|--:|--:|
+| M1b v1 (orientation, inflated GT) | 9.1 / 32.0 | — |
+| **M1b v2 (continuity + GT fix)** | **20.1 / 42.9** | **12/17** |
+| oracle | 91.0 / 100.0 | 17/17 |
+
+**Result:** exact_M 5→**12/17**, Top-1 **9.1→20.1** (Top-10 32→43). Residual errors all bounded:
+4× **+1 corner end-effect** (wall turns; one collinear+connected opening past the corner) + 1
+**corridor pathology** (AP_SK_078, 2-filler wall collinear with a continuous corridor wall) + a
+**~3-case orientation sign ambiguity** on near-⊥-to-ref walls (image axis sign disagrees with the
+GT PCA sign). Next levers: corner detection (stop at the wall turn) and the F2 re-render for the 18
+uncovered fillers. M-counting is no longer the dominant loss; coverage (17/35) now is.

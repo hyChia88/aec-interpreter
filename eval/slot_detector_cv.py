@@ -62,7 +62,9 @@ def build_global_slot(idx, pos):
     for g, p in pos.items():
         e = idx.get(g)
         if e and e.get("centroid"):
-            byw[p["wall_guid"]].append((g, e["centroid"]["x"], e["centroid"]["y"]))
+            # group by (wall, storey) — matches position_index; stacked fillers on a
+            # multi-storey wall are NOT neighbours (else M inflates across floors).
+            byw[(p["wall_guid"], e.get("storey_name"))].append((g, e["centroid"]["x"], e["centroid"]["y"]))
     out = {}
     for items in byw.values():
         P = np.array([[x, y] for _, x, y in items], float)
@@ -159,13 +161,47 @@ def detect(target_world, storey_name):
     proj = (cents[on_wall] - tc) @ axis_ord
     order = on_wall[np.argsort(proj)]
     seq = list(order)
+    # wall-continuity truncation: collinear != same wall. Keep only the run around the
+    # target where consecutive openings are joined by continuous wall poche (a corridor /
+    # junction gap = open floor between them = break). Kills the over-counting.
+    dark = (im.astype(int).sum(2) < 330)            # wall poche (near-black lines)
+    nrm = np.array([-axis_ord[1], axis_ord[0]])
+
+    def joined(a, b):
+        seg = b - a
+        L = np.linalg.norm(seg)
+        if L < 1:
+            return True
+        hit = tot = 0
+        for t in np.linspace(0.2, 0.8, max(6, int(L / 12))):
+            p = a + seg * t
+            tot += 1
+            # any wall pixel within a perpendicular window straddling the axis line?
+            found = False
+            for s in range(-14, 15, 2):
+                q = (p + nrm * s).astype(int)
+                if 0 <= q[1] < dark.shape[0] and 0 <= q[0] < dark.shape[1] and dark[q[1], q[0]]:
+                    found = True
+                    break
+            hit += found
+        return hit / tot >= 0.6
+    pis = seq.index(ti)
+    C = cents
+    hi = pis
+    while hi + 1 < len(seq) and joined(C[seq[hi]], C[seq[hi + 1]]):
+        hi += 1
+    lo = pis
+    while lo - 1 >= 0 and joined(C[seq[lo]], C[seq[lo - 1]]):
+        lo -= 1
+    seq = seq[lo:hi + 1]
+    order = np.array(seq)
     i_pred = seq.index(ti)
     M_pred = len(seq)
     # orientation is arbitrary (axis sign): report both i and its mirror; caller picks min err.
     spread = float(np.ptp(proj)) if len(proj) > 1 else 0.0
     conf = min(1.0, len(seq) / max(spread / 40.0, 1.0)) if spread else 0.3
     return {"i": i_pred, "M": M_pred, "i_mirror": M_pred - 1 - i_pred, "conf": round(conf, 2),
-            "match_px": float(di[ti])}
+            "match_px": float(di[ti]), "counted": cents[order], "axis": axis_ord, "tc": tc}
 
 
 # ── predictor for the M1a harness ────────────────────────────────────────────
@@ -200,6 +236,11 @@ def viz(case_id, idx, cases, pos):
     g = pos[gt]
     for cc, kind in ops:
         cv2.circle(im, tuple(cc.astype(int)), 6, (0, 120, 255) if kind == "window" else (0, 200, 0), -1)
+    if r is not None:  # ring the COUNTED openings + draw the wall axis
+        for cc in r["counted"]:
+            cv2.circle(im, tuple(cc.astype(int)), 13, (230, 0, 230), 2)
+        a = r["axis"]; p0 = (r["tc"] - a * 900).astype(int); p1 = (r["tc"] + a * 900).astype(int)
+        cv2.line(im, tuple(p0), tuple(p1), (230, 0, 230), 1)
     cv2.drawMarker(im, tuple(tpx.astype(int)), (255, 0, 0), cv2.MARKER_CROSS, 50, 4)
     txt = f"GT i{g['wall_position_index']}/M{g['wall_child_total']}  pred " + (
         f"i{r['i']}(or {r['i_mirror']})/M{r['M']} conf{r['conf']}" if r else "NONE")
