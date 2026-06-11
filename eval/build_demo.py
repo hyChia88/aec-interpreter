@@ -1,7 +1,8 @@
 """Demo interface mock — the spatial-address grounding dashboard (offline, no GPU).
 
-Renders one 3x3 "case card" per held-out target, mocking the live interface panel
-(ROADMAP Sec.4). Every panel is labelled by epistemic status:
+Renders one 4x3 "case card" per held-out target, mocking the live interface panel
+(ROADMAP Sec.4) as a ① raw → ② expected → ③ interpreted → ④ predicted flow. Every panel
+is labelled by epistemic status:
   REAL    raw inputs, GT spatial address, expected local graph, |C| collapse, Top-1
   ORACLE  the "predicted address" = perfect extraction (NOT a learned prediction yet)
   REALIZED  what G8 actually extracted, from the frozen trace (the honest contrast)
@@ -24,6 +25,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 import networkx as nx
+import numpy as np
 
 EVAL = Path(__file__).resolve().parent
 sys.path.insert(0, str(EVAL))
@@ -178,7 +180,7 @@ def predicted_graph_panel(ax, case, gt, universe, nbrs, pos, wallfp, live):
     sg = subgroup(gt, pos, wallfp)
     if sg != "filler" or live is None or gt not in live["gslot"]:
         _draw_subgraph(ax, gt, universe, nbrs,
-                       "③ Predicted address — sub-graph → node.val",
+                       "④ Predicted address — sub-graph → node.val",
                        "(extractor: fillers only)", "#888", "#eee", "REALIZED",
                        "wall fingerprint detector deferred — post-MVP")
         return
@@ -194,7 +196,7 @@ def predicted_graph_panel(ax, case, gt, universe, nbrs, pos, wallfp, live):
         nv = f"slot {pi} of {pM} {mark}{defer}"
         col, face = ("#2ca02c", "#e8f6ec") if match else ("#d62728", "#fcebec")
     _draw_subgraph(ax, gt, universe, nbrs,
-                   "③ Predicted address — sub-graph → node.val (LIVE)",
+                   "④ Predicted address — sub-graph → node.val (LIVE)",
                    nv, col, face, "LIVE",
                    f"predicted node.val · conf {conf:.2f}→{cal:.2f} · τ={live['tau']:.2f}"
                    if pi is not None else "extractor abstained")
@@ -243,11 +245,93 @@ def top1_panel(ax, case, gt, n_sc, n_addr):
     _tag(ax, "REAL")
 
 
+def detector_interp_panel(ax, case, gt, idx, pos, wallfp, live):
+    """③ REAL — how the M1b detector actually reads the plan: the clean floorplan cropped to
+    the host wall, every color-detected opening marked + numbered by slot, the target circled.
+    This is the literal 'how it is interpreted' step that produces the predicted address."""
+    ax.set_title("③ How it's interpreted — detector reads the plan", fontsize=11,
+                 fontweight="bold", loc="left")
+    sg = subgroup(gt, pos, wallfp)
+    e = idx.get(gt, {})
+    if sg != "filler" or live is None or gt not in live["gslot"] or not cv.FULL.exists():
+        ax.axis("off")
+        ax.text(0.5, 0.5, "detector interpretation:\nfillers only", ha="center", va="center",
+                transform=ax.transAxes, color="#888"); _tag(ax, "REALIZED"); return
+    cc = e.get("centroid", {})
+    r = cv.detect((cc.get("x", 0) / 1000.0, cc.get("y", 0) / 1000.0), e.get("storey_name", ""))
+    j = cv._plan_for_storey(e.get("storey_name", ""))
+    if r is None or j is None or "counted" not in r:
+        ax.axis("off")
+        ax.text(0.5, 0.5, "detector abstained\n(no host wall found)", ha="center", va="center",
+                transform=ax.transAxes, color="#888"); _tag(ax, "LIVE"); return
+    im = plt.imread(cv.FULL / Path(j["png_path"]).name)
+    counted = r["counted"]; tc = r["tc"]
+    xs, ys = counted[:, 0], counted[:, 1]
+    pad = 70
+    H, W = im.shape[:2]
+    x0, x1 = max(0, int(xs.min() - pad)), min(W, int(xs.max() + pad))
+    y0, y1 = max(0, int(ys.min() - pad)), min(H, int(ys.max() + pad))
+    ax.imshow(im[y0:y1, x0:x1])
+    for k, (px, py) in enumerate(counted):
+        is_t = np.hypot(px - tc[0], py - tc[1]) < 6
+        ax.scatter([px - x0], [py - y0], s=320 if is_t else 180,
+                   facecolors="none", edgecolors="#d62728" if is_t else "#ff7f0e",
+                   linewidths=2.4 if is_t else 1.6, zorder=3)
+        ax.text(px - x0, py - y0 - 16, str(k), ha="center", va="bottom", fontsize=9,
+                fontweight="bold", color="#d62728" if is_t else "#ff7f0e", zorder=4)
+    ax.set_xticks([]); ax.set_yticks([])
+    ax.set_xlabel(f"M={r['M']} openings detected & ordered (blue=window/green=door); "
+                  f"target = slot {r['i']}", fontsize=8.5)
+    _tag(ax, "LIVE")
+
+
+def predicted_top1_panel(ax, case, gt, idx, pos, wallfp, live):
+    """④ The realized Top-1 for THIS case: storey+class alone vs + the PREDICTED slot
+    (calibrated weight), plus the ANSWER/DEFER decision. Mirrors the Expected Top-1 panel."""
+    ax.set_title("④ Predicted Top-1 (this case)", fontsize=11, fontweight="bold", loc="left")
+    pool = pool_candidates(case)
+    gslot = live["gslot"] if live else None
+    if subgroup(gt, pos, wallfp) != "filler" or live is None or gt not in (gslot or {}):
+        ax.axis("off")
+        ax.text(0.5, 0.5, "fillers only", ha="center", va="center",
+                transform=ax.transAxes, color="#888"); _tag(ax, "REALIZED"); return
+    pi, pM, conf = live["pred"](case)
+    cal = apply_T(conf, live["T"]) if pi is not None else 0.0
+    gf = cand_feats(gt, pool[gt], idx, gslot)
+    key = (pi, pM) if pi is not None else None
+
+    def top1(use_slot):
+        scores = {}
+        for guid, tc in pool.items():
+            cf = cand_feats(guid, tc, idx, gslot)
+            s = float(cf.get("storey") == gf.get("storey")) + float(cf.get("ifc_class") == gf.get("ifc_class"))
+            if use_slot and key is not None and cf.get("position_slot") == key:
+                s += cal
+            scores[guid] = s
+        order = sorted(scores, key=lambda g: -scores[g])
+        rank = order.index(gt)
+        ties = sum(1 for g in scores if scores[g] == scores[gt])
+        return 100.0 / ties if rank < ties else 0.0   # expected Top-1 under random tie-break
+
+    sc, addr = top1(False), top1(True)
+    bars = ax.bar(range(2), [sc, addr], color=["#7fb3d5", "#ff7f0e"])
+    ax.set_xticks(range(2)); ax.set_xticklabels(["storey\n+class", "+ predicted\nslot (LIVE)"], fontsize=9)
+    for b, v in zip(bars, [sc, addr]):
+        ax.text(b.get_x() + b.get_width() / 2, b.get_height() + 2, f"{v:.0f}%",
+                ha="center", fontsize=10, fontweight="bold")
+    ax.set_ylim(0, 115); ax.set_ylabel("predicted Top-1 %", fontsize=9)
+    answer = cal >= live["tau"]
+    ax.text(0.5, 1.04, ("ANSWER" if answer else "DEFER"),
+            transform=ax.transAxes, ha="center", fontsize=9, fontweight="bold",
+            color="#2ca02c" if answer else "#d62728")
+    _tag(ax, "LIVE")
+
+
 def predicted_panel(ax, case, gt, idx, pos, wallfp, live=None):
     """Top: G8's realized extraction (leaves the slot empty — the gap). Bottom (fillers):
     the LIVE M1b position-slot extractor + temperature-calibrated confidence + selective
     ANSWER/DEFER decision, judged against the convention-consistent GT (gslot)."""
-    ax.set_title("③ Predicted — fields + decision (G8 realized vs LIVE)", fontsize=11, fontweight="bold", loc="left")
+    ax.set_title("④ Predicted — fields + decision (G8 realized vs LIVE)", fontsize=11, fontweight="bold", loc="left")
     ax.axis("off")
     con = case.get("internals", {}).get("constraints", {}) or {}
     e = idx.get(gt, {})
@@ -341,12 +425,12 @@ def render_case(case, idx, universe, nbrs, pos, wallfp, live=None):
     sg = subgroup(gt, pos, wallfp)
     query = case["scenario"].get("query_text", "")
 
-    fig = plt.figure(figsize=(17, 14))
+    fig = plt.figure(figsize=(17, 18.5))
     fig.suptitle(f"AEC Interpreter — spatial-address grounding   |   case {sid}   "
                  f"({short_cls(e.get('ifc_class'))}, {sg})",
-                 fontsize=15, fontweight="bold", y=0.985)
-    gs = fig.add_gridspec(3, 3, hspace=0.32, wspace=0.18,
-                          left=0.04, right=0.97, top=0.92, bottom=0.05)
+                 fontsize=15, fontweight="bold", y=0.992)
+    gs = fig.add_gridspec(4, 3, hspace=0.34, wspace=0.18,
+                          left=0.04, right=0.97, top=0.945, bottom=0.04)
 
     gslot = live["gslot"] if live else None
     # ── ① RAW INPUT — what the user provides ──
@@ -368,11 +452,17 @@ def render_case(case, idx, universe, nbrs, pos, wallfp, live=None):
     n_full, n_sc, n_addr = collapse_panel(fig.add_subplot(gs[1, 1]), gt, pool, idx, pos, wallfp)
     top1_panel(fig.add_subplot(gs[1, 2]), case, gt, n_sc, n_addr)
 
-    # ── ③ PREDICTED — the LIVE extractor's address as the same graph + the decision table ──
-    predicted_graph_panel(fig.add_subplot(gs[2, 0]), case, gt, universe, nbrs, pos, wallfp, live)
-    predicted_panel(fig.add_subplot(gs[2, 1]), case, gt, idx, pos, wallfp, live)
-    pending_panel(fig.add_subplot(gs[2, 2]), "Opening / element segmentation",
+    # ── ③ HOW IT'S INTERPRETED — the detector reading + pending learned-visual tiles ──
+    detector_interp_panel(fig.add_subplot(gs[2, 0]), case, gt, idx, pos, wallfp, live)
+    pending_panel(fig.add_subplot(gs[2, 1]), "③ Attention heatmap",
+                  "P2 — VLM cross-attention\n(pending learned extractor)")
+    pending_panel(fig.add_subplot(gs[2, 2]), "③ Opening / element segmentation",
                   "P2 — segmentation overlay\n(pending learned extractor)")
+
+    # ── ④ PREDICTED — the LIVE extractor's address as the same graph + decision + Top-1 ──
+    predicted_graph_panel(fig.add_subplot(gs[3, 0]), case, gt, universe, nbrs, pos, wallfp, live)
+    predicted_panel(fig.add_subplot(gs[3, 1]), case, gt, idx, pos, wallfp, live)
+    predicted_top1_panel(fig.add_subplot(gs[3, 2]), case, gt, idx, pos, wallfp, live)
 
     OUT.mkdir(parents=True, exist_ok=True)
     p = OUT / f"case_{sid}.png"
