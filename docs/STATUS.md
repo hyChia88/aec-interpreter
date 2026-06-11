@@ -98,12 +98,19 @@ truncation** (collinear ≠ same wall; corridor gaps break the run). **exact_M 5
 9.1→20.1, Top-10 32→43.** 34 tests. Residual bounded: 4× +1 corner end-effect, 1 corridor case,
 ~3-case orientation sign ambiguity.
 
-### ▶️ NEXT: coverage is now the dominant loss (17/35), not M-counting
-Two tracks: (a) **F2 multi-storey re-render** so the 18 uncovered fillers (Floors 2-5, host walls
-live in "Level 1") get a clean plan — needs the host-wall→floor reconstruction the dataset author
-deferred; (b) optional detector polish (corner detection to kill the +1s). Lever order: **coverage
-first** (doubles the n that the detector can score). Then wall-fingerprint detector (the other
-address class) + P1 calibrated soft-rerank/ECE.
+### ✅ M1b coverage / F2 re-render done (2026-06-10) — `scripts/render_upper_storeys.py`
+Pulled each upper-floor window's host wall (FILLS→VOIDS) + rendered via the dataset's own
+`render_one` → **coverage 17/35 → 35/35**. Detector now: realistic-cluttered **Top-1 39.1** /
+sparse-new 94.6 / aggregate 67.6 (oracle 91). ⚠️ **The new plans are sparse (host-walls-only) =
+optimistic; the realistic number is 39.1** (floor 2.4 → 39.1 = 16× on cluttered plans). Full arc:
+**2.4 → 39.1 realistic** (67.6 aggregate). 34 tests.
+
+### ▶️ NEXT — pick one:
+1. **wall-fingerprint detector** (the OTHER address class — walls; currently only filler/slot is
+   imaged) → makes the spatial address image-realizable for both classes.
+2. **P1 calibrated soft-rerank + ECE** on the realized slot (the RQ2 mechanism + the demo's live arm).
+3. detector polish: realistic upper-floor clutter (multi-storey-wall→floor) to de-optimism the 94.6;
+   corner-detection for the +1s. Lower ROI than 1/2.
 
 ### (was) NEXT: position-slot structured extractor (P2) — the MVP-defining build
 Scoped in `docs/specs/position_slot_extractor.md`. Turns oracle Top-1 56.5 / 78.5 into a

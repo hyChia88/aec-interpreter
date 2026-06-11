@@ -30,13 +30,14 @@ def test_detects_clean_small_wall():
     assert 2 in (r["i"], r["i_mirror"])
 
 
-def test_covers_only_clean_storeys():
-    """Predictor detects on the 3 clean storeys, abstains elsewhere -> partial coverage."""
+def test_coverage_at_least_three_clean_storeys():
+    """Detector covers >=17 fillers (the 3 always-present clean storeys; 35/35 once the
+    F2 upper-storey plans from scripts/render_upper_storeys.py have been rendered)."""
     idx, cases, pos = _ctx()
     fill = [c for c in cases if c["scenario"]["ground_truth"]["target_guid"] in pos]
     pred = cv.make_predictor(idx)
     cov = sum(pred(c)[0] is not None for c in fill)
-    assert 0 < cov < len(fill)               # some covered, some abstain (17/35 today)
+    assert cov >= 17
 
 
 def test_downstream_lifts_well_above_floor():

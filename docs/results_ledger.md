@@ -438,3 +438,29 @@ Diagnosing the v1 M-count bottleneck surfaced **two** issues:
 **~3-case orientation sign ambiguity** on near-⊥-to-ref walls (image axis sign disagrees with the
 GT PCA sign). Next levers: corner detection (stop at the wall turn) and the F2 re-render for the 18
 uncovered fillers. M-counting is no longer the dominant loss; coverage (17/35) now is.
+
+---
+
+## M1b coverage — F2 upper-storey re-render (2026-06-10)
+`scripts/render_upper_storeys.py` (reuses the dataset's own `render_one`, frozen tree untouched).
+The 18 uncovered fillers were on Floors 2-5, whose host walls are multi-storey walls contained in
+"Level 1" → storey-containment gave wall-less plans (the author's deferred "F2"). Fix: per upper
+floor, pull each window's **host wall** via FILLS→VOIDS and render walls+windows together →
+byte-matches `floorplans_full/` (blue/green/dark + world_bbox json), consumed by the detector
+unchanged. **Coverage 17/35 → 35/35.**
+
+| subset | Top-1 | Top-10 | exact_M |
+|---|--:|--:|--:|
+| **orig-17 (realistic, cluttered)** | **39.1** | 65.3 | 12/17 |
+| new-18 (sparse host-wall renders) | 94.6 | 95.7 | 17/18 |
+| all-35 (aggregate) | 67.6 | 80.9 | 29/35 |
+| oracle | 91.0 | 100.0 | 35/35 |
+
+**⚠️ Honesty caveat (load-bearing).** The new upper-floor plans contain **only the host walls +
+windows** (the multi-storey walls aren't storey-contained, so only host walls are pull-able) → they
+are **sparser/easier than realistic cluttered floors** (no corridors/doors/interior walls to confuse
+collinearity). So **94.6 is an optimistic ceiling**, and the **realistic deployable number is the
+cluttered-floor 39.1** (floor 2.4 → 39.1 = 16× on realistic plans; aggregate 67.6 is flattered by a
+half-sparse test set — report the split, not the aggregate alone). A fully-realistic upper-floor
+render needs the multi-storey-wall→floor assignment (genuine future work). Full M1b arc on realistic
+plans: floor 2.4 → 39.1.
