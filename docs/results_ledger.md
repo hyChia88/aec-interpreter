@@ -623,3 +623,24 @@ siblings. A generic dense retriever (25 Top-10) nearly matches the fine-tuned VL
 both are bound by the same slot-recovery ceiling. The structured spatial address (oracle 78.5)
 breaks it. ⇒ the contribution beats an **external** standard, not only our own ablations. Figure:
 `output/external_baseline.png`. 4 tests (3 offline + 1 model-gated).
+
+---
+
+## Triage-effort value-prop measurement (2026-06-12, exploratory)
+
+`eval/triage_effort.py`. Effort proxy = expected # candidate elements a coordinator must inspect
+in the model to reach the correct one = GT's expected rank (random tie-break) over the SAME pool
+(n=60). Time = effort × 15 s/inspection (assumption, flagged).
+
+| arm | median inspections | mean | ~time/element | success@1 | @5 | @10 |
+|---|--:|--:|--:|--:|--:|--:|
+| manual scan (no ranking) | 38.0 | 53.6 | ~570 s | 1.8 | 9.2 | 16.9 |
+| coarse (storey+class) | 23.0 | 24.7 | ~345 s | 4.9 | 17.9 | 31.5 |
+| **+ spatial address (oracle)** | **0.5** | **1.3** | **~8 s** | **78.5** | 94.2 | 98.1 |
+
+**Finding.** The spatial address turns a manual scan of **~38** candidate inspections into **~0.5**
+(76× less effort; ~570 s → ~8 s per element at 15 s/inspection) — the coordinator's job shifts from
+*search* to *verification*. success@k ties out with the oracle ceiling (78.5/94.2/98.1) by
+construction. Honest scope: this is an effort *proxy* derived from the rankings, not a human user
+study; the address arm is the oracle ceiling (the realized detector ≈67.6 Top-1 → median
+inspections ≈1–2). Figure: `output/triage_effort.png`. 2 tests.
