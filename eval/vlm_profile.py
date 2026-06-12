@@ -50,20 +50,40 @@ def make_figure(p, out_path):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    fields = ["storey", "ifc_class", "relation\npresent", "direction", "position\nslot", "size"]
-    vals = [p["storey_ex"], p["class_ex"], p["rel"], p["dir"], p["slot_ex"], p["size_ex"]]
-    # green = coarse (saturated, VLM-recoverable); red = discriminating (delegate to specialists)
-    colors = ["#2ca02c", "#2ca02c", "#7fb3d5", "#7fb3d5", "#d62728", "#d62728"]
-    fig, ax = plt.subplots(figsize=(9, 4.6))
-    bars = ax.bar(range(len(fields)), vals, color=colors)
-    for b, v in zip(bars, vals):
-        ax.text(b.get_x() + b.get_width() / 2, v + 2, f"{v:.0f}%", ha="center", fontsize=10, fontweight="bold")
-    ax.set_xticks(range(len(fields))); ax.set_xticklabels(fields, fontsize=9)
-    ax.set_ylabel("extracted (%)"); ax.set_ylim(0, 108)
-    ax.set_title("Fine-tuned VLM (Qwen2.5-VL LoRA, G8) — per-field extraction\n"
-                 "nails the coarse prefix (green); fails the discriminating fields (red) → delegate to specialists",
-                 fontsize=11)
-    fig.tight_layout(); fig.savefig(out_path, dpi=130)
+    fig, ax2 = plt.subplots(figsize=(11.2, 3.9))
+    fig.suptitle("Perception takeaway: specialist fields make grounding usable", fontsize=16, fontweight="bold", y=1.03)
+    fig.text(
+        0.5,
+        0.925,
+        "The VLM supplies coarse typed semantics; sibling-level address fields need specialists before graph retrieval.",
+        ha="center",
+        fontsize=10.0,
+        color="#5b6470",
+    )
+    names = [
+        "VLM end-to-end\nAP n=60",
+        "real slot specialist\nfiller n=35",
+        "address ceiling\nAP n=60",
+    ]
+    vals = [6.7, 67.6, 78.5]
+    colors = ["#8f8f8f", "#ef7d00", "#9467bd"]
+    y = list(range(len(names)))
+    ax2.hlines(y, 0, vals, color=colors, lw=5, alpha=0.25)
+    ax2.scatter(vals, y, s=260, color=colors, zorder=3, edgecolors="white", linewidths=1.5)
+    for yy, v in zip(y, vals):
+        ax2.text(v + 2.0, yy, f"{v:.1f}%", va="center", fontsize=9.5, fontweight="bold")
+    ax2.set_yticks(y)
+    ax2.set_yticklabels(names, fontsize=10.0)
+    ax2.set_xlim(0, 100)
+    ax2.set_xlabel("Top-1 right-element-first accuracy", fontsize=10.0)
+    ax2.grid(axis="x", color="#e5e8ee", lw=0.8)
+    ax2.invert_yaxis()
+    for side in ("top", "right", "left"):
+        ax2.spines[side].set_visible(False)
+    ax2.tick_params(axis="y", length=0)
+
+    fig.tight_layout(rect=[0, 0, 1, 0.87])
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
     print("figure →", out_path)
 
 
