@@ -1,0 +1,52 @@
+% AEC Interpreter — research-paper assembly (standard structure:
+% Intro w/ related work + contributions → System Design → Evaluation → Discussion → Conclusion).
+% Structure follows the draft in "AEC Interpreter - org.md" §Draft structure.
+% Compile:  pdflatex main && bibtex main && pdflatex main && pdflatex main   (see Makefile).
+\documentclass[11pt]{article}
+
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[protrusion=true,expansion=true]{microtype}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue,urlcolor=blue]{hyperref}
+
+\graphicspath{{figures/}}
+
+% Section cross-reference shorthand used in the prose.
+\newcommand{\secref}[1]{\S\ref{#1}}
+
+\title{\bfseries AEC Interpreter: Cross-Modal Alignment and\\
+Ontology-Driven Retrieval for Site-to-BIM Element Grounding}
+\author{Chia Hui Yen\\
+\small Carnegie Mellon University\\
+\small \texttt{huiyenc@andrew.cmu.edu}}
+\date{2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\input{sections/00_abstract}
+\end{abstract}
+
+\noindent\textbf{Keywords:} AEC, spatial intelligence, neuro-symbolic grounding, IFC, vision-language models
+
+\input{sections/01_introduction}
+\input{sections/02_system_design}
+\input{sections/03_evaluation}
+\input{sections/04_discussion}
+\input{sections/05_conclusion}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

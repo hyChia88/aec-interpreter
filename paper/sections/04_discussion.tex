@@ -1,0 +1,66 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Workflow impact: a before/after walkthrough}
+\label{sec:workflow}
+
+The system's value is best seen as a concrete walkthrough rather than a claim.
+
+\paragraph{Before (manual workflow).} A site worker photographs a cracked column near a stairwell on
+floor 12 and writes a chat message: ``crack near stairs, floor 12, block A.'' The coordinator reads it
+at end of day, goes on a site walk, identifies the element by sight, and manually types the IFC GUID
+into the issue tracker. Average lag: 1--3 days. If the coordinator leaves the project, the knowledge
+leaves with them. The element lands in a flat spreadsheet, not linked to the BIM record, and downstream
+compliance requires manual re-entry.
+
+\paragraph{After (system-assisted).} The worker sends the same photo and message. The system returns a
+compact ranked shortlist within ${\sim}1$ second --- the pool compressed from ${\sim}1{,}200$ elements
+to a median of a few dozen, with the correct element in the pool ${\sim}100\%$ of the time and, on the
+addressable subset, at rank 1 in 67.6\% of answered cases (80.6\% when the system is allowed to defer
+the least-confident fifth). The worker taps the correct element; a BCF package is generated and the
+element is linked to the BIM record. The coordinator's role shifts from data entry to verifying and
+escalating a shortlist, and no longer requires being on-site to resolve the link.
+
+The claim is deliberately bounded: this does not replace the coordinator. It eliminates the manual
+data-entry loop, surfaces the correct element inside a short ranked shortlist, abstains explicitly
+when unsure, and improves over the project lifecycle as confirmed GUIDs accumulate as supervision.
+
+\subsection{Limitations}
+\label{sec:limitations}
+
+We state the boundaries directly. \emph{Synthetic-to-real gap (central limitation):} all training and
+evaluation data are synthetic; the numbers are optimistic until validated on real site photographs,
+and a small pilot (50--100 labelled real cases from a live project) is the single most informative
+next measurement. \emph{Single project:} the ceilings and reliabilities are measured on one synthetic
+model; the form of the contribution (type-conditional, shallow, image-recoverable, calibrated-soft) is
+general, the specific numbers are not. \emph{Statistical power:} the calibration and
+coverage--accuracy estimates rest on 35 addressable fillers; we report the operating point (defer
+${\sim}20\% \to 80.6\%$), not a precise optimal threshold. \emph{Class coverage:} the realized address
+covers fillers; the wall fingerprint is demonstrated at oracle level and is blocked from realization
+by the image-recoverability constraint itself (\secref{sec:eval-realized}); ``other''-class and
+room-relative addressing remain open. \emph{Multi-hop:} joint multi-hop extraction collapses under
+error cascade; practical use is single-hop plus human review, by design. \emph{IFC dependency:} the
+system retrieves against the model as given; if the IFC is outdated, retrieval is against stale ground
+truth --- mitigated by versioning the graph and surfacing low-confidence results for manual check.
+
+\subsection{Future work, prioritized}
+\label{sec:future}
+
+\begin{enumerate}
+  \item \textbf{Real project traces.} Validate on live coordination data; the synthetic-to-real shift
+  is the most credible threat to the numbers and the first thing to measure.
+  \item \textbf{Remaining address classes.} Size-band realization (the ResNet head), relation-direction
+  improvement via subtype-contrastive augmentation, and room/space addressing where the export carries
+  space boundaries.
+  \item \textbf{Learned spatial topology.} Replace the distance-threshold \texttt{ADJACENT\_TO}
+  heuristic with a learned spatial graph model to generalize beyond standard geometries.
+  \item \textbf{Write-back integration.} BCF and BIM-cloud integration, so the grounded GUID lands in a
+  live workflow rather than a report; the human feedback loop then converts confirmed GUIDs into
+  supervised updates.
+  \item \textbf{4D temporal context.} Schedules, timestamps, and progress updates, making the IFC
+  graph a dynamic project database rather than a static snapshot.
+\end{enumerate}
+
+The long-term goal is not to replace construction managers but to remove the manual translation
+burden between physical on-site evidence and the digital record --- supporting timely, traceable, and
+continuously updated project analytics.

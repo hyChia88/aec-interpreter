@@ -1,0 +1,120 @@
+\chapter{RQ3 --- A Depth Law for the Spatial Address}
+\label{ch:rq3}
+
+\emph{Where relational context belongs.}
+
+\section{The architectural question}
+
+The spatial address is relational: a filler is pinned by its place \emph{along a wall}, a wall by
+\emph{what it connects to}. A relational representation forces an architectural decision about
+\textbf{where the relational context is computed}. One option is to extract it \emph{at inference time}
+as a multi-hop graph traversal --- ``the window next to the door that opens onto the stair that leads
+to the lobby'' --- letting the model recover an arbitrarily deep chain from the evidence. The other is
+to \emph{precompute} the relational context into the target node as a fixed feature, so inference only
+reads a node attribute. The choice is not cosmetic: it determines how much the runtime extractor must
+recover from a noisy image, how the learned components allocate capacity, and whether the system is
+auditable. RQ3 asks which is right, and answers it with a measurement rather than a preference.
+
+\section{Information is not realizability: the central distinction}
+
+The tempting argument for deep extraction is informational. Deeper relational context \emph{is} more
+discriminative: under an oracle that recovers every relation perfectly, the confusable set keeps
+shrinking with depth --- a Weisfeiler--Leman-style refinement drives it toward singletons, so in the
+limit \emph{deeper context uniquely identifies the target}. If information were the only consideration,
+the architecture should extract as deep as possible.
+
+It is not, because \textbf{the relations must be recovered from an image, and recovery reliability
+collapses with depth}. The two curves diverge sharply. Measured on the held-out set, the oracle
+confusable set falls with depth (information says deeper is unique), but the \emph{realizable}
+confusable set --- weighting each hop by the measured reliability of recovering it from evidence ---
+saturates almost immediately (Table~\ref{tab:depth}, Figure~\ref{fig:depth}).
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lc}
+    \toprule
+    relational depth & realizable median $|C|$ \\
+    \midrule
+    attributes only (depth 0) & 13 \\
+    \textbf{+ 1 hop} & \textbf{8.2} \\
+    + 2 hops & 8.1 \\
+    + 3 hops & 8.1 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Realizable median confusable-set size by relational depth (AP held-out). Discrimination
+  saturates at one hop.}
+  \label{tab:depth}
+\end{table}
+
+Per-hop extraction reliability falls as $\mathbf{0.40 \to 0.05 \to 0}$: a one-hop relation is
+recovered ${\sim}40\%$ of the time, a two-hop predicate ${\sim}5\%$, a three-hop predicate
+essentially never. The product that governs a realized multi-hop chain therefore decays geometrically,
+and \textbf{all realizable discrimination is captured at depth 1} (median 8.2, near the oracle-L3 value
+of ${\sim}9$); depths 2 and 3 add nothing a real extractor can use. This is the depth law:
+\emph{deeper context is informative but not recoverable, so the realizable address is shallow.} The
+failure mode is the well-documented error compounding of multi-hop reasoning over knowledge graphs,
+where each additional hop multiplies the chance of an unrecoverable or hallucinated link
+\citep{chakraborty2024multihop}.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{depth_saturation.png}
+  \caption{Information versus realizability. The oracle confusable set keeps shrinking with depth, but
+  the reliability-weighted realizable set saturates at one hop --- the depth law.}
+  \label{fig:depth}
+\end{figure}
+
+\section{The training-side corroboration}
+
+The depth law is not only an inference-time observation; the author's prior thesis found its
+training-time shadow \citep{chiahuiyen_mscd_thesis}. Supervising the model on depth-3 relational
+chains \emph{wasted} the supervision --- the realizable improvement was $\approx 0$ --- and worse, it
+\textbf{cost capacity}: under a constrained adapter (LoRA rank 16) the depth-$\ge 2$ chains competed
+with and degraded the model's recovery of the coarse \texttt{ifc\_class} field, and the deep-chain
+extraction itself ran at ${\sim}5\%$ accuracy and \emph{hurt} end-to-end performance by ${\sim}13$
+points. Two independent measurements --- the inference-time reliability collapse and the training-time
+capacity conflict --- point to the same conclusion, which makes the architectural prescription
+\textbf{subtractive}: not ``add deeper reasoning'' but ``stop training depth-$\ge 2$ chains and
+reallocate the freed capacity to the fields that are recoverable.''
+
+\section{The answer: compile depth into the node}
+
+The architecture therefore precomputes. Relational context is \textbf{compiled into the target node}
+as the distilled \texttt{node.val} address (the position-slot, the connectivity fingerprint), computed
+once from the BIM model at ingestion, and the runtime extractor recovers only what is recoverable: a
+single hop of context. This is consistent with the dual representation of RQ1 --- a depth-1 sub-graph
+and the node attributes it distils into carry the same information --- and it places the learned
+component exactly where a neuro-symbolic system should: at the \emph{neural$\to$symbolic interface},
+recovering shallow node-level evidence that a deterministic symbolic layer then executes, rather than
+asking a network to perform deep relational inference internally \citep{mao2019nscl}. The principle the
+system follows is concise: \textbf{extract at depth $\le 1$; go richer at depth 1, never deeper;
+compile depth into the node.} A single concession is allowed --- a depth-1-to-landmark relation may be
+used when the landmark anchor is \emph{independently} grounded (so the second hop carries no extraction
+risk) --- but the default is shallow.
+
+\section{The honest boundary of the claim}
+
+Three caveats bound the depth law. \emph{Descriptor and project specificity:} the saturation is
+measured on this synthetic AP export and this address-descriptor family; the \emph{form} of the law
+--- realizable discrimination saturates where per-hop reliability decays --- is general, but the exact
+saturation depth could differ for a model with reliably-recoverable deep relations (e.g.\ strong named
+landmarks). \emph{Reliability estimates:} the per-hop reliabilities (0.40 / 0.05 / 0) are measured on
+the current extractors; a substantially better multi-hop extractor would push the realizable curve
+rightward, though the oracle--realizable gap is large enough that depth-1 dominance is robust to
+moderate improvement. \emph{Oracle refinement:} the WL-style uniqueness at depth is an informational
+upper bound, not a claim that any system should pursue it. None of these undercuts the operative
+result: for the address and the evidence at hand, the realizable representation is a shallow node, not
+a deep path.
+
+\section{Conclusion}
+
+RQ3 asked where the address's relational context belongs --- extracted deep at inference, or compiled
+into the node. The measurement separates information from realizability: deeper context is
+informationally more discriminative (oracle refinement toward singletons), but its recovery from an
+image collapses with depth (per-hop reliability $0.40 \to 0.05 \to 0$), so the realizable confusable
+set saturates at one hop (median $13 \to 8.2 \to 8.1$). The prior thesis's training-time finding
+corroborates it --- depth-$\ge 2$ supervision is wasted and costs \texttt{ifc\_class} capacity ---
+making the prescription subtractive. The architecture therefore compiles depth into the node and
+extracts at depth $\le 1$, placing learning at the neural$\to$symbolic interface where shallow,
+recoverable evidence meets a deterministic executor. The depth law is the architectural principle that
+makes the representation of RQ1 and the mechanism of RQ2 realizable rather than merely informative.

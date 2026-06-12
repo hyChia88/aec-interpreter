@@ -1,0 +1,20 @@
+Architecture, Engineering, and Construction workflows still depend on people translating
+egocentric site evidence --- photographs, marked plans, and short notes --- into allocentric BIM
+records. Before an AI system can reason about status, schedule, or corrective action, it must answer
+a more basic spatial question: \emph{which exact model element is this?} We introduce a
+neuro-symbolic image-to-BIM grounding method that maps a construction-site photograph and
+natural-language note to a \emph{unique} IFC element GUID using only the BIM model itself for
+supervision, with no real on-site labels. The task is hard because many candidate elements are
+\emph{visually identical}, the target identity lives in \emph{graph} space while the evidence lives
+in \emph{image} space, and a cold-start deployment has no paired site-image training set. Our method
+recovers a \textbf{type-conditional spatial address} --- a class-specific relational key, such as an
+opening's ordinal position-slot or a wall's connectivity fingerprint, that is computable from the
+raw IFC model and recoverable from image/plan evidence. A vocabulary-constrained neural layer reads
+coarse semantics; deterministic visual specialists recover discriminating address fields; and a
+symbolic executor consumes a per-field \texttt{\{value, confidence, source\}} contract through
+recall-safe reranking and selective prediction. Supplied at an oracle level, the address lifts pool
+Top-1 from 4.9\% to \textbf{78.5\%} at zero recall cost; a single realizable position-slot extractor
+lifts the addressable subset from a 6.6\% floor to \textbf{67.6\%}; its confidence passes an ECE
+calibration gate (AUROC 0.80); and deferring the least-confident fifth raises answered-set Top-1 to
+\textbf{80.6\%}. The result is an auditable spatial multimodal grounding layer for AEC: ontology is
+the guardrail, topology is the discriminator, and the system knows when to abstain.

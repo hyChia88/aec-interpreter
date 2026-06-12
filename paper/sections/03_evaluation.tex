@@ -1,0 +1,235 @@
+\section{Evaluation \& Results}
+\label{sec:eval}
+
+\subsection{Setup, metrics, and staging}
+\label{sec:eval-setup}
+
+All numbers are measured on the held-out benchmark of the studied project (Tier-3; $n=60$ cases / 59
+elements, of which 35 are addressable fillers), with no case overlap with training. We structure the
+evaluation in stages: first, an \emph{oracle} experiment establishing the symbolic-layer ceiling under
+perfect extraction (\secref{sec:eval-oracle}); second, neural extraction accuracy per field
+(\secref{sec:eval-neural}); third, how noisy signals combine without destroying recall
+(\secref{sec:eval-union}); fourth, the realized extractor with calibrated, selectively-predictive
+routing (\secref{sec:eval-realized}); fifth, the depth analysis (\secref{sec:eval-depth}); and last,
+failure decomposition and workflow-facing cost (\secref{sec:eval-failure}). This staging separates
+symbolic retrieval quality from neural extraction quality --- the two failure modes require different
+fixes, and conflating them produces misleading aggregate metrics. We report \textbf{GT-in-Pool} as the
+primary retrieval metric rather than Top-1, because Top-1 conflates retrieval failure (element never
+in the pool) with ranking failure (element in the pool but ranked poorly); guaranteed retrievability is
+the architectural contribution, and ranking is where the spatial address acts.
+
+\subsection{Oracle experiment: the symbolic ceiling, and where discrimination lives}
+\label{sec:eval-oracle}
+
+Under perfect extraction the symbolic layer retains the target in \textbf{100\% of cases}
+(GT-in-Pool) and compresses the live pool along the fingerprint ladder --- from ${\sim}1{,}257$
+elements (whole-model) to 46 (storey+class) toward single digits as spatial constraints are added
+\citep{chiahuiyen_mscd_thesis}. The architecture is therefore provably sound; the question is where,
+inside the pool, the discriminating information lives.
+
+\paragraph{The coarse floor saturates.} Restricting to the target's storey and IFC class leaves a
+median confusable set of 46 (mean 112) and an oracle Top-1 of only \textbf{4.9\%} --- \emph{below} the
+realized end-to-end reranker (6.7\%) and equal to it on Top-10 (31.5\% vs.\ 30.0\%). Ontology is
+necessary but cannot separate same-class siblings: it is the floor, not the discriminator. Adding the
+richest attribute (the family/type string \texttt{object\_type}) shrinks the confusable set to a
+median of 13 ($3.8\times$) and lifts oracle Top-10 to 76\%, but uniquely identifies only 2 of 60
+targets. What remains is the irreducibly \emph{relational} residue.
+
+\paragraph{The type-conditional address closes it.} Supplied at an oracle level, the class-conditional
+address of \secref{sec:address} takes the real retrieved pool from a coarse Top-1 of 4.9\% to
+\textbf{78.5\%}, and Top-10 from 31.5\% to \textbf{98.1\%} (MRR $0.137 \to 0.854$), at zero recall
+cost. The gain decomposes exactly along the type-conditional split --- fillers reach Top-1
+\textbf{91.0\%} (position-slot), walls \textbf{64.2\%} (connectivity fingerprint; within same-storey
+walls the fingerprint collapses a median confusable set of $110 \to 2$, uniquely identifying 10 of 22
+walls where \texttt{object\_type} identifies none). No uniform descriptor achieves this: the
+position-slot is meaningless for a wall, the fingerprint degenerate for a window. Generic retrieval
+baselines confirm the gap is not an artifact of our own pipeline: lexical and dense retrievers plateau
+at Top-1 1.7\% (Top-10 15.6\% / 25.0\%) on the same pools (Figure~\ref{fig:external}).
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{external_baseline.png}
+  \caption{Baselines against the oracle ceiling on identical pools. Lexical and dense retrieval and
+  the fine-tuned end-to-end reranker plateau in single-digit Top-1 with the ground truth in-pool
+  throughout; the oracle spatial address reorders the same pool to 78.5\%/98.1\%. The bottleneck is
+  ranking inside the pool, and the missing signal is the relational address.}
+  \label{fig:external}
+\end{figure}
+
+\subsection{Neural extraction quality: what the fine-tuned VLM does and does not recover}
+\label{sec:eval-neural}
+
+Per-field evaluation shows fine-tuning works where it was aimed: against zero-shot prompting
+(\texttt{ifc\_class} 63.3\%, storey 30.0\%), the fine-tuned models saturate both at \textbf{100\%},
+reach predicate slot-accuracy 82.8--86.2\% versus 43.1\%, and lift relation direction to 82.1\% versus
+${\sim}0\%$ \citep{chiahuiyen_mscd_thesis}. End-to-end, however, the best configuration delivers
+Top-10 30.0\% / Top-1 6.7\% / MRR@10 0.110 --- with the target in the pool ${\sim}100\%$ of the time.
+The decisive diagnostic is the held-out per-field re-profile (Figure~\ref{fig:vlm}): the VLM is
+saturated on the \emph{coarse prefix} (storey, class --- exactly the fields the oracle shows are
+non-discriminating) and recovers the \emph{discriminating} structured fields at \textbf{0\%} (the
+position-slot and the size band), with relation direction partial (57\%). The conclusion is
+architectural, not ``fine-tune harder'': delegate the slot and size to deterministic visual
+specialists, keep the VLM on the coarse prefix and relation typing where it is reliable. This is the
+neuro-symbolic interface in practice --- learn where the network is reliable, compute
+deterministically where it is not \citep{mao2019nscl}.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{vlm_profile.png}
+  \caption{Perception takeaway: per-field re-profile of the fine-tuned VLM on the held-out set. The
+  coarse prefix (storey, class) saturates; the discriminating fields (position-slot, size) are
+  recovered at 0\% --- motivating delegation to deterministic specialists.}
+  \label{fig:vlm}
+\end{figure}
+
+\subsection{Combining signals: union, never intersection}
+\label{sec:eval-union}
+
+How should a mature signal (storey+type) combine with an immature one (spatial topology)? The strategy
+ablation is unambiguous: the \textbf{union} of constraint sets is the only strategy that preserves
+full GT-in-Pool while still gaining the spatial constraints' compression and ranking benefit; hard
+intersection over-prunes under noisy extraction, and spatial-only is too brittle
+\citep{chiahuiyen_mscd_thesis}. The measurement says why: treating each extracted field as a hard
+filter multiplies per-field recalls --- with measured single-field reliabilities (storey
+$\approx 0.66$, class $\approx 0.50$), a hard conjunction over the attribute fields collapses joint
+recall toward $\prod r \approx 0.009$. The filter evicts the ground truth far more often than it
+removes a distractor. The resolution is to relocate determinism: \textbf{the executor is deterministic
+given the structured record; the ranking is a calibrated soft prior inside a recall-fixed pool.} The
+address never removes a candidate; it re-weights one. Recall stays at 100\% by construction, and the
+unreliable signal is spent only on ordering. As a design principle this generalizes: when combining
+mature and immature signals, union --- intersection amplifies extraction error and destroys recall.
+
+\subsection{Realizing the address: one specialist, calibrated, selectively predictive}
+\label{sec:eval-realized}
+
+The oracle ceiling is a statement about information; this section measures how much survives a real,
+imperfect detector. The honest floor is stark: the fine-tuned reranker emits position as free text and
+recovers a usable slot in \textbf{0 of 35} held-out fillers; even a modal-prior slot guess reaches
+only 6.6\%. We report four results.
+
+\paragraph{(1) One realizable extractor closes most of the gap.} The OpenCV position-slot detector
+recovers the opening count exactly in 83\% of cases (29/35) and the full slot in 74\% (joint
+$(i,M)$). Fed into the soft rerank, it lifts filler Top-1 from the 6.6\% floor to \textbf{67.6\%} and
+Top-10 to 80.9\%, at zero recall cost. The residual error concentrates in the ordering index, not in
+the perception of the openings.
+
+\paragraph{(2) A representational prerequisite: the address must be image-recoverable.} The
+ground-truth slot in the source data is numbered along each wall's IFC local-X axis --- a modelling
+artefact invisible in any image. Scored against that convention, detector and ground truth disagree on
+16 of 35 fillers, \emph{all} exact mirrors $i \mapsto M{-}1{-}i$; under an image-coordinate convention
+the disagreement vanishes and joint accuracy rises from an apparent 34\% to the true 74\%. An address
+field is realizable only if it is defined in a frame the evidence carries --- a substantive design
+constraint, not bookkeeping. The same constraint explains a negative result: the wall fingerprint's
+load-bearing fields depend on IFC wall-\emph{instance} boundaries that collinear instances erase in
+the floorplan poch\'e (length-band recovery 5/17, realized Top-1 $\approx$ floor), so the wall address
+is oracle-discriminative but \emph{not} image-realizable, and realization is scoped to the filler
+slot.
+
+\paragraph{(3) The confidence is calibratable --- and reweighting is a measured no-op.} Routing is
+only legitimate if confidence tracks correctness \citep{guo2017calibration}. On the held-out fillers
+the raw detector confidence is positively discriminative (AUROC \textbf{0.80}) and moderately
+mis-calibrated (ECE 0.206); temperature scaling reduces it to 0.172 (Figure~\ref{fig:caldiag}). But
+the calibrated weight does \emph{not} pay off as a rerank weight: because the slot is the finest
+tiebreaker inside a storey$\times$class bucket, any strictly-positive weight induces the identical
+ordering --- hard match, raw weight, and calibrated weight all yield the same 67.6\%. We report this
+no-op rather than bury it.
+
+\paragraph{(4) The payoff is selective prediction.} The calibrated confidence pays off as a deferral
+threshold: sweeping it traces a coverage--accuracy curve (Figure~\ref{fig:rerank}), and deferring the
+least-confident ${\sim}20\%$ of cases lifts Top-1 on the answered subset from 67.6\% to
+\textbf{80.6\%} \citep{geifman2017selective}. A worked case (Figure~\ref{fig:demo}) shows the
+mechanism: the detector predicts slot 1 of 10 where the truth is 8 of 10 --- an error --- but its
+calibrated confidence (0.05) is below threshold, so the case routes to \emph{defer} and surfaces the
+candidates instead of a confident wrong GUID. For a triage tool with downstream consequence, this is
+the correct behavior, and the coverage--accuracy curve, not a point estimate, is the honest report.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{calibration_diag.png}
+  \caption{Calibration gate. Raw detector confidence is positively discriminative (AUROC 0.80) and
+  moderately mis-calibrated (ECE 0.206); temperature scaling reduces ECE to 0.172.}
+  \label{fig:caldiag}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{calibrate_rerank.png}
+  \caption{Selective prediction. Sweeping the deferral threshold traces a coverage--accuracy curve;
+  deferring the least-confident ${\sim}20\%$ lifts answered-set Top-1 from 67.6\% to 80.6\%.}
+  \label{fig:rerank}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{case_AP_SK_092.png}
+  \caption{A worked DEFER case. The detector predicts slot 1 of 10 where the truth is 8 of 10, but
+  its calibrated confidence (0.05) is below threshold: the case routes to defer and surfaces the
+  candidate pool rather than emitting a confident wrong GUID.}
+  \label{fig:demo}
+\end{figure}
+
+\subsection{The depth law: relational context saturates at one hop}
+\label{sec:eval-depth}
+
+Where should relational context live --- extracted deep at inference, or compiled into the node? Under
+an oracle, deeper context keeps shrinking the confusable set (a Weisfeiler--Leman-style refinement
+toward singletons). But the relations must be recovered from an image, and per-hop extraction
+reliability falls as $0.40 \to 0.05 \to 0$, so the \emph{realizable} confusable set saturates
+immediately (Table~\ref{tab:depth}, Figure~\ref{fig:depth}): median 13 (attributes) $\to$
+\textbf{8.2} at one hop $\to$ 8.1 at two and three. This is the depth law --- deeper context is
+informative but not recoverable --- and its failure mode is the documented error compounding of
+multi-hop reasoning over knowledge graphs \citep{chakraborty2024multihop}. The training side
+corroborates it: supervising depth-3 chains yielded ${\approx}0$ realizable improvement and \emph{cost}
+capacity --- under a fixed LoRA rank, depth-$\ge 2$ chains degraded the coarse \texttt{ifc\_class}
+recovery, and the deep-chain extraction itself ran at ${\sim}5\%$ and hurt end-to-end performance by
+${\sim}13$ points \citep{chiahuiyen_mscd_thesis}. The prescription is subtractive: stop training deep
+chains, compile depth into the node, extract at depth $\le 1$.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lc}
+    \toprule
+    relational depth & realizable median $|C|$ \\
+    \midrule
+    attributes only (depth 0) & 13 \\
+    \textbf{+ 1 hop} & \textbf{8.2} \\
+    + 2 hops & 8.1 \\
+    + 3 hops & 8.1 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Realizable median confusable-set size by relational depth (held-out set). All realizable
+  discrimination is captured at one hop.}
+  \label{tab:depth}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{depth_saturation.png}
+  \caption{Information versus realizability. The oracle confusable set keeps shrinking with depth; the
+  reliability-weighted realizable set saturates at one hop --- the depth law.}
+  \label{fig:depth}
+\end{figure}
+
+\subsection{Failure decomposition, latency, and triage effort}
+\label{sec:eval-failure}
+
+Because the pipeline localizes errors to named fields rather than opaque scores, the residual
+end-to-end loss decomposes cleanly: it is dominated by \emph{extraction} errors --- missing or
+incorrect spatial predicates and the lowest-accuracy fields (subtype, material, position-context) ---
+not by retrieval logic; on cross-IFC generalization, \texttt{ifc\_class} gating is the added failure
+mode \citep{chiahuiyen_mscd_thesis}. Every failure has a traceable stage, which is the operational
+differentiator over black-box matching: the roadmap is ``improve the named weak fields,'' not
+``redesign the planner.'' Latency favors the constrained pipeline (${\sim}1$\,s vs.\ ${\sim}4.5$\,s
+for the ReAct agent, with exact repeatability). The workflow-facing cost metric makes the ceiling
+concrete (Figure~\ref{fig:triage}): the expected number of candidates a coordinator must inspect falls
+from a median 38 under manual scan to 0.5 under a perfect address --- with 15 seconds per inspection an
+explicit proxy assumption, not a user-study result.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{triage_effort.png}
+  \caption{Triage-effort proxy on the same held-out pools. Expected inspections per case fall from a
+  median 38 (manual scan) to 0.5 (perfect address); the realized specialist sits between, with
+  success@1 78.5\% under the oracle address.}
+  \label{fig:triage}
+\end{figure}

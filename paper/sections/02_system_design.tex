@@ -1,0 +1,175 @@
+\section{System Design}
+\label{sec:design}
+
+\subsection{Design rationale: four decisions, each against a measured alternative}
+\label{sec:rationale}
+
+The architecture is best explained by the alternatives it rejects. Each key decision below names the
+rejected alternative, the evidence against it, and the trade-off accepted.
+
+\paragraph{Why neuro-symbolic over end-to-end neural matching?} The obvious design --- train a single
+cross-attention model to compare the site evidence against the candidates and rank them end-to-end
+--- is, in its strongest ``bitter-lesson'' form \citep{sutton2019bitter}, the objection the design
+must answer, and we answer it empirically. First, the candidates are graph nodes, not images: they
+carry no photograph, and an image-space grounding result (a region in a photo or plan) does not reach
+a GUID, because image space and graph space are not co-registered. The only bridge is a representation
+independent of the image's coordinate frame --- a coordinate-free relational address. Second, the
+discriminative signal is relational, not pixel-local: what separates two visually identical windows is
+graph topology (``the third of five fillers along an external wall''), which a pixel matcher would
+have to re-derive inside its own weights --- unreliably, as the classical opening-count baseline
+(${\sim}27\%$) illustrates \citep{chiahuiyen_mscd_thesis}. Third, the end-to-end matcher is our
+measured baseline, and it plateaus: the strongest fine-tuned multimodal reranker reaches Top-1 6.7\%
+with the answer in the pool 100\% of the time, while the same pool reorders to 78.5\% when the
+relational address is supplied (\secref{sec:eval-oracle}). Finally, construction compliance requires
+repeatability and audit: a scalar matching score is not auditable, not correctable, and cannot be
+gated by per-field calibrated confidence. Trade-off accepted: less end-to-end flexibility, in exchange
+for recall guarantees, auditability, and zero-shot transfer of the address to any IFC model.
+
+\paragraph{Why deterministic query templates over text-to-Cypher?} LLM-generated Cypher produces
+syntax errors and hallucinates node and relationship names; even dedicated systems need an
+LLM-supervised generation-verification loop to approach reliability
+\citep{tiwari2024autocypher, gusarov2025graphrag}. Our query patterns are enumerable (nine strategies)
+and domain-specific, so a fixed template with parameter slots gives 100\% syntax correctness. The
+agentic alternative was tested directly: a ReAct-style agent ran at ${\sim}4.5$\,s versus ${\sim}1$\,s
+for the constrained pipeline and chose different tool sequences for the same input --- unacceptable
+where the same photo must always produce the same result. Trade-off accepted: only predefined query
+patterns are covered, not arbitrary questions.
+
+\paragraph{Why an IFC-native graph over document-level GraphRAG?} Document GraphRAG builds its graph
+by LLM extraction from text \citep{edge2024graphrag} --- noisy in AEC, where element attributes and
+spatial relationships are rarely verbalized. Our graph is compiled from the IFC schema directly
+\citep{zhu2023ifcgraph, buildingsmart2024ifc4x3}, so the graph itself is zero-error ground truth.
+Trade-off accepted: the system requires a project IFC file and cannot answer questions about things
+absent from the model.
+
+\paragraph{Why fine-tuning over prompting-only?} Few-shot prompting is stateless --- it cannot improve
+over a project's lifecycle. LoRA fine-tuning accumulates field feedback as supervised examples for
+periodic retraining, and runs locally at ${\sim}1$\,s with no per-call API cost versus 3--5\,s for a
+prompted frontier model. Trade-off accepted: a synthetic data pipeline and retraining infrastructure
+are required (\secref{sec:synth}).
+
+\subsection{Architecture overview}
+\label{sec:arch}
+
+The pipeline has five stages: multimodal input (photo + note + plan crop) $\to$ neural extraction into
+a typed record $\to$ a structured constraint contract $\to$ deterministic query compilation against the
+IFC graph $\to$ a ranked GUID shortlist or an explicit deferral. Figure~\ref{fig:pipeline} traces a
+single case through the spine, with the confidence-routing path --- from the extractors'
+\texttt{\{value, confidence, source\}} records to the answer/defer gate --- highlighted; that path is
+the system's determinism$\leftrightarrow$adaptivity mechanism. The evidence flow is intentionally
+ordered from raw observation to auditable execution: a vocabulary-constrained VLM reads the coarse
+semantic prefix; deterministic specialists recover the fields the VLM does not carry reliably; the IFC
+graph supplies the legal candidate universe and precomputed topology; and the routing layer decides
+whether the recovered address is confident enough to answer or should surface a candidate set for
+human verification. This ordering is the hallucination control: \textbf{the neural layer describes
+evidence, but the symbolic layer alone names GUIDs.}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\textwidth]{pipeline.png}
+  \caption{The method spine. A site photograph and a marked plan are decomposed into per-field
+  extractions, each carrying a \texttt{\{value, confidence, source\}} record; the depth-1
+  spatial-address record is routed through a calibration gate that either answers with a GUID or
+  defers. The highlighted lane is the confidence-routing path.}
+  \label{fig:pipeline}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{system_decomposition.png}
+  \caption{Module decomposition. The neural side (fine-tuned VLM, deterministic visual specialists)
+  emits typed fields; the symbolic side (IFC graph, query compiler, reranker) executes them; the
+  confidence-routing layer sits at the interface.}
+  \label{fig:decomp}
+\end{figure}
+
+\subsection{IFC parse engine: from a linear file to a query-ready graph}
+\label{sec:ifc}
+
+The symbolic substrate is built once per project by compiling the raw IFC file into a property graph
+(IfcOpenShell $\to$ Neo4j), following the IFC-as-graph line \citep{zhu2023ifcgraph}. Beyond the
+schema's containment hierarchy, the engine enriches the graph with the spatial topology the address
+needs: \texttt{ON\_STOREY} from spatial containment, \texttt{FILLS} from
+\texttt{IfcRelFillsElement}/\texttt{IfcRelVoidsElement} chains, \texttt{CONNECTS\_TO} from
+\texttt{IfcRelConnectsPathElements} wall connectivity, and \texttt{ADJACENT\_TO} as generic proximity
+(centroid distance under 1500\,mm) \citep{buildingsmart2024ifc4x3}. A graph database rather than a
+vector store is a requirement, not a preference: the discriminating signal is multi-hop topology with
+a deterministic schema, which embedding similarity cannot express. The reconstruction is validated
+against the dataset's own skeleton --- the recovered wall \texttt{connection\_degree} matches ground
+truth in 14 of 14 checked cases --- so the graph exists, correct and complete, on day one with no
+human annotation: the cold-start property the system claims.
+
+\subsection{Neural layer: a fine-tuned VLM as the perception engine}
+\label{sec:vlm}
+
+The perception engine is Qwen2.5-VL-7B with LoRA adapters (rank 32 in the strongest configurations,
+targeting Q/K/V/O and MLP layers across both the vision encoder and the language model), chosen for
+stable JSON emission and native dynamic resolution. It reads the photo, the note, and the plan crop
+and emits a structured contract --- \texttt{\{storey\_name, ifc\_class,
+spatial\_relations:[\{predicate, object\_type, direction\}]\}} --- and nothing else: \emph{it
+describes, it never queries} (Figure~\ref{fig:vlmimpl}). Fine-tuning on the synthetic corpus is what
+makes the spatial fields exist at all: spatial-direction accuracy reaches 82\% where zero-shot
+prompting scores ${\sim}0\%$, and the coarse fields (storey, \texttt{ifc\_class}) saturate at 100\%
+versus 30--63\% zero-shot \citep{chiahuiyen_mscd_thesis}. The G-series ablation also exposes a
+multi-task capacity trade-off under a fixed adapter rank: under-resourced adapters collapse on spatial
+extraction while the coarse fields stay saturated, so topology-specific supervision and added
+position-context capacity are needed to recover spatial fingerprints --- and, as the per-field profile
+in \secref{sec:eval-neural} shows, the finest discriminating fields do not survive fine-tuning at all,
+which is why they are delegated to the specialists below.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{vlm_implementation.png}
+  \caption{Fine-tuned VLM implementation and impact. A LoRA-tuned Qwen2.5-VL reads photo, note, and
+  plan and emits the typed constraints contract; fine-tuning lifts spatial-direction accuracy from
+  ${\sim}0\%$ (zero-shot) to 82\%.}
+  \label{fig:vlmimpl}
+\end{figure}
+
+\subsection{Synthetic data pipeline: supervision with zero real labels}
+\label{sec:synth}
+
+Cold-start means no real paired data, so supervision is manufactured from the model itself in three
+stages. \emph{Stage 1 --- IFC structure mining:} IfcOpenShell traversal plus spatial-relationship
+computation yields, for every element, its ground-truth address and relational context. \emph{Stage 2
+--- visual synthesis:} Blender renders scenes with deliberate hard negatives --- identical-looking
+adjacent rooms --- so the model cannot shortcut on appearance. \emph{Stage 3 --- text generation:} an
+LLM writes site-note queries at varying specificity, and an LLM-as-judge filter removes degenerate
+cases. The output is 990 training cases on the studied project, a 60-case held-out benchmark (the
+evaluation set throughout \secref{sec:eval}), and a 116-case cross-IFC generalization benchmark.
+
+\subsection{Symbolic layer: deterministic query compilation with a recall-safe cascade}
+\label{sec:symbolic}
+
+The constraint contract compiles into Cypher through nine predefined query strategies (spatial
+triplet, continuous span, space+type, \ldots); the VLM never generates Cypher
+(\secref{sec:rationale}). Execution follows a cascade that is recall-safe by construction: strict
+constraints first, then loosen one constraint at a time, with a storey+type safety net guaranteeing a
+non-empty pool. The pool is then \emph{never} hard-filtered further --- the measured reason is in
+\secref{sec:eval-union} --- and ranking inside the pool is delegated to the spatial address.
+
+\subsection{The spatial address, deterministic specialists, and calibrated routing}
+\label{sec:address}
+
+The element that closes the loop is the \textbf{type-conditional spatial address}: the minimal
+descriptor set that identifies an element within its confusable set $C(e)$ --- the pool elements
+sharing its storey and IFC class --- subject to two deployment constraints: it must be
+\textbf{IFC-computable} (derivable from the model with no labels) and \textbf{image-recoverable}
+(estimable from photo and plan). The address is class-conditional. \emph{Fillers} (windows, doors) are
+identified by the \textbf{position-slot} $(i, M)$: the $i$-th of $M$ openings ordered along the host
+wall, numbered in an image-coordinate convention (a representational prerequisite quantified in
+\secref{sec:eval-realized}). \emph{Walls} are identified by a \textbf{connectivity fingerprint}
+(\texttt{connection\_degree}, \texttt{hosted\_opening\_count}, \texttt{length\_band},
+\texttt{is\_external}). Relational context is \emph{compiled into the node} at ingestion --- the
+depth-1 sub-graph and the distilled node attributes carry the same information --- so the runtime
+extractor recovers at most one hop (the depth law, \secref{sec:eval-depth}).
+
+Recovery of the discriminating fields is delegated to \textbf{deterministic visual specialists}: an
+OpenCV detector that color-segments the plan's openings and orders them along the host wall to read
+the position-slot, and a ResNet size head for dimension bands --- both of which outperform the trained
+VLM on exactly these sub-tasks. Every extracted field, from every source, is emitted as a uniform
+record \texttt{\{value, confidence, source\}} --- the contract invariant. A routing policy consumes the
+contract: the recovered slot enters the rerank as a confidence-weighted prior inside the recall-fixed
+pool, and a low-confidence extraction routes to \textbf{defer} (``here are the candidates'') rather
+than to a confident wrong answer. The premise that confidence may route at all is gated on calibration
+\citep{guo2017calibration} and measured, not assumed (\secref{sec:eval-realized}).
