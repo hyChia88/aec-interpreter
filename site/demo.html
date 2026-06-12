@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AEC Interpreter — interactive 3D-highlight demo</title>
+<style>
+  :root{--ink:#1a1c20;--muted:#5b6470;--line:#e6e8ec;--soft:#f6f7f9;--accent:#ef7d00;
+    --accent-soft:#fff4e3;--green:#2ca02c;--red:#d62728;--blue:#1f6feb}
+  *{box-sizing:border-box}
+  body{margin:0;color:var(--ink);background:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.55}
+  a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+  header{padding:18px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+  header h1{font-size:20px;margin:0;font-weight:800}header h1 b{color:var(--accent)}
+  header .sub{color:var(--muted);font-size:14px}
+  .app{display:grid;grid-template-columns:380px 1fr;height:calc(100vh - 62px);min-height:560px}
+  .panel{border-right:1px solid var(--line);overflow-y:auto;padding:20px}
+  .viewer{position:relative;background:#eef1f4}
+  #c{width:100%;height:100%;display:block}
+  .hint{position:absolute;left:14px;bottom:12px;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12.5px;color:var(--muted)}
+  #loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:15px;background:rgba(238,241,244,.7)}
+  .kicker{color:var(--accent);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 18px}
+  .chip{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;background:#fff;color:#333}
+  .chip:hover{border-color:var(--accent)}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  .chip .d{font-size:10px}
+  figure{margin:0 0 14px}img.site{width:100%;border:1px solid var(--line);border-radius:10px;display:block}
+  figcaption{font-size:12.5px;color:var(--muted);margin-top:6px;font-style:italic}
+  .row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .row .k{color:var(--muted)}.row .v{font-weight:600;font-family:ui-monospace,monospace}
+  .badge{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:3px 10px;color:#fff}
+  .badge.ANSWER{background:var(--green)}.badge.DEFER{background:var(--red)}
+  .ok{color:var(--green)}.bad{color:var(--red)}
+  .note{margin-top:16px;font-size:12.5px;color:var(--muted);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+  h3{font-size:15px;margin:18px 0 4px}
+  .legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted);margin-top:8px}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px}
+  @media(max-width:820px){.app{grid-template-columns:1fr;height:auto}.viewer{height:62vh}}
+</style>
+</head>
+<body>
+<header>
+  <h1>AEC&nbsp;<b>Interpreter</b> — 3D grounding demo</h1>
+  <span class="sub">pick a case → see the grounded element highlighted in the BIM model · <a href="index.html">← project page</a></span>
+</header>
+
+<div class="app">
+  <aside class="panel">
+    <span class="kicker">Held-out cases</span>
+    <div class="chips" id="chips"></div>
+    <div id="detail"></div>
+    <div class="note" id="servenote" style="display:none">
+      <b>Note:</b> the 3D model loads over HTTP. If the viewer is blank, serve this folder:
+      <code>python3 -m http.server</code> in <code>site/</code>, then open
+      <code>http://localhost:8000/demo.html</code>.
+    </div>
+  </aside>
+  <div class="viewer">
+    <canvas id="c"></canvas>
+    <div id="loading">select a case…</div>
+    <div class="hint">drag to orbit · scroll to zoom · right-drag to pan</div>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const BASE = new THREE.Color(0xcdd3da), BASEEDGE = 0x9aa3ad;
+const HOT = new THREE.Color(0xef7d00);
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xeef1f4);
+const camera = new THREE.PerspectiveCamera(45, 2, 0.1, 5000);
+const controls = new OrbitControls(camera, canvas); controls.enableDamping = true;
+scene.add(new THREE.HemisphereLight(0xffffff, 0x9aa3ad, 1.15));
+const dir = new THREE.DirectionalLight(0xffffff, 1.1); dir.position.set(40,80,30); scene.add(dir);
+
+function resize(){ const r = canvas.getBoundingClientRect();
+  renderer.setSize(r.width, r.height, false); camera.aspect = r.width/r.height; camera.updateProjectionMatrix(); }
+new ResizeObserver(resize).observe(canvas.parentElement);
+(function loop(){ requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); })();
+
+const loader = new GLTFLoader();
+const cache = {};                 // glb file -> THREE.Group (with up-axis fixed)
+let current = null;
+const markers = new THREE.Group(); scene.add(markers);   // world-space highlight markers
+
+function loadGLB(file){
+  if (cache[file]) return Promise.resolve(cache[file]);
+  return new Promise((res, rej) => loader.load('assets/3d/'+file, g => {
+    const root = g.scene; root.rotation.x = -Math.PI/2;     // IFC Z-up -> three Y-up
+    root.traverse(o => { if (o.isMesh){ o.userData.guid = guidOf(o); } });
+    cache[file] = root; res(root);
+  }, undefined, rej));
+}
+function guidOf(o){ let n=o; while(n){ if(n.name && n.name.length>=20) return n.name; n=n.parent; } return o.name; }
+
+function show(file, guid){
+  document.getElementById('loading').style.display = 'flex';
+  document.getElementById('loading').textContent = 'loading model…';
+  loadGLB(file).then(root => {
+    if (current) scene.remove(current);
+    current = root; scene.add(root);
+    const hits = [];
+    root.traverse(o => { if(!o.isMesh) return;
+      const isT = (o.userData.guid||'').includes(guid);
+      o.material = new THREE.MeshStandardMaterial({
+        color: isT?HOT:BASE, emissive: isT?HOT:0x000000, emissiveIntensity:isT?0.95:0,
+        transparent:!isT, opacity:isT?1:0.18, roughness:0.9, metalness:0.0,
+        depthWrite:isT, side:THREE.DoubleSide });
+      o.renderOrder = isT?2:1;
+      if(isT) hits.push(o);
+    });
+    root.updateMatrixWorld(true);          // matrices must be current before bbox/framing
+    markers.clear();
+    if(hits.length){                        // world-space markers so the element reads at any zoom
+      const b = new THREE.Box3(); hits.forEach(o=>b.expandByObject(o));
+      const cc = b.getCenter(new THREE.Vector3()), sz = b.getSize(new THREE.Vector3());
+      const H = Math.max(sz.x,sz.y,sz.z,1);
+      const glow = new THREE.Mesh(
+        new THREE.BoxGeometry(sz.x+H*0.6, sz.y+H*0.6, sz.z+H*0.6),
+        new THREE.MeshBasicMaterial({color:0xef7d00, transparent:true, opacity:0.32, depthTest:false}));
+      glow.position.copy(cc); glow.renderOrder=5; markers.add(glow);
+      const beam = new THREE.Mesh(
+        new THREE.CylinderGeometry(H*0.10, H*0.10, H*9, 14),
+        new THREE.MeshBasicMaterial({color:0xef7d00, transparent:true, opacity:0.9, depthTest:false}));
+      beam.position.set(cc.x, cc.y + H*4.5, cc.z); beam.renderOrder=6; markers.add(beam);
+    }
+    frame(root, hits);
+    console.log('demo: loaded', file, 'meshes', root.children.length, 'target hits', hits.length);
+    document.getElementById('loading').style.display = 'none';
+  }).catch(e => { document.getElementById('loading').textContent='3D load failed — serve over HTTP (see note).';
+    document.getElementById('servenote').style.display='block'; console.error(e); });
+}
+function frame(root, hits){
+  const tBox = new THREE.Box3();
+  (hits.length?hits:[root]).forEach(o=>tBox.expandByObject(o));
+  const c = tBox.getCenter(new THREE.Vector3()), s = tBox.getSize(new THREE.Vector3());
+  const d = Math.max(s.x,s.y,s.z, 1.5) * 3.5 + 4;
+  camera.position.set(c.x + d, c.y + d*0.55, c.z + d);
+  camera.near = d/100; camera.far = d*40; camera.updateProjectionMatrix();
+  controls.target.copy(c); controls.update();
+}
+
+// ---- left panel ----
+let CASES = [];
+fetch('assets/3d/cases.json').then(r=>r.json()).then(cs => {
+  CASES = cs;
+  const chips = document.getElementById('chips');
+  cs.forEach((c,i)=>{
+    const b = document.createElement('div'); b.className='chip'; b.dataset.i=i;
+    b.innerHTML = `${c.id.replace('AP_SK_','#')} <span class="d">${c.decision[0]}</span>`;
+    b.onclick = ()=>select(i); chips.appendChild(b);
+  });
+  if(cs.length) select(0);
+}).catch(()=>{ document.getElementById('detail').innerHTML='<p class="bad">Could not load cases.json — serve over HTTP.</p>';
+  document.getElementById('servenote').style.display='block'; });
+
+function select(i){
+  const c = CASES[i];
+  document.querySelectorAll('.chip').forEach((el,j)=>el.classList.toggle('on', j===i));
+  const dec = `<span class="badge ${c.decision}">${c.decision}</span>`;
+  const mark = c.correct ? '<span class="ok">✓ correct</span>' : '<span class="bad">✗ mismatch</span>';
+  const slot = c.pred_slot ? `${c.pred_slot[0]} of ${c.pred_slot[1]}` : 'abstained';
+  document.getElementById('detail').innerHTML = `
+    <figure>${c.site_img?`<img class="site" src="${c.site_img}" alt="site photo">`:''}
+      <figcaption>“${c.query}”</figcaption></figure>
+    <span class="kicker">Spatial address — predicted</span>
+    <div class="row"><span class="k">element</span><span class="v">${c.ifc_class} · ${c.storey}</span></div>
+    <div class="row"><span class="k">predicted slot</span><span class="v">${slot}</span></div>
+    <div class="row"><span class="k">ground truth</span><span class="v">${c.gt_slot[0]} of ${c.gt_slot[1]} &nbsp;${mark}</span></div>
+    <div class="row"><span class="k">confidence</span><span class="v">${c.conf_raw} → ${c.conf_cal} (cal)</span></div>
+    <div class="row"><span class="k">decision (τ=${c.tau})</span><span class="v">${dec}</span></div>
+    <h3>In the model</h3>
+    <p style="font-size:13.5px;color:#3a3f47;margin:4px 0 0">The grounded element (GUID
+      <code style="font-size:11px">${c.target_guid}</code>) is highlighted in orange in its storey.
+      ${c.correct?'A correct ANSWER — the system commits to this GUID.':
+        (c.decision==='DEFER'?'A DEFER — the prediction is wrong but its confidence is below threshold, so the system abstains and returns candidates instead.':'')}</p>
+    <div class="legend"><span><span class="sw" style="background:#ef7d00"></span>grounded element</span>
+      <span><span class="sw" style="background:#cdd3da"></span>storey context</span></div>`;
+  show(c.glb, c.target_guid);
+}
+if (location.protocol === 'file:') document.getElementById('servenote').style.display='block';
+</script>
+</body>
+</html>

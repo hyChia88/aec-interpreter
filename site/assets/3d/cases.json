@@ -1,0 +1,134 @@
+[
+  {
+    "id": "AP_SK_102",
+    "storey": "2 - Second Floor",
+    "glb": "2_second_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRS7s",
+    "ifc_class": "Window",
+    "query": "The window in the wall opening on Second Floor needs QA review.",
+    "site_img": "../assets/dataset/AP_SK_102_site.png",
+    "gt_slot": [
+      2,
+      17
+    ],
+    "pred_slot": [
+      2,
+      17
+    ],
+    "conf_raw": 0.52,
+    "conf_cal": 0.57,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true
+  },
+  {
+    "id": "AP_SK_092",
+    "storey": "1 - First Floor",
+    "glb": "1_first_floor.glb",
+    "target_guid": "1KMtYLyv9CyfGv8UjnMB3m",
+    "ifc_class": "Window",
+    "query": "On First Floor, check the window set into the wall opening at this location.",
+    "site_img": "../assets/dataset/AP_SK_092_site.png",
+    "gt_slot": [
+      8,
+      10
+    ],
+    "pred_slot": [
+      1,
+      10
+    ],
+    "conf_raw": 0.29,
+    "conf_cal": 0.05,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false
+  },
+  {
+    "id": "AP_SK_107",
+    "storey": "3 - Third Floor",
+    "glb": "3_third_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV0G",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on Third Floor installed in the wall opening.",
+    "site_img": "../assets/dataset/AP_SK_107_site.png",
+    "gt_slot": [
+      0,
+      3
+    ],
+    "pred_slot": [
+      0,
+      3
+    ],
+    "conf_raw": 0.64,
+    "conf_cal": 0.87,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true
+  },
+  {
+    "id": "AP_SK_082",
+    "storey": "-1 - Garage",
+    "glb": "1_garage.glb",
+    "target_guid": "1q9pLykVT2tOtz_4Xjbup3",
+    "ifc_class": "Door",
+    "query": "On Garage, check the door set into the wall opening at this location.",
+    "site_img": "../assets/dataset/AP_SK_082_site.png",
+    "gt_slot": [
+      0,
+      5
+    ],
+    "pred_slot": [
+      0,
+      5
+    ],
+    "conf_raw": 0.56,
+    "conf_cal": 0.69,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true
+  },
+  {
+    "id": "AP_SK_111",
+    "storey": "4 - Fourth Floor",
+    "glb": "4_fourth_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV1$",
+    "ifc_class": "Window",
+    "query": "On Fourth Floor, check the window set into the wall opening at this location.",
+    "site_img": "../assets/dataset/AP_SK_111_site.png",
+    "gt_slot": [
+      2,
+      17
+    ],
+    "pred_slot": [
+      2,
+      17
+    ],
+    "conf_raw": 0.52,
+    "conf_cal": 0.57,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true
+  },
+  {
+    "id": "AP_SK_118",
+    "storey": "5 - Fifth Floor",
+    "glb": "5_fifth_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV44",
+    "ifc_class": "Window",
+    "query": "The window in the wall opening on Fifth Floor needs QA review.",
+    "site_img": "../assets/dataset/AP_SK_118_site.png",
+    "gt_slot": [
+      0,
+      4
+    ],
+    "pred_slot": [
+      0,
+      4
+    ],
+    "conf_raw": 0.62,
+    "conf_cal": 0.84,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true
+  }
+]

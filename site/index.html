@@ -365,14 +365,20 @@
 
 <section id="demo"><div class="wrap">
   <span class="kicker">Demo</span>
-  <h2>One case, end-to-end — in the browser</h2>
-  <p>A web demo takes an uploaded construction photo plus a natural-language description and highlights the
-    matched IFC elements in a <b>3D viewer</b> — no AEC software required. The interface exposes every stage:
-    the extracted constraints, the predicted spatial address as a graph, the calibrated confidence, and the
-    answer/defer decision — so the answer is always <em>inspectable</em>.</p>
+  <h2>One case, end-to-end — the grounded element, highlighted in 3D</h2>
+  <p>An interactive demo lets you pick a held-out case and see the grounded element <b>highlighted in the
+    BIM model in 3D</b> — no AEC software required. The reasoning panel exposes every stage: the predicted
+    spatial address, the calibrated confidence, and the answer/defer decision, so the answer is always
+    <em>inspectable</em>.</p>
+  <p style="margin:18px 0">
+    <a href="demo.html" style="display:inline-block;background:var(--accent);color:#fff;font-weight:700;
+      padding:13px 22px;border-radius:10px;font-size:16px">▶ &nbsp;Launch the interactive 3D demo</a>
+    <span class="muted" style="font-size:13.5px;margin-left:12px">(serve <code>site/</code> over HTTP — see below)</span>
+  </p>
   <figure><img src="assets/portfolio/fig-demo-hub.png" alt="Web demo: photo + note to highlighted IFC elements in a 3D viewer.">
-    <figcaption>The demo hub: upload evidence → see the grounded element in a 3D model view, with the full
-      reasoning trace beside it.</figcaption></figure>
+    <figcaption>The grounded element (orange) marked in the storey model, with the full reasoning trace
+      beside it. <b>Run it:</b> <code>cd site &amp;&amp; python3 -m http.server</code>, then open
+      <code>http://localhost:8000/demo.html</code> (the 3D model loads over HTTP).</figcaption></figure>
 </div></section>
 
 <section id="refs"><div class="wrap">
