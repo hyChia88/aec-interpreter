@@ -113,6 +113,12 @@ function show(file, guid){
   loadGLB(file).then(root => {
     if (current) scene.remove(current);
     current = root; scene.add(root);
+    // recenter the model on the origin — IFC models sit at real-world survey coords (~430m here),
+    // which wrecks float depth-buffer precision and makes geometry clip out as the camera moves.
+    root.position.set(0,0,0); root.updateMatrixWorld(true);
+    const full = new THREE.Box3().setFromObject(root);
+    const off = full.getCenter(new THREE.Vector3());
+    root.position.sub(off); root.updateMatrixWorld(true);
     const hits = [];
     root.traverse(o => { if(!o.isMesh) return;
       const isT = (o.userData.guid||'').includes(guid);
@@ -148,10 +154,17 @@ function frame(root, hits){
   const tBox = new THREE.Box3();
   (hits.length?hits:[root]).forEach(o=>tBox.expandByObject(o));
   const c = tBox.getCenter(new THREE.Vector3()), s = tBox.getSize(new THREE.Vector3());
+  const mBox = new THREE.Box3().setFromObject(root);            // whole-model extent (for clip planes)
+  const mDiag = mBox.getSize(new THREE.Vector3()).length();
   const d = Math.max(s.x,s.y,s.z, 1.5) * 3.5 + 4;
   camera.position.set(c.x + d, c.y + d*0.55, c.z + d);
-  camera.near = d/100; camera.far = d*40; camera.updateProjectionMatrix();
+  // generous clip planes sized to the whole model so zoom in/out never clips it out
+  camera.near = Math.max(d*0.02, 0.05);
+  camera.far  = (mDiag + d) * 12;
+  camera.updateProjectionMatrix();
   controls.target.copy(c); controls.update();
+  controls.minDistance = Math.max(s.x,s.y,s.z,1) * 0.4;          // zoom bounds → can't zoom past/through
+  controls.maxDistance = mDiag * 6;
 }
 
 // ---- left panel ----
