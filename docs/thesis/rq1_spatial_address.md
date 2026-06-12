@@ -99,13 +99,21 @@ skeleton: the recovered wall `connection_degree` matches the ground-truth skelet
 checked cases. The address exists for every element with no human annotation — the cold-start
 property the system claims.
 
-**Image-recoverable.** Each field is defined in a frame the evidence carries. The wall fingerprint's
-constituents are visible structure (junctions, hosted openings, length, envelope position); the
-position-slot is read by ordering the plan's openings along the host wall. Crucially, the slot's
-ordinal must be numbered by an **image-coordinate** convention, not the wall's arbitrary IFC local
-axis, or it ceases to be recoverable — the representational prerequisite established quantitatively
-in RQ2. Image-recoverability is thus a *design constraint on the address*, not an afterthought: a
-field keyed to an invisible modelling choice is excluded by construction.
+**Image-recoverable — and not automatically so.** Image-recoverability is a *design constraint on
+the address*, not a property we may assume, and the two solved classes fall on opposite sides of it.
+The filler position-slot is recoverable: the plan's openings render as coloured marks, and the slot
+is read by ordering them along the host wall — provided the ordinal is numbered by an
+**image-coordinate** convention rather than the wall's arbitrary IFC local axis (the representational
+prerequisite quantified in RQ2). The wall fingerprint, by contrast, is largely *not* recoverable: its
+load-bearing fields — `connection_degree` and `length_band` — depend on where the modeller split a
+run into IfcWall *instances*, and collinear adjacent instances render as one continuous wall poché,
+so the instance boundaries those fields require are simply not in the image (measured: length-band
+recovered on 5/17 walls, realized Top-1 ≈ floor; M2b). Only the wall's hosted-opening count, which
+renders, is recoverable, and it is too weak alone. A descriptor keyed to an invisible modelling
+choice is thus excluded from realization by construction — which is exactly why the realized system
+is built on the one image-recoverable address (the filler slot), the wall remaining an oracle-level
+result. Image-recoverability is therefore not an afterthought but a property the address must be
+*designed* to satisfy.
 
 ## The honest boundary of the claim
 

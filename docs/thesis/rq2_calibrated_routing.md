@@ -131,8 +131,14 @@ Three caveats bound the result. *Statistical power:* the calibration and coverag
 estimates rest on 35 addressable fillers; the curve is clean down to ~0.74 coverage and noisy
 below, and the temperature estimate carries small-n uncertainty — we report the operating point
 (defer ~20 % → 80.6 %), not a precise optimal threshold. *Scope:* we realize and calibrate the
-single highest-value extractor (the position-slot); the wall fingerprint and the remaining
-address descriptors are demonstrated only at oracle level, and their realization is future work.
+single highest-value extractor (the position-slot). The wall fingerprint is demonstrated at oracle
+level only — and its realization is not merely deferred but **blocked**: its load-bearing fields
+(`connection_degree`, `length_band`) depend on IFC wall-*instance* boundaries the floorplan render
+does not encode (collinear instances merge into one poché; measured length-band recovery 5/17,
+realized Top-1 ≈ floor). This is the negative case of the same image-recoverability constraint the
+position-slot satisfies — the wall address is oracle-discriminative but not image-realizable — and
+it is why realization is scoped to the one recoverable extractor; the remaining "other"-class
+descriptors are genuine future work.
 *Mechanism honesty:* the headline is selective prediction, not soft reweighting — the latter we
 report as a measured no-op, and we explicitly do *not* lead with "we added calibration", which
 the calibratability gate supports but does not, on its own, deliver.
