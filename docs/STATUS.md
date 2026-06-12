@@ -180,6 +180,15 @@ RQ1/RQ2 image-recoverability constraint; explains why the MVP scoped realization
 fillers). v1 junction-counting not pursued (endpoints non-recoverable). 7 tests. ⇒ fold into
 RQ1/RQ2 as the negative case; do not chase the wall number.
 
+### ✅ Interactive 3D-highlight demo — DONE (2026-06-11)
+`eval/build_3d_demo.py` + `site/demo.html`. Pick a held-out case → the grounded element is
+highlighted in orange (glow box + beam) in the BIM model in 3D (Three.js + glTF), beside the
+reasoning panel (site photo + predicted slot + calibrated confidence + ANSWER/DEFER). Server-side:
+ifcopenshell.geom + trimesh extract each case's storey to a GUID-named GLB (~2MB, cached) +
+cases.json (6 cases, 5 storeys). Verified end-to-end in headless Chrome (swiftshader). Launch
+button + run instructions on `index.html`. trimesh added to deps. Project page also merged with the
+thesis-stage portfolio (full problem→system→modules→impact narrative + glossary).
+
 ### ▶️ NEXT: thesis assembly or build
 - **Thesis:** all four RQ sections + abstract/intro + baseline drafted (markdown). Remaining:
   port to the LaTeX template, resolve `\cite{chiahuiyen_mscd_thesis}` title/year + the
