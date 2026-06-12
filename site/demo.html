@@ -79,11 +79,12 @@ const BASE = new THREE.Color(0xcdd3da), BASEEDGE = 0x9aa3ad;
 const HOT = new THREE.Color(0xef7d00);
 
 const canvas = document.getElementById('c');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, logarithmicDepthBuffer:true });
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 const scene = new THREE.Scene(); scene.background = new THREE.Color(0xeef1f4);
 const camera = new THREE.PerspectiveCamera(45, 2, 0.1, 5000);
-const controls = new OrbitControls(camera, canvas); controls.enableDamping = true;
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true; controls.zoomSpeed = 0.8;
 scene.add(new THREE.HemisphereLight(0xffffff, 0x9aa3ad, 1.15));
 const dir = new THREE.DirectionalLight(0xffffff, 1.1); dir.position.set(40,80,30); scene.add(dir);
 
