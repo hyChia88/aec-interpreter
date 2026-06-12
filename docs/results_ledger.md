@@ -600,3 +600,26 @@ image-recoverability constraint of RQ1/RQ2: the filler position-slot satisfies i
 GLOBAL_REF convention); the wall fingerprint does not. This is *why* the MVP correctly scoped
 realization to the one image-recoverable extractor (fillers). v1 junction-counting not pursued (the
 endpoints are themselves non-recoverable). 7 tests (M2a 4 + M2b 3).
+
+---
+
+## External retrieval baselines (2026-06-12, exploratory) — the plan-mandated comparators
+
+`eval/external_baseline.py`. Ranks the SAME held-out pool (GT-in-pool 100%, n=60) by two
+standard off-the-shelf methods that do NOT use the structured address — answering "beat our own
+ablations is too weak."
+
+| method | Top-1 | Top-10 | MRR | reading |
+|---|--:|--:|--:|---|
+| lexical (BM25-style token overlap) | 1.7 | 15.6 | 0.058 | weakest |
+| dense (sentence-transformer all-MiniLM-L6-v2, query↔candidate text) | 1.7 | 25.0 | 0.108 | ≈ G8 on Top-10 |
+| our realized (G8 fine-tuned VLM) | 6.7 | 30.0 | 0.110 | |
+| **+ type-conditional spatial address (oracle)** | **78.5** | **98.1** | **0.854** | |
+
+**Finding.** Off-the-shelf dense and lexical retrieval **plateau at Top-1 1.7 / Top-10 16–25** —
+*below* even the fine-tuned G8 — because the NL query carries storey + class but not the
+discriminating slot, so they rank the right class/floor and then cannot separate identical
+siblings. A generic dense retriever (25 Top-10) nearly matches the fine-tuned VLM (30), confirming
+both are bound by the same slot-recovery ceiling. The structured spatial address (oracle 78.5)
+breaks it. ⇒ the contribution beats an **external** standard, not only our own ablations. Figure:
+`output/external_baseline.png`. 4 tests (3 offline + 1 model-gated).
