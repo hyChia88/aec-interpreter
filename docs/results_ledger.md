@@ -543,3 +543,32 @@ the frame) + L183 (defer = first-class outcome, the clearest triage value prop).
 AP_SK_092 is the selective-prediction headline case: the extractor is wrong (1 of 10 vs GT 8 of
 10) but its calibrated confidence (0.05) is below τ, so the system defers and returns candidates
 rather than a confident wrong GUID. Cards: `output/demo/case_AP_SK_{102,092}.png`.
+
+---
+
+## M2a — wall-fingerprint harness + per-field oracle ablation (2026-06-11, exploratory)
+
+`eval/wall_extractor_m1.py`. 22 held-out wall targets. Diagnose WHICH field of the wall address
+`(connection_degree, hosted_opening_count, length_band, is_external)` is the realizable lever,
+before building the CV detector (M2b). Mirrors M1a; exact-tuple match (reproduces the oracle ceiling).
+
+| predictor | Top-1 | Top-10 | note |
+|---|--:|--:|---|
+| prior (modal fp) — FLOOR | 3.4 | 32.9 | |
+| **oracle full — CEILING** | **64.2** | 97.4 | reproduces spatial-address ceiling ✅ |
+| oracle connection_degree only | **16.9** | 54.6 | biggest single-field lever |
+| oracle length_band only | 7.6 | 36.2 | |
+| oracle hosted_opening_count only | 5.5 | 38.7 | weak (13/22 host 0 openings) |
+| oracle is_external only | 3.4 | 32.9 | = floor (all 22 external → dead field) |
+| oracle drop connection_degree | **17.3** | 42.3 | **dropping cd crashes 64.2→17.3** |
+| oracle drop length_band | 27.3 | 66.2 | |
+| oracle drop hosted_opening_count | 30.9 | 70.6 | |
+| oracle drop is_external | 64.2 | 97.4 | no loss (dead field) |
+
+**Findings (reframes M2b).** (1) **`connection_degree` is the make-or-break field** — alone it gives
+the most lift (16.9), and dropping it from the oracle crashes Top-1 64.2→17.3. It is also the
+*hardest* to recover from a plan (junction counting from wall poché). (2) **`is_external` is dead**
+on this held-out set (all 22 external) → hardcode True. (3) **No single field reaches 64.2** — the
+fields are complementary, so a realized wall number requires recovering cd + hoc + len *together*.
+⇒ M2b's realized Top-1 is bounded by junction-counting quality; expect it between the drop-cd floor
+(17.3, oracle len+hoc) and oracle (64.2). 4 tests.
