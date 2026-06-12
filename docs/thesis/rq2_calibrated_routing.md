@@ -78,6 +78,19 @@ rerank, it lifts filler Top-1 from the **6.6 %** modal-prior floor to **67.6 %**
 delivered by a real detector rather than an oracle. The *count* is reliable; what residual
 error remains is concentrated in the ordering index, not in the perception of the openings.
 
+*Why a deterministic detector rather than the fine-tuned VLM.* A per-field re-evaluation of the
+LoRA-fine-tuned multimodal extractor (G8) over the held-out set is decisive: it recovers the
+**coarse prefix at 100 %** (storey and `ifc_class`, both ~100 % correct) but the **discriminating
+structured fields at 0 %** — the position-slot and the size band — with relation *direction* only
+partial (57 %). The fine-tuned network is thus saturated on exactly the part of the address that,
+by RQ1, does *not* discriminate, and absent on the part that does. The lesson is architectural, not
+"fine-tune harder": the slot and size are **delegated to deterministic visual specialists** (the
+OpenCV position-slot detector above; a ResNet size head), and the VLM is kept to the coarse prefix
+and relation typing where it is reliable. This is the neuro-symbolic interface in practice — learn
+where the network is reliable, compute deterministically where it is not — and it is *why* the
+realized path is the specialist, not the VLM. (The one VLM-side gain still open is direction,
+57 % →, via subtype-contrastive data augmentation; the slowest loop, lowest priority.)
+
 **(2) The confidence is calibratable — the routing premise holds, and is not assumed.** Before
 any routing we gate on calibration \cite{guo2017calibration}: a routing layer is only legitimate if
 its confidence tracks correctness. On the held-out fillers the raw detector confidence is

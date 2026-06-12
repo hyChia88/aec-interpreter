@@ -644,3 +644,28 @@ in the model to reach the correct one = GT's expected rank (random tie-break) ov
 construction. Honest scope: this is an effort *proxy* derived from the rankings, not a human user
 study; the address arm is the oracle ceiling (the realized detector ≈67.6 Top-1 → median
 inspections ≈1–2). Figure: `output/triage_effort.png`. 2 tests.
+
+---
+
+## Fine-tuned VLM re-evaluation — per-field extraction (2026-06-12, exploratory)
+
+`eval/vlm_profile.py`. The LoRA-fine-tuned Qwen2.5-VL (G8), per-field over the 60 held-out cases:
+
+| field | extracted | correct | role |
+|---|--:|--:|---|
+| storey_name | 100% | ~100% | coarse prefix (saturated) |
+| ifc_class | 100% | 100% | coarse prefix (saturated) |
+| spatial_relation present | 100% | — | |
+| direction | 57% | — | partial |
+| **position_context (slot)** | **0%** | — | **the discriminator** |
+| **size (w/h mm)** | **0%** | — | discriminator |
+
+**Finding (decides "how to improve the VLM").** The VLM is *already saturated* on what it recovers
+— the coarse storey+class prefix (100%), which by RQ1 does **not** discriminate siblings. It
+extracts the discriminating structured fields at **0%** (position-slot, size). So the improvement
+is **not** "fine-tune harder on the slot" — it is to **delegate the slot/size to the deterministic
+visual specialists** (M1b position-slot detector realizes 67.6; ResNet for size), keeping the VLM
+on coarse + relations where it is reliable. This is direct evidence for the neuro-symbolic
+interface (learn where the net is reliable; deterministic specialists where it is not), and is
+*why* the realized path is the specialist, not the VLM. Only VLM-side gain worth pursuing: direction
+57%→ via P4 subtype-contrastive data aug (slowest loop, lowest priority). Figure: `output/vlm_profile.png`. 1 test.

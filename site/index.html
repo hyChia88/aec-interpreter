@@ -212,6 +212,16 @@
         ResNet classifies size bands — the sub-tasks a VLM does <em>unreliably</em>. Each emits its own
         <em>confidence</em>, and this is the seed of the spatial-interpretation work below. &nbsp;<i>OpenCV · ResNet</i></div></div>
   </div>
+  <figure>
+    <img src="assets/vlm_profile.png" alt="Fine-tuned VLM per-field extraction: coarse 100%, discriminating fields 0%.">
+    <figcaption><b>Why perception is split.</b> A per-field re-evaluation of the fine-tuned VLM: it
+      nails the <b>coarse prefix</b> (storey, class — 100%, <span style="color:#2ca02c">green</span>)
+      but extracts the <b>discriminating</b> position-slot and size at <b>0%</b>
+      (<span style="color:#d62728">red</span>). So those are <em>delegated to the deterministic
+      specialists</em> (which realize them) — the network learns where it is reliable, the symbolic
+      side computes where it is not. The fine-tune detail that matters is not the loss curve but
+      <em>which fields</em> it can and cannot carry.</figcaption>
+  </figure>
 
   <h3 class="in"><span class="lbl">③ Symbolic backend — the deterministic engine</span>An IFC-native knowledge graph + a deterministic planner</h3>
   <div class="grid2">
