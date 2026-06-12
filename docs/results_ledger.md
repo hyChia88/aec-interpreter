@@ -572,3 +572,31 @@ on this held-out set (all 22 external) → hardcode True. (3) **No single field 
 fields are complementary, so a realized wall number requires recovering cd + hoc + len *together*.
 ⇒ M2b's realized Top-1 is bounded by junction-counting quality; expect it between the drop-cd floor
 (17.3, oracle len+hoc) and oracle (64.2). 4 tests.
+
+---
+
+## M2b v0 — wall detector + the non-recoverability finding (2026-06-11, exploratory)
+
+`eval/wall_detector_cv.py`. Arm-A wall detector (anchored on the target wall's known centroid),
+recovering length_band + hosted_opening_count from the clean plan; connection_degree left at the
+modal prior (junction counting deferred).
+
+| metric (22 walls) | value | reading |
+|---|--:|---|
+| coverage (wall findable) | 17/22 | poché present at the centroid |
+| length_band recovered | 5/17 | **poor** — not a tuning bug |
+| hosted_opening_count recovered | 9/17 | moderate (helped by the many 0s) |
+| downstream Top-1 | 3.3 | **≈ floor 3.4** (oracle 64.2) |
+
+**FINDING — the wall fingerprint is largely NOT image-recoverable.** The length failure is
+diagnostic, not a bug: short `<2m` IFC junction-stub walls trace to 5-7m because **collinear
+adjacent IfcWall *instances* merge into one continuous poché** — the rendered floorplan does not
+encode IFC wall-instance boundaries. Both load-bearing fields (`length_band`, and
+`connection_degree`, which needs the endpoints) therefore depend on a modelling segmentation
+invisible in the image. Only `hosted_opening_count` is recoverable (openings render), and per M2a
+it is too weak alone (Top-1 5.5). ⇒ **The wall address is oracle-discriminative (64.2) but its
+realization is blocked by non-recoverability** — the wall analogue of, and direct evidence for, the
+image-recoverability constraint of RQ1/RQ2: the filler position-slot satisfies it (under the
+GLOBAL_REF convention); the wall fingerprint does not. This is *why* the MVP correctly scoped
+realization to the one image-recoverable extractor (fillers). v1 junction-counting not pursued (the
+endpoints are themselves non-recoverable). 7 tests (M2a 4 + M2b 3).
