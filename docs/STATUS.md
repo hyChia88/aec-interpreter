@@ -189,7 +189,24 @@ cases.json (6 cases, 5 storeys). Verified end-to-end in headless Chrome (swiftsh
 button + run instructions on `index.html`. trimesh added to deps. Project page also merged with the
 thesis-stage portfolio (full problem→system→modules→impact narrative + glossary).
 
-### ▶️ NEXT: thesis assembly or build
+### ✅ Submission-gap closes + demo backend + VLM re-eval (2026-06-12)
+- **External baseline** (`eval/external_baseline.py`): dense/lexical retrieval plateau (Top-1 1.7,
+  Top-10 16–25) — below G8; address 78.5 breaks the ceiling. Beats an external standard, not own ablations.
+- **Triage effort** (`eval/triage_effort.py`): manual scan 38 inspections → 0.5 with the address
+  (76×; ~570s→~8s/element); search → verification.
+- **Demo backend waterfall** (`build_3d_demo.py`+`demo.html`): per-case pool collapse 76→46→1 panel +
+  blue look-alike dots vs orange target in 3D (window meshes don't shade → world-space markers).
+- **VLM re-eval** (`eval/vlm_profile.py`): G8 extracts coarse 100% but discriminating slot/size 0%,
+  direction 57% → delegate slot/size to specialists (the realized path); documented in RQ2 + project page.
+- 65 tests pass.
+
+### ▶️ NEXT (Docker-gated or low-priority)
+- **Live closeout + agent ablation** — needs Docker WSL integration (you enable); unblocks the live
+  Neo4j arm of the demo + the static→learned→agent adaptivity finding (RQ4).
+- **P4 subtype-contrastive data aug** — only VLM-side gain (direction 57%→); slowest loop, lowest priority.
+- **Real 20–30-case study** — the venue unlock for Automation in Construction (org-gated).
+
+### (older) thesis assembly or build
 - **Thesis:** all four RQ sections + abstract/intro + baseline drafted (markdown). Remaining:
   port to the LaTeX template, resolve `\cite{chiahuiyen_mscd_thesis}` title/year + the
   hand-added venue fields, related-work section, limitations consolidation.
