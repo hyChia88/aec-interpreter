@@ -20,11 +20,9 @@
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
   code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
 
-  /* jargon term tooltip */
   .term{border-bottom:1.5px dotted var(--accent);cursor:help;font-weight:600}
   .term:hover{background:var(--accent-soft)}
 
-  /* sticky nav */
   nav.bar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);
     backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line)}
   nav.bar .wrap{display:flex;gap:6px;align-items:center;height:54px;overflow-x:auto}
@@ -33,20 +31,15 @@
   nav.bar .brand{color:var(--ink);font-weight:800;margin-right:8px}
   nav.bar .brand b{color:var(--accent)}
 
-  /* hero */
   header.hero{padding:60px 0 38px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fffdfa,#fff)}
   .eyebrow{display:inline-block;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:14px}
   h1{font-size:44px;line-height:1.08;margin:0 0 14px;letter-spacing:-.02em;font-weight:800}
   h1 .sub{display:block;font-size:21px;font-weight:500;color:var(--muted);margin-top:12px;letter-spacing:-.01em}
-  .lede{font-size:19px;max-width:780px;margin:18px 0 20px}
+  .lede{font-size:18.5px;max-width:800px;margin:18px 0 18px}
   .byline{color:var(--muted);font-size:15px}.byline b{color:var(--ink)}
   .pills{margin-top:20px;display:flex;gap:9px;flex-wrap:wrap}
   .pill{font-size:13.5px;border:1px solid var(--line);border-radius:999px;padding:6px 14px;color:var(--muted);background:#fff}
   .pill b{color:var(--ink)}
-
-  /* one-liner "in plain words" */
-  .plain{margin-top:22px;background:var(--accent-soft);border:1px solid #f3d8a6;border-radius:14px;padding:18px 20px;max-width:820px}
-  .plain b{color:#9a5200}
 
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:30px 0 4px}
   .stat{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:18px 16px;text-align:center}
@@ -58,7 +51,8 @@
   section h2{font-size:27px;letter-spacing:-.02em;margin:0 0 6px;font-weight:800}
   .kicker{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
   section p{max-width:830px;color:#2a2e35}.muted{color:var(--muted)}
-  h3.in{font-size:20px;margin:28px 0 4px;letter-spacing:-.01em}
+  h3.in{font-size:19px;margin:30px 0 2px;letter-spacing:-.01em}
+  h3.in .lbl{color:var(--accent);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:2px}
 
   figure{margin:24px 0 8px}
   figure img{width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;display:block}
@@ -66,9 +60,8 @@
   figcaption b{color:var(--ink)}
   .two{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
 
-  /* card grids */
-  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px}
-  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:24px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:14px}
   .card{border:1px solid var(--line);border-radius:14px;padding:20px;background:#fff;display:flex;flex-direction:column}
   .card .tag{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--accent)}
   .card h3{font-size:18px;margin:7px 0 8px;letter-spacing:-.01em}
@@ -81,6 +74,15 @@
   .badge{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:2px 8px;color:#fff}
   .badge.ans{background:var(--green)} .badge.def{background:var(--red)}
 
+  /* the system flow strip */
+  .flow{display:flex;align-items:stretch;gap:0;margin:24px 0 6px;flex-wrap:wrap}
+  .flow .st{flex:1;min-width:150px;border:1px solid var(--line);border-radius:12px;padding:14px 15px;background:#fff;position:relative}
+  .flow .st .n{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.06em}
+  .flow .st h4{margin:4px 0 5px;font-size:15px}
+  .flow .st p{font-size:13px;color:#3a3f47;margin:0}
+  .flow .arr{align-self:center;color:#c4cad2;font-size:22px;padding:0 6px}
+  @media(max-width:860px){.flow .arr{transform:rotate(90deg);padding:6px 0}}
+
   table{border-collapse:collapse;width:100%;font-size:14.5px;margin-top:18px}
   th,td{text-align:right;padding:9px 12px;border-bottom:1px solid var(--line)}
   th:first-child,td:first-child{text-align:left}
@@ -88,9 +90,6 @@
   tr.best td{background:var(--accent-soft);font-weight:700}
 
   ul.clean{max-width:830px;padding-left:20px}ul.clean li{margin:8px 0;color:#2a2e35}
-  .gloss{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 26px;max-width:880px;margin-top:8px;font-size:14.5px}
-  .gloss div{color:#2a2e35}.gloss b{color:var(--ink)}
-
   .ba{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
   .ba .col{border:1px solid var(--line);border-radius:12px;padding:18px 20px}
   .ba .col.before{background:#fbf3f3}.ba .col.after{background:#f1f8f2}
@@ -102,7 +101,7 @@
 
   @media (max-width:860px){
     h1{font-size:32px}.stats{grid-template-columns:repeat(2,1fr)}
-    .two,.grid3,.grid2,.ba,.gloss{grid-template-columns:1fr}
+    .two,.grid3,.grid2,.ba{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -110,9 +109,9 @@
 
 <nav class="bar"><div class="wrap">
   <span class="brand">AEC&nbsp;<b>Interpreter</b></span>
-  <a href="#problem">Problem</a><a href="#what">What it does</a><a href="#system">System</a>
-  <a href="#modules">Modules</a><a href="#depth">Going deeper</a><a href="#results">Results</a>
-  <a href="#examples">Examples</a><a href="#impact">Impact</a><a href="#demo">Demo</a>
+  <a href="#problem">Problem</a><a href="#system">System</a><a href="#components">Components</a>
+  <a href="#spatial">Spatial interpretation</a><a href="#results">Results</a>
+  <a href="#impact">Impact</a><a href="#demo">Demo</a>
 </div></nav>
 
 <header class="hero"><div class="wrap">
@@ -120,176 +119,184 @@
   <h1>An Interpreter Layer for AEC
     <span class="sub">Grounding a construction-site photo and a field note to the <em>exact</em> element in the building's digital model — hallucination-free and traceable.</span>
   </h1>
-  <p class="lede">Point a phone at a window, add a short note, and the system tells you <em>which</em>
-    modelled element it is — its unique ID — using only the building's
-    <span class="term" title="Building Information Model: the structured 3D/data model of a building">BIM</span>
-    model, with no history of labelled site photos to learn from.</p>
+  <p class="lede">A building's digital model — its
+    <span class="term" title="Building Information Model: a 3D model plus structured data">BIM</span> — stores
+    thousands of look-alike parts: hundreds of near-identical windows and doors, each with a globally-unique
+    ID (<span class="term" title="Globally Unique Identifier: each element's unique ID in the model">GUID</span>).
+    Point a phone at one, add a short note, and this AI "interpreter" tells you <em>which</em> modelled element
+    it is — automatically, using only the BIM model itself, <b>with no history of labelled site photos to learn
+    from</b>, and — crucially — it <b>refuses to guess when it is unsure</b>.</p>
   <div class="byline">Chia&nbsp;Hui&nbsp;Yen · <b>Carnegie Mellon University</b>, M.Sc. Computational Design</div>
   <div class="pills">
     <span class="pill">site photo + note&nbsp;→&nbsp;<b>IFC element GUID</b></span>
     <span class="pill"><b>zero</b> hallucinated IDs</span>
     <span class="pill">cold-start: <b>no real labels</b></span>
-    <span class="pill">VLM&nbsp;·&nbsp;OpenCV&nbsp;·&nbsp;IFC knowledge graph</span>
+    <span class="pill">fine-tuned VLM&nbsp;·&nbsp;IFC knowledge graph&nbsp;·&nbsp;visual specialists</span>
   </div>
-
-  <div class="plain">
-    <b>In plain words.</b> A building's digital model (BIM) stores thousands of look-alike parts —
-    hundreds of near-identical windows and doors. When a worker photographs one on site, linking it
-    back to the <em>right</em> part in the model is slow, manual, and error-prone. This project is an
-    AI "interpreter" that does that linking automatically, and — crucially — refuses to guess when it
-    is unsure.
-  </div>
-
   <div class="stats">
-    <div class="stat"><div class="n">100%</div><div class="l">the answer is <b>always retrievable</b><br>(ground truth in candidate pool)</div></div>
+    <div class="stat"><div class="n">100%</div><div class="l">the answer is <b>always retrievable</b><br>(ground truth in the candidate pool)</div></div>
     <div class="stat"><div class="n up">78.5%</div><div class="l">right-element-first, <b>oracle</b><br>spatial address · vs 6.7% black-box</div></div>
     <div class="stat"><div class="n up">67.6%</div><div class="l">right-element-first, <b>realized</b><br>by one real visual detector</div></div>
     <div class="stat"><div class="n up">80.6%</div><div class="l">when it chooses to answer<br>(<b>defers</b> the unsure 20%)</div></div>
   </div>
 </div></header>
 
-<!-- glossary -->
-<section style="padding:30px 0;background:var(--soft)"><div class="wrap">
-  <span class="kicker">The words, once</span>
-  <h2 style="font-size:21px">A 20-second glossary</h2>
-  <div class="gloss">
-    <div><b>BIM</b> — Building Information Model: the digital 3D + data model of a building.</div>
-    <div><b>IFC</b> — the open file standard for BIM (vendor-neutral, ISO).</div>
-    <div><b>GUID</b> — the globally unique ID each element carries in the model.</div>
-    <div><b>Neuro-symbolic</b> — pair a neural network (perception) with deterministic symbolic logic (the executor).</div>
-    <div><b>VLM</b> — Vision-Language Model: reads an image + text together.</div>
-    <div><b>Spatial address</b> — a relational key ("3rd of 5 windows on this wall") that pins one element among look-alikes.</div>
-    <div><b>Oracle</b> — an "if perception were perfect" upper bound; isolates where the real bottleneck is.</div>
-    <div><b>Knowledge graph</b> — the model stored as nodes (elements) + typed edges (relations).</div>
-  </div>
-</div></section>
-
 <section id="problem"><div class="wrap">
   <span class="kicker">The problem</span>
   <h2>The physical–digital traceability gap</h2>
-  <p>AEC (Architecture, Engineering, Construction) projects standardise on
-    <span class="term" title="Open standard for sharing BIM models across software">OpenBIM/IFC</span>, yet
-    day-to-day coordination still runs on manual interpretive labour: people translate unstructured
-    evidence — photos, chat messages, floorplan markups — into model-linked, schema-compliant records.
-    The result is information loss across handoffs, ambiguous evidence-to-element links, and days of lag
-    that decay into lost institutional knowledge.</p>
+  <p>Construction and facilities teams standardise on
+    <span class="term" title="Open, vendor-neutral ISO standard for sharing BIM models">OpenBIM/IFC</span>, yet
+    day-to-day coordination still runs on manual interpretive labour: people translate unstructured evidence —
+    photos, chat messages, floorplan markups — into model-linked records by hand. The final step is choosing
+    one element from a retrieved shortlist that <b>already contains the answer</b> (median 76 candidates, ground
+    truth present 100% of the time). So the difficulty is not <em>retrieval</em> but <b>discriminating among
+    visually identical siblings</b> — a façade is a row of indistinguishable windows. What separates two windows
+    is not in their pixels; it is in the building's <em>relational structure</em>, which a black-box image
+    matcher must reconstruct internally and unreliably — and it plateaus at just <b>6.7%</b> right-first, with
+    the answer already in the pool. Making that relational signal <em>explicit</em> is the contribution.</p>
   <figure>
-    <img src="assets/portfolio/fig-problem-workflow.png" alt="Multi-stakeholder AEC workflow with information loss between physical site and digital BIM cloud.">
-    <figcaption>Coordination spans the physical site and the digital BIM cloud across many
-      stakeholders — <b>every manual handoff leaks context</b>.</figcaption>
+    <img src="assets/portfolio/fig-problem-workflow.png" alt="AEC workflow with information loss between physical site and digital BIM cloud.">
+    <figcaption>Coordination spans the physical site and the digital BIM cloud across many stakeholders —
+      <b>every manual handoff leaks context</b>.</figcaption>
   </figure>
-</div></section>
-
-<section id="what"><div class="wrap">
-  <span class="kicker">What it does</span>
-  <h2>One question: <em>which</em> element is this?</h2>
-  <p>Given a site photo, a short natural-language note, and (optionally) a marked floorplan, the system
-    returns a ranked shortlist of candidate <span class="term" title="The unique ID of an element in the IFC model">GUIDs</span>
-    — the exact parts in the BIM model. The hard part is not <em>finding</em> candidates (the right one
-    is in the pool 100% of the time) but <b>discriminating among visually identical siblings</b>: a façade
-    is a row of indistinguishable windows. The signal that separates them is not in their pixels — it is
-    in the building's <em>relational structure</em>, which is exactly what a black-box image matcher fails
-    to recover (it plateaus at <b>6.7%</b> right-first, with the answer already in the pool).</p>
 </div></section>
 
 <section id="system"><div class="wrap">
   <span class="kicker">The system</span>
-  <h2>A neuro-symbolic interpreter middleware</h2>
-  <p>Five stages turn messy evidence into a verifiable answer: multimodal input →
-    <b>neural extraction</b> (a fine-tuned VLM emits a typed <span class="mono">Constraints</span> record) →
-    <b>symbolic retrieval</b> (a deterministic, priority-ordered traversal over an IFC knowledge graph) →
-    <b>Graph-RAG reranking</b> → ranked GUIDs. The design rationale is <em>reliability over flexibility</em>:</p>
-  <ul class="clean">
-    <li><b>The VLM never writes a database query.</b> It emits a structured
-      <span class="mono">{storey, ifc_class, spatial_relations:[…]}</span> contract that fills
-      <em>deterministic</em> templates — so the system can only ever return GUIDs that exist in the model.
-      <b>Zero hallucinated IDs, by construction.</b></li>
-    <li><b>The graph is built from the IFC schema itself</b>, not from noisy document extraction — topology
-      is computed, not guessed.</li>
-  </ul>
+  <h2>One neuro-symbolic interpreter — perception in, a verifiable element out</h2>
+  <p><span class="term" title="Pairing a neural network for perception with deterministic symbolic logic for execution">Neuro-symbolic</span>
+    means a neural network does the <em>perceiving</em> and a deterministic symbolic engine does the
+    <em>deciding</em>. Evidence flows through one pipeline:</p>
+
+  <div class="flow">
+    <div class="st"><span class="n">① INPUT</span><h4>Evidence</h4><p>site photo + field note + (optional) marked floorplan</p></div>
+    <div class="arr">→</div>
+    <div class="st"><span class="n">② PERCEPTION</span><h4>Neural extraction</h4><p>a fine-tuned VLM + deterministic visual specialists read the evidence into a typed, structured description</p></div>
+    <div class="arr">→</div>
+    <div class="st"><span class="n">③ SYMBOLIC</span><h4>Graph retrieval</h4><p>a deterministic planner queries the IFC knowledge graph; a Graph-RAG reranker orders the candidates</p></div>
+    <div class="arr">→</div>
+    <div class="st"><span class="n">④ CONTROL</span><h4>Route &amp; decide</h4><p>an orchestration layer routes by confidence and answers — or defers to a human</p></div>
+    <div class="arr">→</div>
+    <div class="st"><span class="n">⑤ OUTPUT</span><h4>Ranked GUIDs</h4><p>linked back to the BIM model</p></div>
+  </div>
+
+  <p>The load-bearing design choice is <em>reliability over flexibility</em>: <b>the neural network never writes
+    a database query.</b> It only emits a structured description; deterministic templates turn that into the
+    query. So the system can only ever return GUIDs that exist in the model — <b>zero hallucinated IDs, by
+    construction</b> — and every error is traceable to a specific stage (type, floor, or ranking).</p>
   <figure>
     <img src="assets/portfolio/fig-architecture-pipeline.png" alt="Five-stage neuro-symbolic pipeline from multimodal input to ranked IFC GUIDs.">
-    <figcaption><b>The neuro-symbolic pipeline</b> — neural perception feeds a deterministic symbolic
-      backend; every error is traceable to a specific stage (type, floor, or ranking).</figcaption>
+    <figcaption><b>The pipeline.</b> Neural perception feeds a deterministic symbolic backend; the contract
+      between them is a structured, inspectable record — not an opaque score.</figcaption>
   </figure>
 </div></section>
 
-<section id="modules"><div class="wrap">
-  <span class="kicker">Under the hood</span>
-  <h2>Key modules</h2>
+<section id="components"><div class="wrap">
+  <span class="kicker">Inside the system</span>
+  <h2>The engineered pieces — in the order evidence flows through them</h2>
+
+  <h3 class="in"><span class="lbl">② Perception — reading the evidence</span>From pixels and prose to a typed description</h3>
   <div class="grid2">
-    <div class="imgcard"><img src="assets/portfolio/fig-ifc-parse-engine.png" alt="IFC parse engine">
-      <div class="cap"><b>IFC Parse &amp; Enrich Engine.</b> Converts raw IFC into a query-ready knowledge
-        graph, enriching topology beyond native containment with retrieval-oriented edges:
-        <span class="mono">NEXT_TO, CONNECTS_TO, ADJACENT_TO, ON_STOREY</span>. &nbsp;<i>IfcOpenShell · Neo4j</i></div></div>
-    <div class="imgcard"><img src="assets/portfolio/fig-symbolic-retrieval.png" alt="Symbolic retrieval planner">
-      <div class="cap"><b>Symbolic Planner.</b> A recall-preserving <span class="mono">p0∪p1</span> union planner
-        combines attribute filtering with spatial-topology ranking. Templates are deterministic — same
-        input, same query, same result. &nbsp;<i>Cypher · priority cascade</i></div></div>
-    <div class="imgcard"><img src="assets/portfolio/fig-data-pipeline.png" alt="Synthetic data pipeline">
-      <div class="cap"><b>Synthetic Data Pipeline.</b> Skeleton-first generation fixes ground truth before
-        adding stochastic visual evidence: IFC mining → Blender renders with hard negatives → LLM text →
-        LLM-as-judge filter → <b>990 cases, no real labels</b>. &nbsp;<i>Blender · Gemini · LLM-judge</i></div></div>
-    <div class="imgcard"><img src="assets/portfolio/fig-visual-heuristics.png" alt="Deterministic visual heuristics">
-      <div class="cap"><b>Deterministic Visual Specialists.</b> OpenCV handles counting and ordinal slot
-        position; ResNet classifies size bands — discriminative cues for sub-tasks VLMs do unreliably.
-        &nbsp;<i>OpenCV · ResNet</i></div></div>
+    <div class="card">
+      <span class="tag">Fine-tuned VLM</span>
+      <h3>The perception engine</h3>
+      <p>A LoRA-fine-tuned <span class="term" title="Vision-Language Model: one network that reads an image and text together">Qwen2.5-VL</span>
+        reads the photo, note, and floorplan and emits a structured contract —
+        <span class="mono">{storey, ifc_class, spatial_relations:[{predicate, object_type…}]}</span>. It
+        <em>describes</em>, it never queries. Fine-tuning on the synthetic corpus lifts spatial-direction
+        accuracy to <b>82%</b> where zero-shot Gemini scores 0%.</p>
+      <div class="meta">Qwen2.5-VL · LoRA · typed Constraints JSON</div>
+    </div>
+    <div class="imgcard"><img src="assets/portfolio/fig-visual-heuristics.png" alt="Deterministic visual specialists: OpenCV counting and ResNet size classification.">
+      <div class="cap"><b>Deterministic visual specialists.</b> OpenCV counts openings and reads ordinal position;
+        ResNet classifies size bands — the sub-tasks a VLM does <em>unreliably</em>. Each emits its own
+        <em>confidence</em>, and this is the seed of the spatial-interpretation work below. &nbsp;<i>OpenCV · ResNet</i></div></div>
   </div>
-  <p class="muted" style="margin-top:18px;font-size:15px">The neural extractor is a fine-tuned
-    <b>Qwen2.5-VL</b> (LoRA) that reaches <b>82%</b> direction accuracy where zero-shot Gemini scores 0%.</p>
+
+  <h3 class="in"><span class="lbl">③ Symbolic backend — the deterministic engine</span>An IFC-native knowledge graph + a deterministic planner</h3>
+  <div class="grid2">
+    <div class="imgcard"><img src="assets/portfolio/fig-ifc-parse-engine.png" alt="IFC parse engine building an enriched knowledge graph.">
+      <div class="cap"><b>IFC Parse &amp; Enrich Engine.</b> Converts the raw IFC into a
+        <span class="term" title="The model stored as nodes (elements) and typed edges (relations)">knowledge graph</span> —
+        nodes are elements, edges are relations — enriched beyond native containment with retrieval-oriented
+        topology: <span class="mono">NEXT_TO, CONNECTS_TO, ADJACENT_TO, ON_STOREY</span>. &nbsp;<i>IfcOpenShell · Neo4j</i></div></div>
+    <div class="imgcard"><img src="assets/portfolio/fig-symbolic-retrieval.png" alt="Symbolic retrieval planner with attribute filter and topology rerank.">
+      <div class="cap"><b>Symbolic Planner + Graph-RAG.</b> A recall-preserving <span class="mono">p0∪p1</span> union
+        planner combines attribute filtering with spatial-topology ranking; templates are deterministic — same
+        input, same query, same result. &nbsp;<i>Cypher · priority cascade</i></div></div>
+  </div>
+
+  <h3 class="in"><span class="lbl">④ Control — adaptive routing</span>An orchestration layer that knows when to defer</h3>
+  <div class="grid2">
+    <div class="card">
+      <span class="tag">Orchestration &amp; routing</span>
+      <h3>Confidence-driven control</h3>
+      <p>Every extracted field carries a <span class="mono">{value, confidence, source}</span> record. An
+        orchestration layer routes on that confidence — which deterministic specialist to trust, which constraint
+        to apply softly, and <b>when to defer to a human</b> instead of guessing. The policy is studied as an
+        ablation, from a static calibrated threshold → a learned router → an
+        <b>LLM-agent orchestrator</b> (same backbone), scored on accuracy, latency, and <em>repeatability</em>.</p>
+      <div class="meta">static → learned router → agent · the adaptivity arm</div>
+    </div>
+    <div class="imgcard"><img src="assets/portfolio/fig-data-pipeline.png" alt="Synthetic data pipeline: IFC mining, Blender synthesis, LLM-as-judge filtering.">
+      <div class="cap"><b>Trained with zero real labels.</b> Skeleton-first generation fixes ground truth before
+        adding stochastic visual evidence: IFC mining → Blender renders with hard negatives → LLM text →
+        LLM-as-judge filter → <b>990 cases</b>, no human annotation. &nbsp;<i>Blender · Gemini · LLM-judge</i></div></div>
+  </div>
 </div></section>
 
-<section id="depth" style="background:linear-gradient(180deg,#fffdfa,#fff)"><div class="wrap">
-  <span class="kicker">Going deeper — the enhancement</span>
-  <h2>From "the architecture is right" to "the address is recoverable"</h2>
-  <p>The thesis proved the architecture sound: with perfect extraction the symbolic layer retains the
-    correct element in <b>100%</b> of cases and compresses the candidate pool toward a single answer — so
-    the <em>operational</em> ceiling is bound by perception, not graph logic. The enhancement asks the next
-    two questions and answers them with measurements.</p>
+<section id="spatial" style="background:linear-gradient(180deg,#fffdfa,#fff)"><div class="wrap">
+  <span class="kicker">The innovation</span>
+  <h2>Reading <em>space</em> from a flat image — the spatial-interpretation layer</h2>
+  <p>The thesis proved the architecture sound: with perfect perception the symbolic engine keeps the correct
+    element <b>100%</b> of the time and compresses the shortlist toward a single answer — so the bottleneck is
+    <em>perception</em>, not graph logic. The core advance deepens the deterministic visual specialists into a
+    principled <b>spatial-interpretation layer</b>: instead of ad-hoc cues, the system recovers a
+    <span class="term" title="A relational key, e.g. 'the 3rd of 5 windows along this wall', that pins one element among look-alikes">spatial address</span>
+    — a relational key read from plain 2D images and floorplans, computable from the BIM model and recoverable
+    from the evidence. Three questions, answered with measurements:</p>
 
   <div class="grid3">
     <div class="card"><span class="tag">① Representation</span>
-      <h3>What is the minimal sufficient address?</h3>
-      <p>It is <b>type-conditional</b>. A coarse prefix (storey + class) is necessary but <em>saturated</em>
-        — it cannot separate same-class siblings. The discriminator is class-specific: a
-        <b>position-slot</b> <span class="mono">(i of M)</span> for an opening, a <b>connectivity
-        fingerprint</b> for a wall.</p>
-      <div class="res">oracle right-first 4.9% → <b>78.5%</b></div></div>
+      <h3>What is the minimal address?</h3>
+      <p>It is <b>type-conditional</b>: a coarse prefix (storey + class) is necessary but <em>saturated</em>; the
+        discriminator is class-specific — a <b>position-slot</b> <span class="mono">(i of M)</span> for an opening,
+        a <b>connectivity fingerprint</b> for a wall.</p>
+      <div class="res">right-first 4.9% → <b>78.5%</b> (oracle)</div></div>
     <div class="card"><span class="tag">② Mechanism</span>
-      <h3>How to use a noisy address without losing recall?</h3>
-      <p>Hard filtering deletes the answer; so the address is a <b>soft prior</b> in a recall-fixed pool.
-        One real detector closes most of the gap, its confidence passes a <b>calibration gate</b>, and —
-        since reweighting is a no-op — its payoff is <b>knowing when to abstain</b>.</p>
+      <h3>How to use a noisy address?</h3>
+      <p>Hard filtering deletes the answer, so the address is a <b>soft prior</b> in a recall-fixed pool. One real
+        detector closes most of the gap; its confidence passes a <b>calibration gate</b>, and its payoff is
+        <b>knowing when to abstain</b> — not blind reweighting.</p>
       <div class="res">realized 6.6% → <b>67.6%</b> · defer → <b>80.6%</b></div></div>
     <div class="card"><span class="tag">③ Architecture</span>
-      <h3>Where should relational context live?</h3>
-      <p>A <b>depth law</b>: deeper context is more unique but its recovery from an image collapses with
-        distance. So discrimination <b>saturates at one hop</b> — compile the relation into the element,
-        don't chase deep chains.</p>
-      <div class="res">confusable set 13 → <b>8</b> at 1 hop</div></div>
+      <h3>How deep should context go?</h3>
+      <p>A <b>depth law</b>: deeper relations are more unique but their recovery from an image collapses with
+        distance, so discrimination <b>saturates at one hop</b> — compile the relation into the element rather
+        than chase deep chains.</p>
+      <div class="res">confusable set 13 → <b>8</b> at one hop</div></div>
   </div>
 
   <figure>
-    <img src="assets/pipeline.png" alt="The inference pipeline traced through one real case, stages (a)-(e).">
-    <figcaption><b>The method spine, traced through one real case.</b>
-      <b>(a)</b> inputs → <b>(b)</b> per-field extraction, each field a <span class="mono">{value,
-      confidence, source}</span> record (VLM → storey/class; OpenCV → the position-slot; ResNet → size) →
-      <b>(c)</b> the depth-1 spatial-address record → <b>(d)</b> calibrated routing → <b>(e)</b> the graph
-      pool collapses (46 → 46 → 1) to a GUID. The orange lane is the confidence-routing path: a field's
-      <em>confidence</em> binds the answer/defer decision.</figcaption>
+    <img src="assets/pipeline.png" alt="The spatial-interpretation pipeline traced through one real case, stages (a)-(e).">
+    <figcaption><b>Spatial interpretation, traced through one real case.</b> <b>(a)</b> evidence →
+      <b>(b)</b> per-field extraction, each a <span class="mono">{value, confidence, source}</span> record (VLM →
+      storey/class; OpenCV → the position-slot; ResNet → size) → <b>(c)</b> the depth-1 spatial-address record →
+      <b>(d)</b> calibrated routing → <b>(e)</b> the knowledge-graph shortlist collapses (46 → 46 → 1) to a GUID.
+      The orange lane is the confidence-routing path that binds the answer/defer decision.</figcaption>
   </figure>
 </div></section>
 
 <section id="results"><div class="wrap">
   <span class="kicker">Results</span>
-  <h2>The architecture is sound; the address makes it realizable</h2>
+  <h2>The address makes the architecture realizable</h2>
 
-  <h3 class="in">Oracle ceiling — the address compresses the pool toward one</h3>
+  <h3 class="in">Oracle ceiling — the address compresses the shortlist toward one</h3>
   <div class="two" style="align-items:center">
     <figure style="margin-top:6px">
       <img src="assets/portfolio/fig-oracle-ceiling.png" alt="Oracle ceiling and fingerprint ladder.">
-      <figcaption>Enriched topology + the right address drive the retrievable pool toward 1, isolating
-        extraction as the bottleneck.</figcaption>
+      <figcaption>With the right address, the retrievable shortlist collapses toward 1 — isolating perception as
+        the bottleneck.</figcaption>
     </figure>
     <table>
       <thead><tr><th>Fingerprint level</th><th>Median pool</th></tr></thead>
@@ -302,48 +309,47 @@
     </table>
   </div>
 
-  <h3 class="in">Downstream retrieval — the learned extractor plateaus, the address does not</h3>
+  <h3 class="in">Downstream — the black box plateaus; the address does not</h3>
   <table>
     <thead><tr><th>Model</th><th>GT-in-pool</th><th>Top-1</th><th>Top-10</th><th>MRR@10</th></tr></thead>
     <tbody>
       <tr><td>Zero-shot Gemini</td><td>95.0%</td><td>1.7%</td><td>18.3%</td><td>0.056</td></tr>
-      <tr><td>G8 — fine-tuned (best end-to-end)</td><td>100%</td><td>6.7%</td><td>30.0%</td><td>0.110</td></tr>
+      <tr><td>Fine-tuned VLM (best end-to-end)</td><td>100%</td><td>6.7%</td><td>30.0%</td><td>0.110</td></tr>
       <tr class="best"><td>+ type-conditional spatial address (oracle)</td><td>100%</td><td>78.5%</td><td>98.1%</td><td>0.854</td></tr>
     </tbody>
   </table>
-  <p class="muted" style="font-size:14.5px">The learned reranker guarantees the target is <em>in</em> the
-    pool (100%); the gain it can't reach is in <em>ranking</em>, and that gap is exactly the address.</p>
+  <p class="muted" style="font-size:14.5px">Fine-tuning guarantees the target is <em>in</em> the pool (100%);
+    the gain it can't reach is in <em>ranking</em>, and that gap is exactly the spatial address.</p>
 
   <h3 class="in">The calibration is real — and pays off as deferral</h3>
   <div class="two">
     <figure><img src="assets/calibration_diag.png" alt="ECE calibration gate.">
-      <figcaption><b>The calibration gate passes.</b> The detector's confidence tracks correctness
-        (AUROC 0.80) and is only moderately mis-calibrated (ECE 0.206) — so routing on it is legitimate,
-        not assumed.</figcaption></figure>
+      <figcaption><b>The calibration gate passes.</b> The detector's confidence tracks correctness (AUROC 0.80)
+        and is only moderately mis-calibrated (ECE 0.206) — so routing on it is legitimate, not assumed.</figcaption></figure>
     <figure><img src="assets/calibrate_rerank.png" alt="Soft-rerank and selective-prediction curve.">
-      <figcaption><b>Selective prediction is the win.</b> Reweighting equals hard matching (a no-op,
-        reported honestly); the value is <em>deferral</em> — answering only the confident 80% lifts
-        right-first to 80.6%.</figcaption></figure>
+      <figcaption><b>Selective prediction is the win.</b> Blind reweighting equals hard matching (a no-op,
+        reported honestly); the value is <em>deferral</em> — answering only the confident 80% lifts right-first
+        to 80.6%.</figcaption></figure>
   </div>
   <figure><img src="assets/depth_saturation.png" alt="Realizable confusable-set size by relational depth.">
-    <figcaption><b>The depth law, measured.</b> The realizable confusable set saturates at one graph hop —
-      deeper context is informative but not recoverable from an image.</figcaption></figure>
+    <figcaption><b>The depth law, measured.</b> Realizable discrimination saturates at one graph hop — deeper
+      relational context is informative but not recoverable from an image.</figcaption></figure>
 </div></section>
 
 <section id="examples"><div class="wrap">
   <span class="kicker">Worked examples</span>
   <h2>It answers when sure — and defers when not</h2>
-  <p>Each card traces one case top-to-bottom: <b>① raw input → ② expected (ground truth) → ③ how the
-    detector reads the plan → ④ predicted address + decision</b>. The predicted spatial address is drawn
-    as a graph (the value on the target node), mirroring the ground-truth graph above it.</p>
+  <p>Each card traces one case top-to-bottom: <b>① raw input → ② expected (ground truth) → ③ how the detector
+    reads the plan → ④ predicted address + decision</b>. The predicted address is drawn as a graph (the value on
+    the target node), mirroring the ground-truth graph above it.</p>
   <div class="two">
     <div class="imgcard"><img src="assets/case_AP_SK_102.png" alt="ANSWER case.">
       <div class="cap"><span class="badge ans">ANSWER</span> &nbsp;Predicted "slot 2 of 17" — ✓ correct;
         confidence above threshold, so the system commits to the GUID.</div></div>
     <div class="imgcard"><img src="assets/case_AP_SK_092.png" alt="DEFER case.">
       <div class="cap"><span class="badge def">DEFER</span> &nbsp;Predicted "1 of 10" but truth is "8 of 10"
-        (<em>wrong</em>); confidence 0.05 is below threshold, so the system <b>abstains</b> and returns
-        candidates rather than a confident mistake — the triage value proposition.</div></div>
+        (<em>wrong</em>); confidence 0.05 is below threshold, so the system <b>abstains</b> and returns candidates
+        rather than a confident mistake — the triage value proposition.</div></div>
   </div>
 </div></section>
 
@@ -366,9 +372,9 @@
 <section id="demo"><div class="wrap">
   <span class="kicker">Demo</span>
   <h2>One case, end-to-end — the grounded element, highlighted in 3D</h2>
-  <p>An interactive demo lets you pick a held-out case and see the grounded element <b>highlighted in the
-    BIM model in 3D</b> — no AEC software required. The reasoning panel exposes every stage: the predicted
-    spatial address, the calibrated confidence, and the answer/defer decision, so the answer is always
+  <p>An interactive demo lets you pick a held-out case and see the grounded element <b>highlighted in the BIM
+    model in 3D</b> — no AEC software required. The reasoning panel exposes every stage: the predicted spatial
+    address, the calibrated confidence, and the answer/defer decision, so the answer is always
     <em>inspectable</em>.</p>
   <p style="margin:18px 0">
     <a href="demo.html" style="display:inline-block;background:var(--accent);color:#fff;font-weight:700;
@@ -376,8 +382,8 @@
     <span class="muted" style="font-size:13.5px;margin-left:12px">(serve <code>site/</code> over HTTP — see below)</span>
   </p>
   <figure><img src="assets/portfolio/fig-demo-hub.png" alt="Web demo: photo + note to highlighted IFC elements in a 3D viewer.">
-    <figcaption>The grounded element (orange) marked in the storey model, with the full reasoning trace
-      beside it. <b>Run it:</b> <code>cd site &amp;&amp; python3 -m http.server</code>, then open
+    <figcaption>The grounded element (orange) marked in the storey model, with the full reasoning trace beside
+      it. <b>Run it:</b> <code>cd site &amp;&amp; python3 -m http.server</code>, then open
       <code>http://localhost:8000/demo.html</code> (the 3D model loads over HTTP).</figcaption></figure>
 </div></section>
 
@@ -396,9 +402,9 @@
   school = {Carnegie Mellon University},
   type   = {M.Sc. Thesis, Computational Design}
 }</pre>
-  <p class="muted" style="font-size:14px">Every quantitative claim on this page traces to the project's
-    results ledger; all citations were programmatically verified. Figures are real artifacts from the
-    thesis and the offline evaluation harness.</p>
+  <p class="muted" style="font-size:14px">Every quantitative claim on this page traces to the project's results
+    ledger; all citations were programmatically verified. Figures are real artifacts from the thesis and the
+    offline evaluation harness.</p>
 </div></section>
 
 <footer><div class="wrap">
