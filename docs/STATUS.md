@@ -170,6 +170,16 @@ Pulls figures `output/{pipeline,calibration_diag,calibrate_rerank}.png` + DEFER 
   (self-cite; ⚠️ confirm title/year). `§[thesis baseline]` resolved → \cite. **All [CITE:] markers
   gone; 7 keys used = 7 verified in references.bib.**
 
+### ✅ M2 wall detector — DONE as a negative result (2026-06-11)
+`eval/wall_extractor_m1.py` (M2a harness) + `eval/wall_detector_cv.py` (M2b v0). **Finding: the
+wall fingerprint is largely NOT image-recoverable** — collinear IfcWall instances merge into one
+poché, so length_band (5/17) + connection_degree (needs endpoints) depend on a modelling
+segmentation invisible in the render; only hosted_opening_count recovers (too weak alone). Realized
+wall Top-1 3.3 ≈ floor (oracle 64.2). **This strengthens the thesis** (direct evidence for the
+RQ1/RQ2 image-recoverability constraint; explains why the MVP scoped realization to ONE extractor =
+fillers). v1 junction-counting not pursued (endpoints non-recoverable). 7 tests. ⇒ fold into
+RQ1/RQ2 as the negative case; do not chase the wall number.
+
 ### ▶️ NEXT: thesis assembly or build
 - **Thesis:** all four RQ sections + abstract/intro + baseline drafted (markdown). Remaining:
   port to the LaTeX template, resolve `\cite{chiahuiyen_mscd_thesis}` title/year + the
