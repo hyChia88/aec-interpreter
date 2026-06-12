@@ -23,9 +23,10 @@ sys.path.insert(0, str(EVAL))
 import slot_detector_cv as cv
 from calibrate_rerank import apply_T, fit_temperature
 from field_contract import collect_pairs
-from rerank_prize import load_index, load_cases, pool_candidates, DEFAULT_INDEX, DEFAULT_TRACES
+from rerank_prize import load_index, load_cases, pool_candidates, cand_feats, DEFAULT_INDEX, DEFAULT_TRACES
 from reconstruct_position_index import load_position_index
-from spatial_address_ceiling import DEFAULT_POS
+from wall_fingerprint import load_wall_fingerprint
+from spatial_address_ceiling import spatial_address, DEFAULT_POS, DEFAULT_WALL
 
 REPO = EVAL.parent
 IFC = REPO / "data" / "ifc_models" / "AdvancedProject.ifc"
@@ -90,6 +91,7 @@ def main():
     idx = load_index(DEFAULT_INDEX)
     cases = load_cases(DEFAULT_TRACES)
     pos = load_position_index(DEFAULT_POS)
+    wallfp = load_wall_fingerprint(DEFAULT_WALL)
     gslot = cv.build_global_slot(idx, pos)
     pred = cv.make_predictor(idx)
     fillers = [c for c in cases if c["scenario"]["ground_truth"]["target_guid"] in gslot]
@@ -136,6 +138,14 @@ def main():
         cal = apply_T(conf, T) if pi is not None else 0.0
         gi, gM = gslot[gt]["wall_position_index"], gslot[gt]["wall_child_total"]
         match = pi == gi and pM == gM
+        # ── candidate-pool waterfall (what's happening at the backend) ──
+        pool = pool_candidates(c)
+        gf = cand_feats(gt, pool[gt], idx, pos)
+        gaddr = spatial_address(gt, pos, wallfp)
+        confusable = [g for g in pool
+                      if cand_feats(g, pool[g], idx, pos).get("storey") == gf.get("storey")
+                      and cand_feats(g, pool[g], idx, pos).get("ifc_class") == gf.get("ifc_class")]
+        addr_match = [g for g in confusable if spatial_address(g, pos, wallfp) == gaddr]
         manifest.append({
             "id": sid,
             "storey": st,
@@ -151,6 +161,14 @@ def main():
             "tau": TAU,
             "decision": "ANSWER" if cal >= TAU else "DEFER",
             "correct": bool(match),
+            # backend pool waterfall: retrieved pool → +storey/class (look-alikes) → +address → target
+            "waterfall": [
+                {"stage": "retrieved pool", "n": len(pool)},
+                {"stage": "+ storey + class", "n": len(confusable)},
+                {"stage": "+ spatial address", "n": max(len(addr_match), 1)},
+            ],
+            # the confusable look-alikes (same storey+class) to highlight in 3D (cap for perf)
+            "confusable_guids": [g for g in confusable if g != gt][:40],
         })
     (OUT / "cases.json").write_text(json.dumps(manifest, indent=2))
     print(f"\nmanifest: {len(manifest)} cases → {OUT/'cases.json'}")

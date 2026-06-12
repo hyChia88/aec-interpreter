@@ -34,7 +34,13 @@
   .ok{color:var(--green)}.bad{color:var(--red)}
   .note{margin-top:16px;font-size:12.5px;color:var(--muted);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
   h3{font-size:15px;margin:18px 0 4px}
-  .legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted);margin-top:8px}
+  .wf{margin:8px 0 2px}
+  .wf-row{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12.5px}
+  .wf-lbl{flex:0 0 105px;color:var(--muted);text-align:right}
+  .wf-bar{flex:1;height:14px;background:#eef1f4;border-radius:4px;overflow:hidden}
+  .wf-fill{display:block;height:100%;border-radius:4px}
+  .wf-n{flex:0 0 30px;font-weight:700;font-family:ui-monospace,monospace}
+  .legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted);margin-top:8px;flex-wrap:wrap}
   .sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px}
   @media(max-width:820px){.app{grid-template-columns:1fr;height:auto}.viewer{height:62vh}}
 </style>
@@ -77,6 +83,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const BASE = new THREE.Color(0xcdd3da), BASEEDGE = 0x9aa3ad;
 const HOT = new THREE.Color(0xef7d00);
+const BLUE = new THREE.Color(0x4a90e2);          // same-storey/class look-alikes (the confusable set)
 
 const canvas = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, logarithmicDepthBuffer:true });
@@ -108,9 +115,10 @@ function loadGLB(file){
 }
 function guidOf(o){ let n=o; while(n){ if(n.name && n.name.length>=20) return n.name; n=n.parent; } return o.name; }
 
-function show(file, guid){
+function show(file, guid, confusable){
   document.getElementById('loading').style.display = 'flex';
   document.getElementById('loading').textContent = 'loading model…';
+  const conf = new Set(confusable || []);
   loadGLB(file).then(root => {
     if (current) scene.remove(current);
     current = root; scene.add(root);
@@ -120,16 +128,19 @@ function show(file, guid){
     const full = new THREE.Box3().setFromObject(root);
     const off = full.getCenter(new THREE.Vector3());
     root.position.sub(off); root.updateMatrixWorld(true);
-    const hits = [];
+    const hits = [], cmeshes = [];
     root.traverse(o => { if(!o.isMesh) return;
-      const isT = (o.userData.guid||'').includes(guid);
+      const g = o.userData.guid || '';
+      const isT = g.includes(guid);
+      const isC = !isT && conf.has(g);                            // a same-storey/class look-alike
       o.material = new THREE.MeshStandardMaterial({
         color: isT?HOT:BASE, emissive: isT?HOT:0x000000, emissiveIntensity:isT?0.95:0,
-        transparent:!isT, opacity:isT?1:0.18, roughness:0.9, metalness:0.0,
+        transparent:!isT, opacity:isT?1:0.16, roughness:0.9, metalness:0.0,
         depthWrite:isT, side:THREE.DoubleSide });
-      o.renderOrder = isT?2:1;
-      if(isT) hits.push(o);
+      o.renderOrder = isT?2:0;
+      if(isT) hits.push(o); if(isC) cmeshes.push(o);
     });
+    console.log('demo highlight: target hits', hits.length, 'confusable hits', cmeshes.length, 'of', conf.size);
     root.updateMatrixWorld(true);          // matrices must be current before bbox/framing
     markers.clear();
     if(hits.length){                        // world-space markers so the element reads at any zoom
@@ -144,6 +155,16 @@ function show(file, guid){
         new THREE.CylinderGeometry(H*0.10, H*0.10, H*9, 14),
         new THREE.MeshBasicMaterial({color:0xef7d00, transparent:true, opacity:0.9, depthTest:false}));
       beam.position.set(cc.x, cc.y + H*4.5, cc.z); beam.renderOrder=6; markers.add(beam);
+      // blue dots on the look-alikes (same storey+class) — the window meshes don't shade, so mark
+      // them with world-space dots, like the target's beam. Shows "a row of identical siblings".
+      const r = Math.max(H * 0.45, 0.35);
+      const dotGeo = new THREE.SphereGeometry(r, 12, 12);
+      const dotMat = new THREE.MeshBasicMaterial({color:0x4a90e2});
+      for (const cm of cmeshes){
+        const cb = new THREE.Box3().setFromObject(cm).getCenter(new THREE.Vector3());
+        const dot = new THREE.Mesh(dotGeo, dotMat); dot.position.copy(cb); dot.renderOrder=4;
+        markers.add(dot);
+      }
     }
     frame(root, hits);
     console.log('demo: loaded', file, 'meshes', root.children.length, 'target hits', hits.length);
@@ -188,23 +209,35 @@ function select(i){
   const dec = `<span class="badge ${c.decision}">${c.decision}</span>`;
   const mark = c.correct ? '<span class="ok">✓ correct</span>' : '<span class="bad">✗ mismatch</span>';
   const slot = c.pred_slot ? `${c.pred_slot[0]} of ${c.pred_slot[1]}` : 'abstained';
+  // backend candidate-pool waterfall (what's happening inside the interpreter)
+  const wf = c.waterfall || [];
+  const wfMax = wf.length ? wf[0].n : 1;
+  const wfBars = wf.map((s,k)=>`
+    <div class="wf-row"><span class="wf-lbl">${s.stage}</span>
+      <span class="wf-bar"><span class="wf-fill" style="width:${Math.max(2,100*s.n/wfMax)}%;
+        background:${k===wf.length-1?'#ef7d00':(k===0?'#cdd3da':'#4a90e2')}"></span></span>
+      <span class="wf-n">${s.n}</span></div>`).join('');
   document.getElementById('detail').innerHTML = `
     <figure>${c.site_img?`<img class="site" src="${c.site_img}" alt="site photo">`:''}
       <figcaption>“${c.query}”</figcaption></figure>
-    <span class="kicker">Spatial address — predicted</span>
+    <span class="kicker">Backend — candidate-pool waterfall</span>
+    <div class="wf">${wfBars}</div>
+    <p style="font-size:12px;color:var(--muted);margin:4px 0 0">The retrieved pool is full of
+      look-alikes (same storey + class, in <span style="color:#4a90e2;font-weight:600">blue</span>);
+      the <b>spatial address</b> collapses them to the one element (<span style="color:#ef7d00;font-weight:600">orange</span>).</p>
+    <span class="kicker" style="display:block;margin-top:16px">Spatial address — predicted</span>
     <div class="row"><span class="k">element</span><span class="v">${c.ifc_class} · ${c.storey}</span></div>
     <div class="row"><span class="k">predicted slot</span><span class="v">${slot}</span></div>
     <div class="row"><span class="k">ground truth</span><span class="v">${c.gt_slot[0]} of ${c.gt_slot[1]} &nbsp;${mark}</span></div>
     <div class="row"><span class="k">confidence</span><span class="v">${c.conf_raw} → ${c.conf_cal} (cal)</span></div>
     <div class="row"><span class="k">decision (τ=${c.tau})</span><span class="v">${dec}</span></div>
-    <h3>In the model</h3>
-    <p style="font-size:13.5px;color:#3a3f47;margin:4px 0 0">The grounded element (GUID
-      <code style="font-size:11px">${c.target_guid}</code>) is highlighted in orange in its storey.
-      ${c.correct?'A correct ANSWER — the system commits to this GUID.':
-        (c.decision==='DEFER'?'A DEFER — the prediction is wrong but its confidence is below threshold, so the system abstains and returns candidates instead.':'')}</p>
+    <p style="font-size:13px;color:#3a3f47;margin:10px 0 0">
+      ${c.correct?'A correct <b>ANSWER</b> — the system commits to this GUID.':
+        (c.decision==='DEFER'?'A <b>DEFER</b> — the prediction is wrong but its confidence is below threshold, so the system abstains and returns the candidates instead.':'')}</p>
     <div class="legend"><span><span class="sw" style="background:#ef7d00"></span>grounded element</span>
-      <span><span class="sw" style="background:#cdd3da"></span>storey context</span></div>`;
-  show(c.glb, c.target_guid);
+      <span><span class="sw" style="background:#4a90e2"></span>look-alikes (same storey+class)</span>
+      <span><span class="sw" style="background:#cdd3da"></span>context</span></div>`;
+  show(c.glb, c.target_guid, c.confusable_guids);
 }
 if (location.protocol === 'file:') document.getElementById('servenote').style.display='block';
 </script>

@@ -19,7 +19,63 @@
     "conf_cal": 0.57,
     "tau": 0.4,
     "decision": "ANSWER",
-    "correct": true
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRS7m",
+      "3ktY1kg3rAwgNBX_XWRS7r",
+      "3ktY1kg3rAwgNBX_XWRS7J",
+      "3ktY1kg3rAwgNBX_XWRS7z",
+      "3ktY1kg3rAwgNBX_XWRS7i",
+      "3ktY1kg3rAwgNBX_XWRS7f",
+      "3ktY1kg3rAwgNBX_XWRS7$",
+      "3ktY1kg3rAwgNBX_XWRS7g",
+      "3ktY1kg3rAwgNBX_XWRS7I",
+      "3ktY1kg3rAwgNBX_XWRS7y",
+      "3ktY1kg3rAwgNBX_XWRS7j",
+      "3ktY1kg3rAwgNBX_XWRS7X",
+      "3ktY1kg3rAwgNBX_XWRS7o",
+      "3ktY1kg3rAwgNBX_XWRS7e",
+      "3ktY1kg3rAwgNBX_XWRS7Z",
+      "3ktY1kg3rAwgNBX_XWRS7W",
+      "3ktY1kg3rAwgNBX_XWRS7_",
+      "3ktY1kg3rAwgNBX_XWRS7p",
+      "3ktY1kg3rAwgNBX_XWRS7t",
+      "3ktY1kg3rAwgNBX_XWRS7q",
+      "3ktY1kg3rAwgNBX_XWRS7Y",
+      "3ktY1kg3rAwgNBX_XWRS7O",
+      "3ktY1kg3rAwgNBX_XWRS7x",
+      "3ktY1kg3rAwgNBX_XWRS7h",
+      "3ktY1kg3rAwgNBX_XWRS7P",
+      "3ktY1kg3rAwgNBX_XWRS7w",
+      "3ktY1kg3rAwgNBX_XWRS7b",
+      "3ktY1kg3rAwgNBX_XWRS7V",
+      "3ktY1kg3rAwgNBX_XWRS7v",
+      "3ktY1kg3rAwgNBX_XWRS7a",
+      "3ktY1kg3rAwgNBX_XWRS7k",
+      "3ktY1kg3rAwgNBX_XWRS7u",
+      "3ktY1kg3rAwgNBX_XWRS7c",
+      "3ktY1kg3rAwgNBX_XWRS7Q",
+      "3ktY1kg3rAwgNBX_XWRS7d",
+      "3ktY1kg3rAwgNBX_XWRS7n",
+      "3ktY1kg3rAwgNBX_XWRS7R",
+      "3ktY1kg3rAwgNBX_XWRS7K",
+      "3ktY1kg3rAwgNBX_XWRS7L",
+      "3ktY1kg3rAwgNBX_XWRS7M"
+    ]
   },
   {
     "id": "AP_SK_092",
@@ -41,7 +97,63 @@
     "conf_cal": 0.05,
     "tau": 0.4,
     "decision": "DEFER",
-    "correct": false
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "0fjrUmmzDB4fngo1stt3cw",
+      "0pHBx4qSPCfPLZRKuUIKNz",
+      "1KMtYLyv9CyfGv8UjnMB3Y",
+      "1KMtYLyv9CyfGv8UjnMB33",
+      "1KMtYLyv9CyfGv8UjnMB3X",
+      "1KMtYLyv9CyfGv8UjnMB3l",
+      "1KMtYLyv9CyfGv8UjnMB31",
+      "1KMtYLyv9CyfGv8UjnMB3i",
+      "1KMtYLyv9CyfGv8UjnMB3Z",
+      "1KMtYLyv9CyfGv8UjnMB3y",
+      "1KMtYLyv9CyfGv8UjnMB3W",
+      "1KMtYLyv9CyfGv8UjnMB3u",
+      "0HFJ4FEcn5UhECI1IyBBLe",
+      "1KMtYLyv9CyfGv8UjnMB3e",
+      "0pHBx4qSPCfPLZRKuUIKG1",
+      "1KMtYLyv9CyfGv8UjnMB3z",
+      "1KMtYLyv9CyfGv8UjnMB3v",
+      "1KMtYLyv9CyfGv8UjnMB32",
+      "1gdfXOIAf8ZBJUgAp$8e1o",
+      "0pHBx4qSPCfPLZRKuUIKhq",
+      "0pHBx4qSPCfPLZRKuUIKPy",
+      "1KMtYLyv9CyfGv8UjnMB3$",
+      "1KMtYLyv9CyfGv8UjnMBSM",
+      "0pHBx4qSPCfPLZRKuUIKOJ",
+      "1KMtYLyv9CyfGv8UjnMB3p",
+      "1KMtYLyv9CyfGv8UjnMBSL",
+      "0pHBx4qSPCfPLZRKuUIKRO",
+      "1KMtYLyv9CyfGv8UjnMB3n",
+      "1KMtYLyv9CyfGv8UjnMBSN",
+      "0pHBx4qSPCfPLZRKuUIKQ9",
+      "1KMtYLyv9CyfGv8UjnMB3o",
+      "1KMtYLyv9CyfGv8UjnMB3d",
+      "0pHBx4qSPCfPLZRKuUIKTa",
+      "1KMtYLyv9CyfGv8UjnMBSK",
+      "1KMtYLyv9CyfGv8UjnMB3x",
+      "0HFJ4FEcn5UhECI1IyBAm7",
+      "1KMtYLyv9CyfGv8UjnMBSR",
+      "1KMtYLyv9CyfGv8UjnMBSQ",
+      "1KMtYLyv9CyfGv8UjnMBSP",
+      "1KMtYLyv9CyfGv8UjnMBSO"
+    ]
   },
   {
     "id": "AP_SK_107",
@@ -63,7 +175,63 @@
     "conf_cal": 0.87,
     "tau": 0.4,
     "decision": "ANSWER",
-    "correct": true
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV0i",
+      "3ktY1kg3rAwgNBX_XWRV0V",
+      "3ktY1kg3rAwgNBX_XWRV07",
+      "3ktY1kg3rAwgNBX_XWRV0H",
+      "3ktY1kg3rAwgNBX_XWRV0M",
+      "3ktY1kg3rAwgNBX_XWRV0d",
+      "3ktY1kg3rAwgNBX_XWRV0T",
+      "3ktY1kg3rAwgNBX_XWRV0h",
+      "3ktY1kg3rAwgNBX_XWRV0L",
+      "3ktY1kg3rAwgNBX_XWRV0W",
+      "3ktY1kg3rAwgNBX_XWRV0a",
+      "3ktY1kg3rAwgNBX_XWRV0f",
+      "3ktY1kg3rAwgNBX_XWRV0N",
+      "3ktY1kg3rAwgNBX_XWRV0D",
+      "3ktY1kg3rAwgNBX_XWRV0e",
+      "3ktY1kg3rAwgNBX_XWRV0O",
+      "3ktY1kg3rAwgNBX_XWRV0E",
+      "3ktY1kg3rAwgNBX_XWRV0l",
+      "3ktY1kg3rAwgNBX_XWRV0Q",
+      "3ktY1kg3rAwgNBX_XWRV0C",
+      "3ktY1kg3rAwgNBX_XWRV0k",
+      "3ktY1kg3rAwgNBX_XWRV0P",
+      "3ktY1kg3rAwgNBX_XWRV03",
+      "3ktY1kg3rAwgNBX_XWRV0j",
+      "3ktY1kg3rAwgNBX_XWRV0R",
+      "3ktY1kg3rAwgNBX_XWRV0F",
+      "3ktY1kg3rAwgNBX_XWRV08",
+      "3ktY1kg3rAwgNBX_XWRV09",
+      "3ktY1kg3rAwgNBX_XWRV0A",
+      "3ktY1kg3rAwgNBX_XWRV0B",
+      "3ktY1kg3rAwgNBX_XWRV04",
+      "3ktY1kg3rAwgNBX_XWRV05",
+      "3ktY1kg3rAwgNBX_XWRV0S",
+      "3ktY1kg3rAwgNBX_XWRV0X",
+      "3ktY1kg3rAwgNBX_XWRV0c",
+      "3ktY1kg3rAwgNBX_XWRV0b",
+      "3ktY1kg3rAwgNBX_XWRV0g",
+      "3ktY1kg3rAwgNBX_XWRV0J",
+      "3ktY1kg3rAwgNBX_XWRV0I",
+      "3ktY1kg3rAwgNBX_XWRV0K"
+    ]
   },
   {
     "id": "AP_SK_082",
@@ -85,7 +253,63 @@
     "conf_cal": 0.69,
     "tau": 0.4,
     "decision": "ANSWER",
-    "correct": true
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 49
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 45
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 2
+      }
+    ],
+    "confusable_guids": [
+      "3pFbansyD0KOHFtJHrTupl",
+      "3pFbansyD0KOHFtJHrTutI",
+      "1q9pLykVT2tOtz_4XjbuoS",
+      "1q9pLykVT2tOtz_4XjbvA1",
+      "1q9pLykVT2tOtz_4XjbvBZ",
+      "1q9pLykVT2tOtz_4XjbvqZ",
+      "1q9pLykVT2tOtz_4Xjbvw7",
+      "0ducQKkW5EGQM9rQ5zdOpb",
+      "0ducQKkW5EGQM9rQ5zdOvK",
+      "0ducQKkW5EGQM9rQ5zdP1L",
+      "0ducQKkW5EGQM9rQ5zdP8c",
+      "0ducQKkW5EGQM9rQ5zdPFU",
+      "0ducQKkW5EGQM9rQ5zdPFm",
+      "0ducQKkW5EGQM9rQ5zdPNP",
+      "0ducQKkW5EGQM9rQ5zdPbh",
+      "0ducQKkW5EGQM9rQ5zdPaT",
+      "0ducQKkW5EGQM9rQ5zdPnm",
+      "0ducQKkW5EGQM9rQ5zdPmG",
+      "0ducQKkW5EGQM9rQ5zdPm_",
+      "0ducQKkW5EGQM9rQ5zdPsI",
+      "0ducQKkW5EGQM9rQ5zdPsq",
+      "0ducQKkW5EGQM9rQ5zdPrI",
+      "0ducQKkW5EGQM9rQ5zdPrq",
+      "0ducQKkW5EGQM9rQ5zdPrw",
+      "0ducQKkW5EGQM9rQ5zdPqd",
+      "0ducQKkW5EGQM9rQ5zdPwl",
+      "0ducQKkW5EGQM9rQ5zdPvI",
+      "0ducQKkW5EGQM9rQ5zdP$j",
+      "0ducQKkW5EGQM9rQ5zdPyj",
+      "0ducQKkW5EGQM9rQ5zdM3l",
+      "0ducQKkW5EGQM9rQ5zdM3v",
+      "0ducQKkW5EGQM9rQ5zdM2q",
+      "0ducQKkW5EGQM9rQ5zdM1T",
+      "0ducQKkW5EGQM9rQ5zdM8G",
+      "1cFRppLhj948bTrzz_ApRD",
+      "1cFRppLhj948bTrzz_ApiD",
+      "1cFRppLhj948bTrzz_Apiw",
+      "3GdhC2lQD5ifjmLdQ3yoHF",
+      "3GdhC2lQD5ifjmLdQ3yoHJ",
+      "1cFRppLhj948bTrzz_Ao_1"
+    ]
   },
   {
     "id": "AP_SK_111",
@@ -107,7 +331,63 @@
     "conf_cal": 0.57,
     "tau": 0.4,
     "decision": "ANSWER",
-    "correct": true
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV1v",
+      "3ktY1kg3rAwgNBX_XWRV1_",
+      "3ktY1kg3rAwgNBX_XWRV1K",
+      "3ktY1kg3rAwgNBX_XWRV1c",
+      "3ktY1kg3rAwgNBX_XWRV1L",
+      "3ktY1kg3rAwgNBX_XWRV1I",
+      "3ktY1kg3rAwgNBX_XWRV1W",
+      "3ktY1kg3rAwgNBX_XWRV1J",
+      "3ktY1kg3rAwgNBX_XWRV1R",
+      "3ktY1kg3rAwgNBX_XWRV1b",
+      "3ktY1kg3rAwgNBX_XWRV1M",
+      "3ktY1kg3rAwgNBX_XWRV1g",
+      "3ktY1kg3rAwgNBX_XWRV1x",
+      "3ktY1kg3rAwgNBX_XWRV1H",
+      "3ktY1kg3rAwgNBX_XWRV1a",
+      "3ktY1kg3rAwgNBX_XWRV1f",
+      "3ktY1kg3rAwgNBX_XWRV1d",
+      "3ktY1kg3rAwgNBX_XWRV1q",
+      "3ktY1kg3rAwgNBX_XWRV1u",
+      "3ktY1kg3rAwgNBX_XWRV1z",
+      "3ktY1kg3rAwgNBX_XWRV1h",
+      "3ktY1kg3rAwgNBX_XWRV11",
+      "3ktY1kg3rAwgNBX_XWRV1y",
+      "3ktY1kg3rAwgNBX_XWRV1i",
+      "3ktY1kg3rAwgNBX_XWRV12",
+      "3ktY1kg3rAwgNBX_XWRV1Z",
+      "3ktY1kg3rAwgNBX_XWRV1k",
+      "3ktY1kg3rAwgNBX_XWRV10",
+      "3ktY1kg3rAwgNBX_XWRV1Y",
+      "3ktY1kg3rAwgNBX_XWRV1j",
+      "3ktY1kg3rAwgNBX_XWRV1N",
+      "3ktY1kg3rAwgNBX_XWRV1X",
+      "3ktY1kg3rAwgNBX_XWRV1l",
+      "3ktY1kg3rAwgNBX_XWRV13",
+      "3ktY1kg3rAwgNBX_XWRV1e",
+      "3ktY1kg3rAwgNBX_XWRV1w",
+      "3ktY1kg3rAwgNBX_XWRV1S",
+      "3ktY1kg3rAwgNBX_XWRV1T",
+      "3ktY1kg3rAwgNBX_XWRV1U",
+      "3ktY1kg3rAwgNBX_XWRV1V"
+    ]
   },
   {
     "id": "AP_SK_118",
@@ -129,6 +409,62 @@
     "conf_cal": 0.84,
     "tau": 0.4,
     "decision": "ANSWER",
-    "correct": true
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV4U",
+      "3ktY1kg3rAwgNBX_XWRV43",
+      "3ktY1kg3rAwgNBX_XWRV7v",
+      "3ktY1kg3rAwgNBX_XWRV4B",
+      "3ktY1kg3rAwgNBX_XWRV7w",
+      "3ktY1kg3rAwgNBX_XWRV7t",
+      "3ktY1kg3rAwgNBX_XWRV45",
+      "3ktY1kg3rAwgNBX_XWRV7m",
+      "3ktY1kg3rAwgNBX_XWRV7u",
+      "3ktY1kg3rAwgNBX_XWRV4A",
+      "3ktY1kg3rAwgNBX_XWRV7x",
+      "3ktY1kg3rAwgNBX_XWRV4F",
+      "3ktY1kg3rAwgNBX_XWRV4O",
+      "3ktY1kg3rAwgNBX_XWRV7s",
+      "3ktY1kg3rAwgNBX_XWRV4S",
+      "3ktY1kg3rAwgNBX_XWRV49",
+      "3ktY1kg3rAwgNBX_XWRV4E",
+      "3ktY1kg3rAwgNBX_XWRV4P",
+      "3ktY1kg3rAwgNBX_XWRV4T",
+      "3ktY1kg3rAwgNBX_XWRV42",
+      "3ktY1kg3rAwgNBX_XWRV48",
+      "3ktY1kg3rAwgNBX_XWRV7c",
+      "3ktY1kg3rAwgNBX_XWRV41",
+      "3ktY1kg3rAwgNBX_XWRV7n",
+      "3ktY1kg3rAwgNBX_XWRV7d",
+      "3ktY1kg3rAwgNBX_XWRV40",
+      "3ktY1kg3rAwgNBX_XWRV7p",
+      "3ktY1kg3rAwgNBX_XWRV7b",
+      "3ktY1kg3rAwgNBX_XWRV47",
+      "3ktY1kg3rAwgNBX_XWRV7o",
+      "3ktY1kg3rAwgNBX_XWRV7q",
+      "3ktY1kg3rAwgNBX_XWRV46",
+      "3ktY1kg3rAwgNBX_XWRV4C",
+      "3ktY1kg3rAwgNBX_XWRV7W",
+      "3ktY1kg3rAwgNBX_XWRV4D",
+      "3ktY1kg3rAwgNBX_XWRV4V",
+      "3ktY1kg3rAwgNBX_XWRV7X",
+      "3ktY1kg3rAwgNBX_XWRV7Y",
+      "3ktY1kg3rAwgNBX_XWRV7Z",
+      "3ktY1kg3rAwgNBX_XWRV7y"
+    ]
   }
 ]
