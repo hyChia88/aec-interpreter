@@ -60,6 +60,23 @@ def auroc(pairs: list[CalibrationPair]) -> float:
     return wins / (len(pos) * len(neg))
 
 
+def bootstrap_ci(pairs, fn, n_boot: int = 10000, seed: int = 0, alpha: float = 0.05):
+    """Percentile bootstrap CI for a scalar statistic fn(pairs) over the n fillers.
+    Returns (point, lo, hi). Honest about the small-n (35) uncertainty."""
+    import numpy as np
+    rng = np.random.default_rng(seed)
+    n = len(pairs)
+    point = fn(pairs)
+    boots = []
+    for _ in range(n_boot):
+        sample = [pairs[i] for i in rng.integers(0, n, size=n)]
+        v = fn(sample)
+        if v == v:  # skip nan (degenerate resample with all-correct / all-wrong)
+            boots.append(v)
+    lo, hi = np.percentile(boots, [100 * alpha / 2, 100 * (1 - alpha / 2)])
+    return float(point), float(lo), float(hi)
+
+
 def make_figure(pairs, stats, out_path: Path) -> None:
     import matplotlib
     matplotlib.use("Agg")
@@ -128,13 +145,22 @@ def main():
     stats["auroc"] = auroc(pairs)
     stats["joint_acc"] = sum(p.correct for p in pairs) / len(pairs)
 
+    # bootstrap 95% CIs (n=35 is small — report the uncertainty, do not hide it)
+    a_pt, a_lo, a_hi = bootstrap_ci(pairs, auroc)
+    e_pt, e_lo, e_hi = bootstrap_ci(pairs, lambda ps: ece(ps, n_bins)["ece"])
+    j_pt, j_lo, j_hi = bootstrap_ci(pairs, lambda ps: sum(p.correct for p in ps) / len(ps))
+    stats["auroc_ci95"] = [round(a_lo, 3), round(a_hi, 3)]
+    stats["ece_ci95"] = [round(e_lo, 3), round(e_hi, 3)]
+    stats["joint_acc_ci95"] = [round(j_lo, 3), round(j_hi, 3)]
+
     OUT.mkdir(exist_ok=True)
     make_figure(pairs, stats, OUT / "calibration_diag.png")
     json.dump({k: v for k, v in stats.items() if k != "bins"} | {"bins": stats["bins"]},
               open(OUT / "calibration_diag.json", "w"), indent=2)
 
-    print(f"\nn={stats['n']}  joint-acc={stats['joint_acc']:.3f}  ECE={stats['ece']:.3f}  "
-          f"AUROC={stats['auroc']:.2f}")
+    print(f"\nn={stats['n']}  joint-acc={stats['joint_acc']:.3f} CI{stats['joint_acc_ci95']}  "
+          f"ECE={stats['ece']:.3f} CI{stats['ece_ci95']}  "
+          f"AUROC={stats['auroc']:.2f} CI{stats['auroc_ci95']}")
     print("verdict:", "ANTI-correlated — Step B confirms L188 contingency; raw conf NOT usable"
           if stats["auroc"] < 0.5 else "some signal — temperature scaling may help")
 

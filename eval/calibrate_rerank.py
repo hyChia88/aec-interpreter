@@ -92,6 +92,41 @@ def downstream_soft(pred: Callable, fillers, idx, gslot, weight: Callable[[float
     return {"n": n, "top1": 100 * t1 / n, "top10": 100 * t10 / n}
 
 
+def _bootstrap_top1_ci(per_case_hits: list[float], n_boot: int = 10000, seed: int = 0):
+    """Percentile 95% CI for a Top-1 rate from per-case 0/1 hits (n=35 is small)."""
+    import numpy as np
+    rng = np.random.default_rng(seed)
+    arr = np.asarray(per_case_hits, float)
+    n = len(arr)
+    boot = arr[rng.integers(0, n, size=(n_boot, n))].mean(axis=1)
+    lo, hi = np.percentile(boot, [2.5, 97.5])
+    return round(100 * float(arr.mean()), 1), [round(100 * float(lo), 1), round(100 * float(hi), 1)]
+
+
+def downstream_hits(pred, fillers, idx, gslot, weight) -> list[float]:
+    """Per-case Top-1 0/1 list for the soft-rerank — feeds the bootstrap CI."""
+    hits = []
+    for c in fillers:
+        gt = c["scenario"]["ground_truth"]["target_guid"]
+        pool = pool_candidates(c)
+        if gt not in pool:
+            continue
+        pi, pM, conf = pred(c)
+        gf = cand_feats(gt, pool[gt], idx, gslot)
+        key_slot = (pi, pM) if pi is not None else None
+        w = weight(conf) if key_slot is not None else 0.0
+        scores = {}
+        for guid, tc in pool.items():
+            cf = cand_feats(guid, tc, idx, gslot)
+            s = float(cf.get("storey") == gf.get("storey")) + float(cf.get("ifc_class") == gf.get("ifc_class"))
+            if key_slot is not None and cf.get("position_slot") == key_slot:
+                s += w
+            scores[guid] = s
+        h, t = _rank_stats(scores, gt)
+        hits.append(_topk(h, t, 1))
+    return hits
+
+
 # ── selective prediction (coverage vs accuracy) ──────────────────────────────
 def selective_curve(pred, fillers, idx, gslot, T: float) -> list[dict]:
     """Sweep a calibrated-confidence threshold τ. A case is *answered* iff its calibrated
@@ -191,15 +226,20 @@ def main():
     calib_soft = downstream_soft(pred, fill, idx, gslot, weight=lambda c: apply_T(c, T))
     selective = selective_curve(pred, fill, idx, gslot, T)
 
+    # bootstrap 95% CI on the realized hard-match Top-1 (the headline 67.6, n=35)
+    hard_hits = downstream_hits(pred, fill, idx, gslot, weight=lambda c: 1.0)
+    hard_top1_pt, hard_top1_ci = _bootstrap_top1_ci(hard_hits)
+
     stats = {"T": T, "ece_raw": ece_raw, "ece_cal": ece_cal,
              "floor": floor, "hard": hard, "raw_soft": raw_soft, "calib_soft": calib_soft,
-             "selective": selective}
+             "hard_top1_ci95": hard_top1_ci, "selective": selective}
 
     OUT.mkdir(exist_ok=True)
     make_figure(stats, OUT / "calibrate_rerank.png")
     json.dump(stats, open(OUT / "calibrate_rerank.json", "w"), indent=2)
 
     print(f"\nT={T:.2f}  ECE {ece_raw:.3f} → {ece_cal:.3f}")
+    print(f"realized hard Top-1 = {hard_top1_pt:.1f}  95% CI {hard_top1_ci}  (n={hard['n']})")
     print(f"Top-1  floor={floor['top1']:.1f}  hard={hard['top1']:.1f}  "
           f"raw-soft={raw_soft['top1']:.1f}  calib-soft={calib_soft['top1']:.1f}")
     print(f"Top-10 floor={floor['top10']:.1f}  hard={hard['top10']:.1f}  "
