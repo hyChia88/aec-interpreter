@@ -47,6 +47,9 @@ geom = [
 live = [
     "py2neo>=2021.2",
     "modal>=1.5",
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+    "python-multipart>=0.0.9",
 ]
 # legacy V1 agent + interactive chat (NOT used by the neuro-symbolic pipeline; kept
 # only if the old agent path is run for qualitative comparison)

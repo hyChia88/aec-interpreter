@@ -89,7 +89,28 @@ collapse, Top-1), `ORACLE` (the "predicted address" = perfect extraction, *not l
 `REALIZED` (G8's actual extraction from the trace), `PENDING` (attention/segmentation tiles
 reserved for the P2 learned extractor).
 
-### 4. Regenerating reference data (optional — needs the IFC model)
+### 4. Live demo (real VLM + graph, not a replay) — needs Docker + Modal
+
+The offline steps above replay frozen traces. To run the **actual** pipeline end-to-end
+(site photo → Modal GPU VLM → constraints → live Neo4j retrieval → grounded GUID):
+
+```bash
+docker compose up -d                                   # Neo4j (bolt://localhost:7687)
+# one-time graph build:  scripts/graph_build/README.md  (run steps 01 -> 02)
+modal token new                                        # one-time Modal auth
+.venv/bin/python eval/live_infer.py --case AP_SK_108   # CLI: one held-out case, live
+
+# browser demo (same-origin, no CORS):
+.venv/bin/uvicorn aec_interpreter.service.app:app --port 8000 --app-dir src
+#   open http://localhost:8000/  → pick a case → "⚡ Run live inference"
+```
+
+The live VLM runs on a deployed Modal A100 (`mscd-vlm-lora3-inference`, canonical G8
+adapter). First call cold-starts ~1–2 min. The live route is currently **pure-VLM** — the
+OpenCV slot specialist + soft-rerank (the 67.6% realized path) is the next enhancement, so
+live slot predictions can be wrong; the system surfaces its confidence and ANSWER/DEFER.
+
+### 5. Regenerating reference data (optional — needs the IFC model)
 
 `data/references/*.jsonl` are committed, so the steps above need nothing extra. To regenerate
 them you need `data/ifc_models/AdvancedProject.ifc` (gitignored) + `ifcopenshell`:

@@ -18,8 +18,17 @@ checkpoint volume) on a real photo+note → Constraints → live Neo4j retrieve 
 Verified end-to-end: AP_SK_108 (window) → live VLM extracts "7th of 10 openings", GT at rank 5/pool 46 →
 ANSWER. So the FULL pipeline now runs live (no precomputed traces). The precomputed `--live` path is
 itself byte-identical across runs (60/60 — repeatability verified). **mscd_demo is now reproducible
-in-repo (retrieval + live VLM) → retire-able.** Remaining: web-demo wiring (FastAPI /ground + browser
-upload → 3D highlight); the OpenCV slot specialist is not yet in the live G8 path (pure-VLM only).
+in-repo (retrieval + live VLM) → retire-able.**
+**LIVE WEB DEMO landed (2026-06-12):** `src/aec_interpreter/service/app.py` (FastAPI) serves `site/`
+same-origin and exposes `POST /api/ground {case_id}` → live Modal VLM → live Neo4j → ranked GUID +
+ANSWER/DEFER; `site/demo.html` got a "⚡ Run live inference" button that overlays the live result and
+re-highlights the live top-1 in the 3D viewer. Verified end-to-end (uvicorn → /health 1257 elems →
+/api/ground AP_SK_107 → live VLM "7th of 17", pool 46). Run: `uvicorn aec_interpreter.service.app:app
+--port 8000 --app-dir src` then open `http://localhost:8000/`.
+**Known gaps (next):** (1) the live route is pure-VLM — the OpenCV slot specialist + soft-rerank (the
+67.6% path) is not yet merged in, so live slot predictions can be wrong (e.g. AP_SK_107 hallucinated
+"7th of 17" vs GT slot 0/3); (2) live demo is case-pick only, not arbitrary photo upload (needs
+on-the-fly storey GLB extraction).
 
 ---
 

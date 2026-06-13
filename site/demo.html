@@ -55,6 +55,14 @@
   .graphStats{font-size:12.5px;color:#3a3f47}
   .graphStats .mini{display:grid;grid-template-columns:1fr auto;gap:4px 10px;margin-top:8px}
   .graphStats b{font-family:ui-monospace,monospace}
+  .livebtn{margin-top:16px;width:100%;padding:11px 14px;font-size:14px;font-weight:700;color:#fff;
+    background:var(--hot);border:none;border-radius:9px;cursor:pointer;font-family:inherit}
+  .livebtn:hover{filter:brightness(1.05)}.livebtn:disabled{opacity:.6;cursor:wait}
+  .livecard{margin-top:12px;border:1px solid var(--hot);border-radius:10px;padding:12px 14px;background:#fff8f1}
+  .livehd{font-size:12px;font-weight:700;color:#9a4f00;margin-bottom:8px}
+  .livetag{display:inline-block;background:var(--hot);color:#fff;font-size:10px;font-weight:800;
+    border-radius:5px;padding:2px 7px;letter-spacing:.08em;margin-right:6px}
+  .livenote{font-size:12px;color:var(--muted);margin:8px 0 0}
   @media(max-width:820px){.app{grid-template-columns:1fr;height:auto}.viewer{height:auto}.canvasWrap{height:62vh}.graphPanel{grid-template-columns:1fr}}
 </style>
 </head>
@@ -258,10 +266,59 @@ function select(i){
         (c.decision==='DEFER'?'A <b>DEFER</b> — the prediction is wrong but its confidence is below threshold, so the system abstains and returns the candidates instead.':'')}</p>
     <div class="legend"><span><span class="sw" style="background:#ef7d00"></span>grounded element</span>
       <span><span class="sw" style="background:#4a90e2"></span>look-alikes (same storey+class)</span>
-      <span><span class="sw" style="background:#cdd3da"></span>context</span></div>`;
+      <span><span class="sw" style="background:#cdd3da"></span>context</span></div>
+    <button id="liveBtn" class="livebtn">⚡ Run live inference</button>
+    <div id="liveResult"></div>`;
+  const lb = document.getElementById('liveBtn');
+  if (lb) lb.onclick = ()=>runLive(i);
   renderKG(c);
   show(c.glb, c.target_guid, c.confusable_guids);
 }
+
+// ---- live inference: POST to the FastAPI /api/ground, overlay the real result ----
+async function runLive(i){
+  const c = CASES[i];
+  const out = document.getElementById('liveResult');
+  const btn = document.getElementById('liveBtn');
+  if (location.protocol === 'file:'){
+    out.innerHTML = `<p class="bad" style="margin-top:10px">Live inference needs the server.
+      Run <code>uvicorn aec_interpreter.service.app:app --port 8000</code> and open
+      <code>http://localhost:8000/</code>.</p>`; return;
+  }
+  btn.disabled = true; btn.textContent = '⚡ running… (Modal A100 cold start ~1–2 min)';
+  out.innerHTML = `<p class="livenote">Calling the real pipeline: site photo → Modal VLM →
+    constraints → live Neo4j retrieval…</p>`;
+  try{
+    const r = await fetch('/api/ground', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({case_id: c.id})});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d = await r.json();
+    const dec = `<span class="badge ${d.decision}">${d.decision}</span>`;
+    const hit = d.rank===1 ? '<span class="ok">✓ rank 1</span>'
+              : (d.rank ? `<span class="bad">rank ${d.rank}</span>` : '<span class="bad">not in top-10</span>');
+    const k = d.constraints || {};
+    out.innerHTML = `
+      <div class="livecard">
+        <div class="livehd"><span class="livetag">LIVE</span> real VLM + graph, just now</div>
+        <div class="row"><span class="k">VLM storey · class</span><span class="v">${esc(k.storey_name)} · ${esc(k.ifc_class)}</span></div>
+        <div class="row"><span class="k">VLM position</span><span class="v">${esc(k.position_context)||'—'}</span></div>
+        <div class="row"><span class="k">VLM confidence</span><span class="v">${d.confidence}</span></div>
+        <div class="row"><span class="k">decision (τ=${d.tau})</span><span class="v">${dec}</span></div>
+        <div class="row"><span class="k">predicted GUID</span><span class="v" style="font-size:11px">${esc(d.top1_guid)||'—'}</span></div>
+        <div class="row"><span class="k">result</span><span class="v">${hit} · pool ${d.pool_size}</span></div>
+        <p class="livenote">Highlighting the live top-1 in 3D (orange). This is the pure-VLM path;
+          the OpenCV slot specialist that lifts fillers to 67.6% is not yet in the live route.</p>
+      </div>`;
+    // re-highlight the LIVE prediction in the 3D scene (fallback to GT highlight if missing)
+    if (d.top1_guid) show(c.glb, d.top1_guid, c.confusable_guids);
+  }catch(e){
+    out.innerHTML = `<p class="bad" style="margin-top:10px">Live call failed: ${esc(e.message)}.
+      Is the server up and Neo4j + Modal reachable?</p>`; console.error(e);
+  }finally{
+    btn.disabled = false; btn.textContent = '⚡ Run live inference';
+  }
+}
+function esc(s){ return String(s ?? '').replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
 
 function renderKG(c){
   const isDoor = (c.ifc_class || "").toLowerCase().includes("door");
