@@ -1,246 +1,13 @@
 [
   {
-    "id": "AP_SK_102",
-    "storey": "2 - Second Floor",
-    "glb": "2_second_floor.glb",
-    "target_guid": "3ktY1kg3rAwgNBX_XWRS7s",
-    "ifc_class": "Window",
-    "query": "The window in the wall opening on Second Floor needs QA review.",
-    "site_img": "../assets/dataset/AP_SK_102_site.png",
-    "gt_slot": [
-      2,
-      17
-    ],
-    "pred_slot": [
-      2,
-      17
-    ],
-    "conf_raw": 0.52,
-    "conf_cal": 0.57,
-    "tau": 0.4,
-    "decision": "ANSWER",
-    "correct": true,
-    "waterfall": [
-      {
-        "stage": "retrieved pool",
-        "n": 46
-      },
-      {
-        "stage": "+ storey + class",
-        "n": 46
-      },
-      {
-        "stage": "+ spatial address",
-        "n": 1
-      }
-    ],
-    "confusable_guids": [
-      "3ktY1kg3rAwgNBX_XWRS7m",
-      "3ktY1kg3rAwgNBX_XWRS7r",
-      "3ktY1kg3rAwgNBX_XWRS7J",
-      "3ktY1kg3rAwgNBX_XWRS7z",
-      "3ktY1kg3rAwgNBX_XWRS7i",
-      "3ktY1kg3rAwgNBX_XWRS7f",
-      "3ktY1kg3rAwgNBX_XWRS7$",
-      "3ktY1kg3rAwgNBX_XWRS7g",
-      "3ktY1kg3rAwgNBX_XWRS7I",
-      "3ktY1kg3rAwgNBX_XWRS7y",
-      "3ktY1kg3rAwgNBX_XWRS7j",
-      "3ktY1kg3rAwgNBX_XWRS7X",
-      "3ktY1kg3rAwgNBX_XWRS7o",
-      "3ktY1kg3rAwgNBX_XWRS7e",
-      "3ktY1kg3rAwgNBX_XWRS7Z",
-      "3ktY1kg3rAwgNBX_XWRS7W",
-      "3ktY1kg3rAwgNBX_XWRS7_",
-      "3ktY1kg3rAwgNBX_XWRS7p",
-      "3ktY1kg3rAwgNBX_XWRS7t",
-      "3ktY1kg3rAwgNBX_XWRS7q",
-      "3ktY1kg3rAwgNBX_XWRS7Y",
-      "3ktY1kg3rAwgNBX_XWRS7O",
-      "3ktY1kg3rAwgNBX_XWRS7x",
-      "3ktY1kg3rAwgNBX_XWRS7h",
-      "3ktY1kg3rAwgNBX_XWRS7P",
-      "3ktY1kg3rAwgNBX_XWRS7w",
-      "3ktY1kg3rAwgNBX_XWRS7b",
-      "3ktY1kg3rAwgNBX_XWRS7V",
-      "3ktY1kg3rAwgNBX_XWRS7v",
-      "3ktY1kg3rAwgNBX_XWRS7a",
-      "3ktY1kg3rAwgNBX_XWRS7k",
-      "3ktY1kg3rAwgNBX_XWRS7u",
-      "3ktY1kg3rAwgNBX_XWRS7c",
-      "3ktY1kg3rAwgNBX_XWRS7Q",
-      "3ktY1kg3rAwgNBX_XWRS7d",
-      "3ktY1kg3rAwgNBX_XWRS7n",
-      "3ktY1kg3rAwgNBX_XWRS7R",
-      "3ktY1kg3rAwgNBX_XWRS7K",
-      "3ktY1kg3rAwgNBX_XWRS7L",
-      "3ktY1kg3rAwgNBX_XWRS7M"
-    ]
-  },
-  {
-    "id": "AP_SK_092",
-    "storey": "1 - First Floor",
-    "glb": "1_first_floor.glb",
-    "target_guid": "1KMtYLyv9CyfGv8UjnMB3m",
-    "ifc_class": "Window",
-    "query": "On First Floor, check the window set into the wall opening at this location.",
-    "site_img": "../assets/dataset/AP_SK_092_site.png",
-    "gt_slot": [
-      8,
-      10
-    ],
-    "pred_slot": [
-      1,
-      10
-    ],
-    "conf_raw": 0.29,
-    "conf_cal": 0.05,
-    "tau": 0.4,
-    "decision": "DEFER",
-    "correct": false,
-    "waterfall": [
-      {
-        "stage": "retrieved pool",
-        "n": 76
-      },
-      {
-        "stage": "+ storey + class",
-        "n": 46
-      },
-      {
-        "stage": "+ spatial address",
-        "n": 1
-      }
-    ],
-    "confusable_guids": [
-      "0fjrUmmzDB4fngo1stt3cw",
-      "0pHBx4qSPCfPLZRKuUIKNz",
-      "1KMtYLyv9CyfGv8UjnMB3Y",
-      "1KMtYLyv9CyfGv8UjnMB33",
-      "1KMtYLyv9CyfGv8UjnMB3X",
-      "1KMtYLyv9CyfGv8UjnMB3l",
-      "1KMtYLyv9CyfGv8UjnMB31",
-      "1KMtYLyv9CyfGv8UjnMB3i",
-      "1KMtYLyv9CyfGv8UjnMB3Z",
-      "1KMtYLyv9CyfGv8UjnMB3y",
-      "1KMtYLyv9CyfGv8UjnMB3W",
-      "1KMtYLyv9CyfGv8UjnMB3u",
-      "0HFJ4FEcn5UhECI1IyBBLe",
-      "1KMtYLyv9CyfGv8UjnMB3e",
-      "0pHBx4qSPCfPLZRKuUIKG1",
-      "1KMtYLyv9CyfGv8UjnMB3z",
-      "1KMtYLyv9CyfGv8UjnMB3v",
-      "1KMtYLyv9CyfGv8UjnMB32",
-      "1gdfXOIAf8ZBJUgAp$8e1o",
-      "0pHBx4qSPCfPLZRKuUIKhq",
-      "0pHBx4qSPCfPLZRKuUIKPy",
-      "1KMtYLyv9CyfGv8UjnMB3$",
-      "1KMtYLyv9CyfGv8UjnMBSM",
-      "0pHBx4qSPCfPLZRKuUIKOJ",
-      "1KMtYLyv9CyfGv8UjnMB3p",
-      "1KMtYLyv9CyfGv8UjnMBSL",
-      "0pHBx4qSPCfPLZRKuUIKRO",
-      "1KMtYLyv9CyfGv8UjnMB3n",
-      "1KMtYLyv9CyfGv8UjnMBSN",
-      "0pHBx4qSPCfPLZRKuUIKQ9",
-      "1KMtYLyv9CyfGv8UjnMB3o",
-      "1KMtYLyv9CyfGv8UjnMB3d",
-      "0pHBx4qSPCfPLZRKuUIKTa",
-      "1KMtYLyv9CyfGv8UjnMBSK",
-      "1KMtYLyv9CyfGv8UjnMB3x",
-      "0HFJ4FEcn5UhECI1IyBAm7",
-      "1KMtYLyv9CyfGv8UjnMBSR",
-      "1KMtYLyv9CyfGv8UjnMBSQ",
-      "1KMtYLyv9CyfGv8UjnMBSP",
-      "1KMtYLyv9CyfGv8UjnMBSO"
-    ]
-  },
-  {
-    "id": "AP_SK_107",
-    "storey": "3 - Third Floor",
-    "glb": "3_third_floor.glb",
-    "target_guid": "3ktY1kg3rAwgNBX_XWRV0G",
-    "ifc_class": "Window",
-    "query": "Please inspect the window on Third Floor installed in the wall opening.",
-    "site_img": "../assets/dataset/AP_SK_107_site.png",
-    "gt_slot": [
-      0,
-      3
-    ],
-    "pred_slot": [
-      0,
-      3
-    ],
-    "conf_raw": 0.64,
-    "conf_cal": 0.87,
-    "tau": 0.4,
-    "decision": "ANSWER",
-    "correct": true,
-    "waterfall": [
-      {
-        "stage": "retrieved pool",
-        "n": 46
-      },
-      {
-        "stage": "+ storey + class",
-        "n": 46
-      },
-      {
-        "stage": "+ spatial address",
-        "n": 1
-      }
-    ],
-    "confusable_guids": [
-      "3ktY1kg3rAwgNBX_XWRV0i",
-      "3ktY1kg3rAwgNBX_XWRV0V",
-      "3ktY1kg3rAwgNBX_XWRV07",
-      "3ktY1kg3rAwgNBX_XWRV0H",
-      "3ktY1kg3rAwgNBX_XWRV0M",
-      "3ktY1kg3rAwgNBX_XWRV0d",
-      "3ktY1kg3rAwgNBX_XWRV0T",
-      "3ktY1kg3rAwgNBX_XWRV0h",
-      "3ktY1kg3rAwgNBX_XWRV0L",
-      "3ktY1kg3rAwgNBX_XWRV0W",
-      "3ktY1kg3rAwgNBX_XWRV0a",
-      "3ktY1kg3rAwgNBX_XWRV0f",
-      "3ktY1kg3rAwgNBX_XWRV0N",
-      "3ktY1kg3rAwgNBX_XWRV0D",
-      "3ktY1kg3rAwgNBX_XWRV0e",
-      "3ktY1kg3rAwgNBX_XWRV0O",
-      "3ktY1kg3rAwgNBX_XWRV0E",
-      "3ktY1kg3rAwgNBX_XWRV0l",
-      "3ktY1kg3rAwgNBX_XWRV0Q",
-      "3ktY1kg3rAwgNBX_XWRV0C",
-      "3ktY1kg3rAwgNBX_XWRV0k",
-      "3ktY1kg3rAwgNBX_XWRV0P",
-      "3ktY1kg3rAwgNBX_XWRV03",
-      "3ktY1kg3rAwgNBX_XWRV0j",
-      "3ktY1kg3rAwgNBX_XWRV0R",
-      "3ktY1kg3rAwgNBX_XWRV0F",
-      "3ktY1kg3rAwgNBX_XWRV08",
-      "3ktY1kg3rAwgNBX_XWRV09",
-      "3ktY1kg3rAwgNBX_XWRV0A",
-      "3ktY1kg3rAwgNBX_XWRV0B",
-      "3ktY1kg3rAwgNBX_XWRV04",
-      "3ktY1kg3rAwgNBX_XWRV05",
-      "3ktY1kg3rAwgNBX_XWRV0S",
-      "3ktY1kg3rAwgNBX_XWRV0X",
-      "3ktY1kg3rAwgNBX_XWRV0c",
-      "3ktY1kg3rAwgNBX_XWRV0b",
-      "3ktY1kg3rAwgNBX_XWRV0g",
-      "3ktY1kg3rAwgNBX_XWRV0J",
-      "3ktY1kg3rAwgNBX_XWRV0I",
-      "3ktY1kg3rAwgNBX_XWRV0K"
-    ]
-  },
-  {
     "id": "AP_SK_082",
+    "type": "filler",
     "storey": "-1 - Garage",
     "glb": "1_garage.glb",
     "target_guid": "1q9pLykVT2tOtz_4Xjbup3",
     "ifc_class": "Door",
     "query": "On Garage, check the door set into the wall opening at this location.",
-    "site_img": "../assets/dataset/AP_SK_082_site.png",
+    "site_img": "assets/dataset/AP_SK_082_site.jpg",
     "gt_slot": [
       0,
       5
@@ -312,13 +79,488 @@
     ]
   },
   {
+    "id": "AP_SK_096",
+    "type": "filler",
+    "storey": "1 - First Floor",
+    "glb": "1_first_floor.glb",
+    "target_guid": "1KMtYLyv9CyfGv8UjnMBSV",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on First Floor installed in the wall opening.",
+    "site_img": "assets/dataset/AP_SK_096_site.jpg",
+    "gt_slot": [
+      13,
+      17
+    ],
+    "pred_slot": [
+      13,
+      17
+    ],
+    "conf_raw": 0.5,
+    "conf_cal": 0.5,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "0fjrUmmzDB4fngo1stt3cw",
+      "0pHBx4qSPCfPLZRKuUIKNz",
+      "1KMtYLyv9CyfGv8UjnMB3Y",
+      "1KMtYLyv9CyfGv8UjnMB33",
+      "1KMtYLyv9CyfGv8UjnMB3X",
+      "1KMtYLyv9CyfGv8UjnMB3l",
+      "1KMtYLyv9CyfGv8UjnMB31",
+      "1KMtYLyv9CyfGv8UjnMB3i",
+      "1KMtYLyv9CyfGv8UjnMB3Z",
+      "1KMtYLyv9CyfGv8UjnMB3y",
+      "1KMtYLyv9CyfGv8UjnMB3W",
+      "1KMtYLyv9CyfGv8UjnMB3u",
+      "0HFJ4FEcn5UhECI1IyBBLe",
+      "1KMtYLyv9CyfGv8UjnMB3e",
+      "0pHBx4qSPCfPLZRKuUIKG1",
+      "1KMtYLyv9CyfGv8UjnMB3z",
+      "1KMtYLyv9CyfGv8UjnMB3v",
+      "1KMtYLyv9CyfGv8UjnMB32",
+      "1gdfXOIAf8ZBJUgAp$8e1o",
+      "0pHBx4qSPCfPLZRKuUIKhq",
+      "0pHBx4qSPCfPLZRKuUIKPy",
+      "1KMtYLyv9CyfGv8UjnMB3$",
+      "1KMtYLyv9CyfGv8UjnMBSM",
+      "0pHBx4qSPCfPLZRKuUIKOJ",
+      "1KMtYLyv9CyfGv8UjnMB3p",
+      "1KMtYLyv9CyfGv8UjnMBSL",
+      "0pHBx4qSPCfPLZRKuUIKRO",
+      "1KMtYLyv9CyfGv8UjnMB3n",
+      "1KMtYLyv9CyfGv8UjnMBSN",
+      "0pHBx4qSPCfPLZRKuUIKQ9",
+      "1KMtYLyv9CyfGv8UjnMB3o",
+      "1KMtYLyv9CyfGv8UjnMB3d",
+      "0pHBx4qSPCfPLZRKuUIKTa",
+      "1KMtYLyv9CyfGv8UjnMB3m",
+      "1KMtYLyv9CyfGv8UjnMBSK",
+      "1KMtYLyv9CyfGv8UjnMB3x",
+      "0HFJ4FEcn5UhECI1IyBAm7",
+      "1KMtYLyv9CyfGv8UjnMBSR",
+      "1KMtYLyv9CyfGv8UjnMBSQ",
+      "1KMtYLyv9CyfGv8UjnMBSP"
+    ]
+  },
+  {
+    "id": "AP_SK_097",
+    "type": "filler",
+    "storey": "2 - Second Floor",
+    "glb": "2_second_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRS7K",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on Second Floor installed in the wall opening.",
+    "site_img": "assets/dataset/AP_SK_097_site.jpg",
+    "gt_slot": [
+      10,
+      17
+    ],
+    "pred_slot": [
+      10,
+      17
+    ],
+    "conf_raw": 0.52,
+    "conf_cal": 0.57,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRS7$",
+      "3ktY1kg3rAwgNBX_XWRS7g",
+      "3ktY1kg3rAwgNBX_XWRS7I",
+      "3ktY1kg3rAwgNBX_XWRS7y",
+      "3ktY1kg3rAwgNBX_XWRS7X",
+      "3ktY1kg3rAwgNBX_XWRS7o",
+      "3ktY1kg3rAwgNBX_XWRS7e",
+      "3ktY1kg3rAwgNBX_XWRS7s",
+      "3ktY1kg3rAwgNBX_XWRS7W",
+      "3ktY1kg3rAwgNBX_XWRS7p",
+      "3ktY1kg3rAwgNBX_XWRS7t",
+      "3ktY1kg3rAwgNBX_XWRS7q",
+      "3ktY1kg3rAwgNBX_XWRS7Y",
+      "3ktY1kg3rAwgNBX_XWRS7O",
+      "3ktY1kg3rAwgNBX_XWRS7x",
+      "3ktY1kg3rAwgNBX_XWRS7h",
+      "3ktY1kg3rAwgNBX_XWRS7P",
+      "3ktY1kg3rAwgNBX_XWRS7w",
+      "3ktY1kg3rAwgNBX_XWRS7b",
+      "3ktY1kg3rAwgNBX_XWRS7V",
+      "3ktY1kg3rAwgNBX_XWRS7v",
+      "3ktY1kg3rAwgNBX_XWRS7a",
+      "3ktY1kg3rAwgNBX_XWRS7k",
+      "3ktY1kg3rAwgNBX_XWRS7u",
+      "3ktY1kg3rAwgNBX_XWRS7c",
+      "3ktY1kg3rAwgNBX_XWRS7Q",
+      "3ktY1kg3rAwgNBX_XWRS7R",
+      "3ktY1kg3rAwgNBX_XWRS7L",
+      "3ktY1kg3rAwgNBX_XWRS7M",
+      "3ktY1kg3rAwgNBX_XWRS7N",
+      "3ktY1kg3rAwgNBX_XWRS7G",
+      "3ktY1kg3rAwgNBX_XWRS7l",
+      "3ktY1kg3rAwgNBX_XWRS4C",
+      "3ktY1kg3rAwgNBX_XWRS7n",
+      "3ktY1kg3rAwgNBX_XWRS7m",
+      "3ktY1kg3rAwgNBX_XWRS7r",
+      "3ktY1kg3rAwgNBX_XWRS7_",
+      "3ktY1kg3rAwgNBX_XWRS7z",
+      "3ktY1kg3rAwgNBX_XWRS7Z",
+      "3ktY1kg3rAwgNBX_XWRS7d"
+    ]
+  },
+  {
+    "id": "AP_SK_099",
+    "type": "filler",
+    "storey": "2 - Second Floor",
+    "glb": "2_second_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRS7W",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on Second Floor installed in the wall opening.",
+    "site_img": "assets/dataset/AP_SK_099_site.jpg",
+    "gt_slot": [
+      6,
+      9
+    ],
+    "pred_slot": [
+      6,
+      9
+    ],
+    "conf_raw": 0.67,
+    "conf_cal": 0.91,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRS7$",
+      "3ktY1kg3rAwgNBX_XWRS7g",
+      "3ktY1kg3rAwgNBX_XWRS7I",
+      "3ktY1kg3rAwgNBX_XWRS7y",
+      "3ktY1kg3rAwgNBX_XWRS7X",
+      "3ktY1kg3rAwgNBX_XWRS7o",
+      "3ktY1kg3rAwgNBX_XWRS7e",
+      "3ktY1kg3rAwgNBX_XWRS7s",
+      "3ktY1kg3rAwgNBX_XWRS7p",
+      "3ktY1kg3rAwgNBX_XWRS7t",
+      "3ktY1kg3rAwgNBX_XWRS7q",
+      "3ktY1kg3rAwgNBX_XWRS7Y",
+      "3ktY1kg3rAwgNBX_XWRS7O",
+      "3ktY1kg3rAwgNBX_XWRS7x",
+      "3ktY1kg3rAwgNBX_XWRS7h",
+      "3ktY1kg3rAwgNBX_XWRS7P",
+      "3ktY1kg3rAwgNBX_XWRS7w",
+      "3ktY1kg3rAwgNBX_XWRS7b",
+      "3ktY1kg3rAwgNBX_XWRS7V",
+      "3ktY1kg3rAwgNBX_XWRS7v",
+      "3ktY1kg3rAwgNBX_XWRS7a",
+      "3ktY1kg3rAwgNBX_XWRS7k",
+      "3ktY1kg3rAwgNBX_XWRS7u",
+      "3ktY1kg3rAwgNBX_XWRS7c",
+      "3ktY1kg3rAwgNBX_XWRS7Q",
+      "3ktY1kg3rAwgNBX_XWRS7R",
+      "3ktY1kg3rAwgNBX_XWRS7K",
+      "3ktY1kg3rAwgNBX_XWRS7L",
+      "3ktY1kg3rAwgNBX_XWRS7M",
+      "3ktY1kg3rAwgNBX_XWRS7N",
+      "3ktY1kg3rAwgNBX_XWRS7G",
+      "3ktY1kg3rAwgNBX_XWRS7l",
+      "3ktY1kg3rAwgNBX_XWRS4C",
+      "3ktY1kg3rAwgNBX_XWRS7n",
+      "3ktY1kg3rAwgNBX_XWRS7m",
+      "3ktY1kg3rAwgNBX_XWRS7r",
+      "3ktY1kg3rAwgNBX_XWRS7_",
+      "3ktY1kg3rAwgNBX_XWRS7z",
+      "3ktY1kg3rAwgNBX_XWRS7Z",
+      "3ktY1kg3rAwgNBX_XWRS7d"
+    ]
+  },
+  {
+    "id": "AP_SK_102",
+    "type": "filler",
+    "storey": "2 - Second Floor",
+    "glb": "2_second_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRS7s",
+    "ifc_class": "Window",
+    "query": "The window in the wall opening on Second Floor needs QA review.",
+    "site_img": "assets/dataset/AP_SK_102_site.jpg",
+    "gt_slot": [
+      2,
+      17
+    ],
+    "pred_slot": [
+      2,
+      17
+    ],
+    "conf_raw": 0.52,
+    "conf_cal": 0.57,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRS7m",
+      "3ktY1kg3rAwgNBX_XWRS7r",
+      "3ktY1kg3rAwgNBX_XWRS7J",
+      "3ktY1kg3rAwgNBX_XWRS7z",
+      "3ktY1kg3rAwgNBX_XWRS7i",
+      "3ktY1kg3rAwgNBX_XWRS7f",
+      "3ktY1kg3rAwgNBX_XWRS7$",
+      "3ktY1kg3rAwgNBX_XWRS7g",
+      "3ktY1kg3rAwgNBX_XWRS7I",
+      "3ktY1kg3rAwgNBX_XWRS7y",
+      "3ktY1kg3rAwgNBX_XWRS7j",
+      "3ktY1kg3rAwgNBX_XWRS7X",
+      "3ktY1kg3rAwgNBX_XWRS7o",
+      "3ktY1kg3rAwgNBX_XWRS7e",
+      "3ktY1kg3rAwgNBX_XWRS7Z",
+      "3ktY1kg3rAwgNBX_XWRS7W",
+      "3ktY1kg3rAwgNBX_XWRS7_",
+      "3ktY1kg3rAwgNBX_XWRS7p",
+      "3ktY1kg3rAwgNBX_XWRS7t",
+      "3ktY1kg3rAwgNBX_XWRS7q",
+      "3ktY1kg3rAwgNBX_XWRS7Y",
+      "3ktY1kg3rAwgNBX_XWRS7O",
+      "3ktY1kg3rAwgNBX_XWRS7x",
+      "3ktY1kg3rAwgNBX_XWRS7h",
+      "3ktY1kg3rAwgNBX_XWRS7P",
+      "3ktY1kg3rAwgNBX_XWRS7w",
+      "3ktY1kg3rAwgNBX_XWRS7b",
+      "3ktY1kg3rAwgNBX_XWRS7V",
+      "3ktY1kg3rAwgNBX_XWRS7v",
+      "3ktY1kg3rAwgNBX_XWRS7a",
+      "3ktY1kg3rAwgNBX_XWRS7k",
+      "3ktY1kg3rAwgNBX_XWRS7u",
+      "3ktY1kg3rAwgNBX_XWRS7c",
+      "3ktY1kg3rAwgNBX_XWRS7Q",
+      "3ktY1kg3rAwgNBX_XWRS7d",
+      "3ktY1kg3rAwgNBX_XWRS7n",
+      "3ktY1kg3rAwgNBX_XWRS7R",
+      "3ktY1kg3rAwgNBX_XWRS7K",
+      "3ktY1kg3rAwgNBX_XWRS7L",
+      "3ktY1kg3rAwgNBX_XWRS7M"
+    ]
+  },
+  {
+    "id": "AP_SK_107",
+    "type": "filler",
+    "storey": "3 - Third Floor",
+    "glb": "3_third_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV0G",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on Third Floor installed in the wall opening.",
+    "site_img": "assets/dataset/AP_SK_107_site.jpg",
+    "gt_slot": [
+      0,
+      3
+    ],
+    "pred_slot": [
+      0,
+      3
+    ],
+    "conf_raw": 0.64,
+    "conf_cal": 0.87,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV0i",
+      "3ktY1kg3rAwgNBX_XWRV0V",
+      "3ktY1kg3rAwgNBX_XWRV07",
+      "3ktY1kg3rAwgNBX_XWRV0H",
+      "3ktY1kg3rAwgNBX_XWRV0M",
+      "3ktY1kg3rAwgNBX_XWRV0d",
+      "3ktY1kg3rAwgNBX_XWRV0T",
+      "3ktY1kg3rAwgNBX_XWRV0h",
+      "3ktY1kg3rAwgNBX_XWRV0L",
+      "3ktY1kg3rAwgNBX_XWRV0W",
+      "3ktY1kg3rAwgNBX_XWRV0a",
+      "3ktY1kg3rAwgNBX_XWRV0f",
+      "3ktY1kg3rAwgNBX_XWRV0N",
+      "3ktY1kg3rAwgNBX_XWRV0D",
+      "3ktY1kg3rAwgNBX_XWRV0e",
+      "3ktY1kg3rAwgNBX_XWRV0O",
+      "3ktY1kg3rAwgNBX_XWRV0E",
+      "3ktY1kg3rAwgNBX_XWRV0l",
+      "3ktY1kg3rAwgNBX_XWRV0Q",
+      "3ktY1kg3rAwgNBX_XWRV0C",
+      "3ktY1kg3rAwgNBX_XWRV0k",
+      "3ktY1kg3rAwgNBX_XWRV0P",
+      "3ktY1kg3rAwgNBX_XWRV03",
+      "3ktY1kg3rAwgNBX_XWRV0j",
+      "3ktY1kg3rAwgNBX_XWRV0R",
+      "3ktY1kg3rAwgNBX_XWRV0F",
+      "3ktY1kg3rAwgNBX_XWRV08",
+      "3ktY1kg3rAwgNBX_XWRV09",
+      "3ktY1kg3rAwgNBX_XWRV0A",
+      "3ktY1kg3rAwgNBX_XWRV0B",
+      "3ktY1kg3rAwgNBX_XWRV04",
+      "3ktY1kg3rAwgNBX_XWRV05",
+      "3ktY1kg3rAwgNBX_XWRV0S",
+      "3ktY1kg3rAwgNBX_XWRV0X",
+      "3ktY1kg3rAwgNBX_XWRV0c",
+      "3ktY1kg3rAwgNBX_XWRV0b",
+      "3ktY1kg3rAwgNBX_XWRV0g",
+      "3ktY1kg3rAwgNBX_XWRV0J",
+      "3ktY1kg3rAwgNBX_XWRV0I",
+      "3ktY1kg3rAwgNBX_XWRV0K"
+    ]
+  },
+  {
+    "id": "AP_SK_108",
+    "type": "filler",
+    "storey": "3 - Third Floor",
+    "glb": "3_third_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV0M",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on Third Floor installed in the wall opening.",
+    "site_img": "assets/dataset/AP_SK_108_site.jpg",
+    "gt_slot": [
+      7,
+      9
+    ],
+    "pred_slot": [
+      7,
+      9
+    ],
+    "conf_raw": 0.67,
+    "conf_cal": 0.91,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV0i",
+      "3ktY1kg3rAwgNBX_XWRV0V",
+      "3ktY1kg3rAwgNBX_XWRV07",
+      "3ktY1kg3rAwgNBX_XWRV0H",
+      "3ktY1kg3rAwgNBX_XWRV0d",
+      "3ktY1kg3rAwgNBX_XWRV0T",
+      "3ktY1kg3rAwgNBX_XWRV0h",
+      "3ktY1kg3rAwgNBX_XWRV0L",
+      "3ktY1kg3rAwgNBX_XWRV0W",
+      "3ktY1kg3rAwgNBX_XWRV0a",
+      "3ktY1kg3rAwgNBX_XWRV0f",
+      "3ktY1kg3rAwgNBX_XWRV0N",
+      "3ktY1kg3rAwgNBX_XWRV0D",
+      "3ktY1kg3rAwgNBX_XWRV0e",
+      "3ktY1kg3rAwgNBX_XWRV0O",
+      "3ktY1kg3rAwgNBX_XWRV0E",
+      "3ktY1kg3rAwgNBX_XWRV0l",
+      "3ktY1kg3rAwgNBX_XWRV0Q",
+      "3ktY1kg3rAwgNBX_XWRV0C",
+      "3ktY1kg3rAwgNBX_XWRV0k",
+      "3ktY1kg3rAwgNBX_XWRV0P",
+      "3ktY1kg3rAwgNBX_XWRV03",
+      "3ktY1kg3rAwgNBX_XWRV0j",
+      "3ktY1kg3rAwgNBX_XWRV0R",
+      "3ktY1kg3rAwgNBX_XWRV0F",
+      "3ktY1kg3rAwgNBX_XWRV08",
+      "3ktY1kg3rAwgNBX_XWRV09",
+      "3ktY1kg3rAwgNBX_XWRV0A",
+      "3ktY1kg3rAwgNBX_XWRV0B",
+      "3ktY1kg3rAwgNBX_XWRV04",
+      "3ktY1kg3rAwgNBX_XWRV05",
+      "3ktY1kg3rAwgNBX_XWRV0S",
+      "3ktY1kg3rAwgNBX_XWRV0X",
+      "3ktY1kg3rAwgNBX_XWRV0c",
+      "3ktY1kg3rAwgNBX_XWRV0b",
+      "3ktY1kg3rAwgNBX_XWRV0g",
+      "3ktY1kg3rAwgNBX_XWRV0J",
+      "3ktY1kg3rAwgNBX_XWRV0I",
+      "3ktY1kg3rAwgNBX_XWRV0G",
+      "3ktY1kg3rAwgNBX_XWRV0K"
+    ]
+  },
+  {
     "id": "AP_SK_111",
+    "type": "filler",
     "storey": "4 - Fourth Floor",
     "glb": "4_fourth_floor.glb",
     "target_guid": "3ktY1kg3rAwgNBX_XWRV1$",
     "ifc_class": "Window",
     "query": "On Fourth Floor, check the window set into the wall opening at this location.",
-    "site_img": "../assets/dataset/AP_SK_111_site.png",
+    "site_img": "assets/dataset/AP_SK_111_site.jpg",
     "gt_slot": [
       2,
       17
@@ -391,12 +633,13 @@
   },
   {
     "id": "AP_SK_118",
+    "type": "filler",
     "storey": "5 - Fifth Floor",
     "glb": "5_fifth_floor.glb",
     "target_guid": "3ktY1kg3rAwgNBX_XWRV44",
     "ifc_class": "Window",
     "query": "The window in the wall opening on Fifth Floor needs QA review.",
-    "site_img": "../assets/dataset/AP_SK_118_site.png",
+    "site_img": "assets/dataset/AP_SK_118_site.jpg",
     "gt_slot": [
       0,
       4
@@ -465,6 +708,3485 @@
       "3ktY1kg3rAwgNBX_XWRV7Y",
       "3ktY1kg3rAwgNBX_XWRV7Z",
       "3ktY1kg3rAwgNBX_XWRV7y"
+    ]
+  },
+  {
+    "id": "AP_SK_149",
+    "type": "filler",
+    "storey": "1 - First Floor",
+    "glb": "1_first_floor.glb",
+    "target_guid": "1KMtYLyv9CyfGv8UjnMB3Z",
+    "ifc_class": "Window",
+    "query": "On First Floor, check the window beside the window along this wall run.",
+    "site_img": "assets/dataset/AP_SK_149_site.jpg",
+    "gt_slot": [
+      1,
+      17
+    ],
+    "pred_slot": [
+      1,
+      17
+    ],
+    "conf_raw": 0.5,
+    "conf_cal": 0.5,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "1KMtYLyv9CyfGv8UjnMB31",
+      "1KMtYLyv9CyfGv8UjnMB3i",
+      "1KMtYLyv9CyfGv8UjnMB3y",
+      "1KMtYLyv9CyfGv8UjnMB3u",
+      "0HFJ4FEcn5UhECI1IyBBLe",
+      "1KMtYLyv9CyfGv8UjnMB3e",
+      "0pHBx4qSPCfPLZRKuUIKG1",
+      "1KMtYLyv9CyfGv8UjnMB3v",
+      "1gdfXOIAf8ZBJUgAp$8e1o",
+      "0pHBx4qSPCfPLZRKuUIKhq",
+      "0pHBx4qSPCfPLZRKuUIKPy",
+      "1KMtYLyv9CyfGv8UjnMB3$",
+      "1KMtYLyv9CyfGv8UjnMBSM",
+      "0pHBx4qSPCfPLZRKuUIKOJ",
+      "1KMtYLyv9CyfGv8UjnMB3p",
+      "1KMtYLyv9CyfGv8UjnMBSL",
+      "0pHBx4qSPCfPLZRKuUIKRO",
+      "1KMtYLyv9CyfGv8UjnMB3n",
+      "1KMtYLyv9CyfGv8UjnMBSN",
+      "0pHBx4qSPCfPLZRKuUIKQ9",
+      "1KMtYLyv9CyfGv8UjnMB3o",
+      "1KMtYLyv9CyfGv8UjnMB3d",
+      "0pHBx4qSPCfPLZRKuUIKTa",
+      "1KMtYLyv9CyfGv8UjnMB3m",
+      "1KMtYLyv9CyfGv8UjnMBSK",
+      "1KMtYLyv9CyfGv8UjnMBSR",
+      "1KMtYLyv9CyfGv8UjnMBSQ",
+      "1KMtYLyv9CyfGv8UjnMBSP",
+      "1KMtYLyv9CyfGv8UjnMBSO",
+      "1KMtYLyv9CyfGv8UjnMBSV",
+      "1KMtYLyv9CyfGv8UjnMBSU",
+      "1KMtYLyv9CyfGv8UjnMB3b",
+      "2Bm1R3arDAW8kJznnV4FrS",
+      "0HFJ4FEcn5UhECI1IyBAm7",
+      "0fjrUmmzDB4fngo1stt3cw",
+      "0pHBx4qSPCfPLZRKuUIKNz",
+      "1KMtYLyv9CyfGv8UjnMB32",
+      "1KMtYLyv9CyfGv8UjnMB33",
+      "1KMtYLyv9CyfGv8UjnMB3z",
+      "1KMtYLyv9CyfGv8UjnMB3x"
+    ]
+  },
+  {
+    "id": "AP_SK_160",
+    "type": "filler",
+    "storey": "2 - Second Floor",
+    "glb": "2_second_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRS7I",
+    "ifc_class": "Window",
+    "query": "On Second Floor, check the window beside the window along this wall run.",
+    "site_img": "assets/dataset/AP_SK_160_site.jpg",
+    "gt_slot": [
+      1,
+      17
+    ],
+    "pred_slot": [
+      1,
+      17
+    ],
+    "conf_raw": 0.52,
+    "conf_cal": 0.57,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRS7$",
+      "3ktY1kg3rAwgNBX_XWRS7g",
+      "3ktY1kg3rAwgNBX_XWRS7y",
+      "3ktY1kg3rAwgNBX_XWRS7X",
+      "3ktY1kg3rAwgNBX_XWRS7o",
+      "3ktY1kg3rAwgNBX_XWRS7e",
+      "3ktY1kg3rAwgNBX_XWRS7s",
+      "3ktY1kg3rAwgNBX_XWRS7W",
+      "3ktY1kg3rAwgNBX_XWRS7p",
+      "3ktY1kg3rAwgNBX_XWRS7t",
+      "3ktY1kg3rAwgNBX_XWRS7q",
+      "3ktY1kg3rAwgNBX_XWRS7Y",
+      "3ktY1kg3rAwgNBX_XWRS7O",
+      "3ktY1kg3rAwgNBX_XWRS7x",
+      "3ktY1kg3rAwgNBX_XWRS7h",
+      "3ktY1kg3rAwgNBX_XWRS7P",
+      "3ktY1kg3rAwgNBX_XWRS7w",
+      "3ktY1kg3rAwgNBX_XWRS7b",
+      "3ktY1kg3rAwgNBX_XWRS7V",
+      "3ktY1kg3rAwgNBX_XWRS7v",
+      "3ktY1kg3rAwgNBX_XWRS7a",
+      "3ktY1kg3rAwgNBX_XWRS7k",
+      "3ktY1kg3rAwgNBX_XWRS7u",
+      "3ktY1kg3rAwgNBX_XWRS7c",
+      "3ktY1kg3rAwgNBX_XWRS7Q",
+      "3ktY1kg3rAwgNBX_XWRS7R",
+      "3ktY1kg3rAwgNBX_XWRS7K",
+      "3ktY1kg3rAwgNBX_XWRS7L",
+      "3ktY1kg3rAwgNBX_XWRS7M",
+      "3ktY1kg3rAwgNBX_XWRS7N",
+      "3ktY1kg3rAwgNBX_XWRS7G",
+      "3ktY1kg3rAwgNBX_XWRS7l",
+      "3ktY1kg3rAwgNBX_XWRS4C",
+      "3ktY1kg3rAwgNBX_XWRS7n",
+      "3ktY1kg3rAwgNBX_XWRS7m",
+      "3ktY1kg3rAwgNBX_XWRS7r",
+      "3ktY1kg3rAwgNBX_XWRS7_",
+      "3ktY1kg3rAwgNBX_XWRS7z",
+      "3ktY1kg3rAwgNBX_XWRS7Z",
+      "3ktY1kg3rAwgNBX_XWRS7d"
+    ]
+  },
+  {
+    "id": "AP_SK_173",
+    "type": "filler",
+    "storey": "3 - Third Floor",
+    "glb": "3_third_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV07",
+    "ifc_class": "Window",
+    "query": "On Third Floor, check the window beside the window along this wall run.",
+    "site_img": "assets/dataset/AP_SK_173_site.jpg",
+    "gt_slot": [
+      1,
+      17
+    ],
+    "pred_slot": [
+      1,
+      17
+    ],
+    "conf_raw": 0.52,
+    "conf_cal": 0.57,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV0i",
+      "3ktY1kg3rAwgNBX_XWRV0V",
+      "3ktY1kg3rAwgNBX_XWRV0H",
+      "3ktY1kg3rAwgNBX_XWRV0M",
+      "3ktY1kg3rAwgNBX_XWRV0d",
+      "3ktY1kg3rAwgNBX_XWRV0T",
+      "3ktY1kg3rAwgNBX_XWRV0h",
+      "3ktY1kg3rAwgNBX_XWRV0L",
+      "3ktY1kg3rAwgNBX_XWRV0W",
+      "3ktY1kg3rAwgNBX_XWRV0a",
+      "3ktY1kg3rAwgNBX_XWRV0f",
+      "3ktY1kg3rAwgNBX_XWRV0N",
+      "3ktY1kg3rAwgNBX_XWRV0D",
+      "3ktY1kg3rAwgNBX_XWRV0e",
+      "3ktY1kg3rAwgNBX_XWRV0O",
+      "3ktY1kg3rAwgNBX_XWRV0E",
+      "3ktY1kg3rAwgNBX_XWRV0l",
+      "3ktY1kg3rAwgNBX_XWRV0Q",
+      "3ktY1kg3rAwgNBX_XWRV0C",
+      "3ktY1kg3rAwgNBX_XWRV0k",
+      "3ktY1kg3rAwgNBX_XWRV0P",
+      "3ktY1kg3rAwgNBX_XWRV03",
+      "3ktY1kg3rAwgNBX_XWRV0j",
+      "3ktY1kg3rAwgNBX_XWRV0R",
+      "3ktY1kg3rAwgNBX_XWRV0F",
+      "3ktY1kg3rAwgNBX_XWRV08",
+      "3ktY1kg3rAwgNBX_XWRV09",
+      "3ktY1kg3rAwgNBX_XWRV0A",
+      "3ktY1kg3rAwgNBX_XWRV0B",
+      "3ktY1kg3rAwgNBX_XWRV04",
+      "3ktY1kg3rAwgNBX_XWRV05",
+      "3ktY1kg3rAwgNBX_XWRV0S",
+      "3ktY1kg3rAwgNBX_XWRV0X",
+      "3ktY1kg3rAwgNBX_XWRV0c",
+      "3ktY1kg3rAwgNBX_XWRV0b",
+      "3ktY1kg3rAwgNBX_XWRV0g",
+      "3ktY1kg3rAwgNBX_XWRV0J",
+      "3ktY1kg3rAwgNBX_XWRV0I",
+      "3ktY1kg3rAwgNBX_XWRV0G",
+      "3ktY1kg3rAwgNBX_XWRV0K"
+    ]
+  },
+  {
+    "id": "AP_SK_174",
+    "type": "filler",
+    "storey": "3 - Third Floor",
+    "glb": "3_third_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV0B",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on Third Floor right next to the window on the same wall.",
+    "site_img": "assets/dataset/AP_SK_174_site.jpg",
+    "gt_slot": [
+      12,
+      17
+    ],
+    "pred_slot": [
+      12,
+      17
+    ],
+    "conf_raw": 0.52,
+    "conf_cal": 0.57,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV0i",
+      "3ktY1kg3rAwgNBX_XWRV0V",
+      "3ktY1kg3rAwgNBX_XWRV07",
+      "3ktY1kg3rAwgNBX_XWRV0H",
+      "3ktY1kg3rAwgNBX_XWRV0M",
+      "3ktY1kg3rAwgNBX_XWRV0d",
+      "3ktY1kg3rAwgNBX_XWRV0T",
+      "3ktY1kg3rAwgNBX_XWRV0h",
+      "3ktY1kg3rAwgNBX_XWRV0L",
+      "3ktY1kg3rAwgNBX_XWRV0W",
+      "3ktY1kg3rAwgNBX_XWRV0a",
+      "3ktY1kg3rAwgNBX_XWRV0f",
+      "3ktY1kg3rAwgNBX_XWRV0N",
+      "3ktY1kg3rAwgNBX_XWRV0D",
+      "3ktY1kg3rAwgNBX_XWRV0e",
+      "3ktY1kg3rAwgNBX_XWRV0O",
+      "3ktY1kg3rAwgNBX_XWRV0E",
+      "3ktY1kg3rAwgNBX_XWRV0l",
+      "3ktY1kg3rAwgNBX_XWRV0Q",
+      "3ktY1kg3rAwgNBX_XWRV0C",
+      "3ktY1kg3rAwgNBX_XWRV0k",
+      "3ktY1kg3rAwgNBX_XWRV0P",
+      "3ktY1kg3rAwgNBX_XWRV03",
+      "3ktY1kg3rAwgNBX_XWRV0j",
+      "3ktY1kg3rAwgNBX_XWRV0R",
+      "3ktY1kg3rAwgNBX_XWRV0F",
+      "3ktY1kg3rAwgNBX_XWRV08",
+      "3ktY1kg3rAwgNBX_XWRV09",
+      "3ktY1kg3rAwgNBX_XWRV0A",
+      "3ktY1kg3rAwgNBX_XWRV04",
+      "3ktY1kg3rAwgNBX_XWRV05",
+      "3ktY1kg3rAwgNBX_XWRV0S",
+      "3ktY1kg3rAwgNBX_XWRV0X",
+      "3ktY1kg3rAwgNBX_XWRV0c",
+      "3ktY1kg3rAwgNBX_XWRV0b",
+      "3ktY1kg3rAwgNBX_XWRV0g",
+      "3ktY1kg3rAwgNBX_XWRV0J",
+      "3ktY1kg3rAwgNBX_XWRV0I",
+      "3ktY1kg3rAwgNBX_XWRV0G",
+      "3ktY1kg3rAwgNBX_XWRV0K"
+    ]
+  },
+  {
+    "id": "AP_SK_199",
+    "type": "filler",
+    "storey": "5 - Fifth Floor",
+    "glb": "5_fifth_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV47",
+    "ifc_class": "Window",
+    "query": "On Fifth Floor, check the window beside the window along this wall run.",
+    "site_img": "assets/dataset/AP_SK_199_site.jpg",
+    "gt_slot": [
+      2,
+      9
+    ],
+    "pred_slot": [
+      2,
+      9
+    ],
+    "conf_raw": 0.67,
+    "conf_cal": 0.91,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV45",
+      "3ktY1kg3rAwgNBX_XWRV7m",
+      "3ktY1kg3rAwgNBX_XWRV7u",
+      "3ktY1kg3rAwgNBX_XWRV4A",
+      "3ktY1kg3rAwgNBX_XWRV4F",
+      "3ktY1kg3rAwgNBX_XWRV4O",
+      "3ktY1kg3rAwgNBX_XWRV7s",
+      "3ktY1kg3rAwgNBX_XWRV4S",
+      "3ktY1kg3rAwgNBX_XWRV4E",
+      "3ktY1kg3rAwgNBX_XWRV4P",
+      "3ktY1kg3rAwgNBX_XWRV4T",
+      "3ktY1kg3rAwgNBX_XWRV42",
+      "3ktY1kg3rAwgNBX_XWRV48",
+      "3ktY1kg3rAwgNBX_XWRV7c",
+      "3ktY1kg3rAwgNBX_XWRV41",
+      "3ktY1kg3rAwgNBX_XWRV7n",
+      "3ktY1kg3rAwgNBX_XWRV7d",
+      "3ktY1kg3rAwgNBX_XWRV40",
+      "3ktY1kg3rAwgNBX_XWRV7p",
+      "3ktY1kg3rAwgNBX_XWRV7b",
+      "3ktY1kg3rAwgNBX_XWRV7o",
+      "3ktY1kg3rAwgNBX_XWRV7q",
+      "3ktY1kg3rAwgNBX_XWRV46",
+      "3ktY1kg3rAwgNBX_XWRV4C",
+      "3ktY1kg3rAwgNBX_XWRV7W",
+      "3ktY1kg3rAwgNBX_XWRV7X",
+      "3ktY1kg3rAwgNBX_XWRV7Y",
+      "3ktY1kg3rAwgNBX_XWRV7Z",
+      "3ktY1kg3rAwgNBX_XWRV7y",
+      "3ktY1kg3rAwgNBX_XWRV7z",
+      "3ktY1kg3rAwgNBX_XWRV7_",
+      "3ktY1kg3rAwgNBX_XWRV7r",
+      "3ktY1kg3rAwgNBX_XWRV4Q",
+      "3ktY1kg3rAwgNBX_XWRV4V",
+      "3ktY1kg3rAwgNBX_XWRV4U",
+      "3ktY1kg3rAwgNBX_XWRV43",
+      "3ktY1kg3rAwgNBX_XWRV44",
+      "3ktY1kg3rAwgNBX_XWRV4B",
+      "3ktY1kg3rAwgNBX_XWRV49",
+      "3ktY1kg3rAwgNBX_XWRV4D"
+    ]
+  },
+  {
+    "id": "AP_SK_233",
+    "type": "filler",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "1ebX2H7F12su$wtPbeYAIT",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on Level 1 right next to the door on the same wall.",
+    "site_img": "assets/dataset/AP_SK_233_site.jpg",
+    "gt_slot": [
+      2,
+      3
+    ],
+    "pred_slot": [
+      2,
+      3
+    ],
+    "conf_raw": 1.0,
+    "conf_cal": 1.0,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 30
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 2
+      }
+    ],
+    "confusable_guids": [
+      "0xyFL4ySP5TexORi78qDB1",
+      "0xyFL4ySP5TexORi78qDYL",
+      "0HFJ4FEcn5UhECI1IyBBbs",
+      "3pFbansyD0KOHFtJHrTt$5",
+      "0HFJ4FEcn5UhECI1IyBBqj",
+      "0HFJ4FEcn5UhECI1IyBBv9",
+      "0HFJ4FEcn5UhECI1IyBq6E",
+      "0xyFL4ySP5TexORi78qEKF",
+      "0ducQKkW5EGQM9rQ5zdOXl",
+      "1gdfXOIAf8ZBJUgAp$8ewJ",
+      "0HFJ4FEcn5UhECI1IyBqQx",
+      "0HFJ4FEcn5UhECI1IyBq3s",
+      "0HFJ4FEcn5UhECI1IyBqD7",
+      "0HFJ4FEcn5UhECI1IyBBr8",
+      "0HFJ4FEcn5UhECI1IyBBz0",
+      "0HFJ4FEcn5UhECI1IyBBWG",
+      "0HFJ4FEcn5UhECI1IyBBXX",
+      "3pFbansyD0KOHFtJHrTsUB",
+      "3pFbansyD0KOHFtJHrTsSA",
+      "2BLn4xX2vF_gM9G5wfbPLu",
+      "2BLn4xX2vF_gM9G5wfbPWX",
+      "2BLn4xX2vF_gM9G5wfbVb4",
+      "2BLn4xX2vF_gM9G5wfbVaT",
+      "0xyFL4ySP5TexORi78qDG5",
+      "0xyFL4ySP5TexORi78qDIC",
+      "0xyFL4ySP5TexORi78qEFc",
+      "1ebX2H7F12su$wtPbeYBaq",
+      "1ebX2H7F12su$wtPbeYAP4",
+      "1ebX2H7F12su$wtPbeYATe"
+    ]
+  },
+  {
+    "id": "AP_SK_234",
+    "type": "filler",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "1ebX2H7F12su$wtPbeYATe",
+    "ifc_class": "Window",
+    "query": "On Level 1, check the window beside the door along this wall run.",
+    "site_img": "assets/dataset/AP_SK_234_site.jpg",
+    "gt_slot": [
+      0,
+      3
+    ],
+    "pred_slot": [
+      0,
+      3
+    ],
+    "conf_raw": 1.0,
+    "conf_cal": 1.0,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 30
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 2
+      }
+    ],
+    "confusable_guids": [
+      "0xyFL4ySP5TexORi78qDB1",
+      "0xyFL4ySP5TexORi78qDYL",
+      "0HFJ4FEcn5UhECI1IyBBbs",
+      "3pFbansyD0KOHFtJHrTt$5",
+      "0HFJ4FEcn5UhECI1IyBBqj",
+      "0HFJ4FEcn5UhECI1IyBBv9",
+      "0HFJ4FEcn5UhECI1IyBq6E",
+      "0xyFL4ySP5TexORi78qEKF",
+      "0ducQKkW5EGQM9rQ5zdOXl",
+      "1gdfXOIAf8ZBJUgAp$8ewJ",
+      "0HFJ4FEcn5UhECI1IyBqQx",
+      "0HFJ4FEcn5UhECI1IyBq3s",
+      "0HFJ4FEcn5UhECI1IyBqD7",
+      "0HFJ4FEcn5UhECI1IyBBr8",
+      "0HFJ4FEcn5UhECI1IyBBz0",
+      "0HFJ4FEcn5UhECI1IyBBWG",
+      "0HFJ4FEcn5UhECI1IyBBXX",
+      "3pFbansyD0KOHFtJHrTsUB",
+      "3pFbansyD0KOHFtJHrTsSA",
+      "2BLn4xX2vF_gM9G5wfbPLu",
+      "2BLn4xX2vF_gM9G5wfbPWX",
+      "2BLn4xX2vF_gM9G5wfbVb4",
+      "2BLn4xX2vF_gM9G5wfbVaT",
+      "0xyFL4ySP5TexORi78qDG5",
+      "0xyFL4ySP5TexORi78qDIC",
+      "0xyFL4ySP5TexORi78qEFc",
+      "1ebX2H7F12su$wtPbeYBaq",
+      "1ebX2H7F12su$wtPbeYAP4",
+      "1ebX2H7F12su$wtPbeYAIT"
+    ]
+  },
+  {
+    "id": "AP_SK_259",
+    "type": "filler",
+    "storey": "-1 - Garage",
+    "glb": "1_garage.glb",
+    "target_guid": "1cFRppLhj948bTrzz_ApRD",
+    "ifc_class": "Door",
+    "query": "On Garage, check the door beside the wall at this location.",
+    "site_img": "assets/dataset/AP_SK_259_site.jpg",
+    "gt_slot": [
+      1,
+      4
+    ],
+    "pred_slot": [
+      1,
+      4
+    ],
+    "conf_raw": 0.84,
+    "conf_cal": 1.0,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 45
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 31
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 2
+      }
+    ],
+    "confusable_guids": [
+      "0ducQKkW5EGQM9rQ5zdOvK",
+      "0ducQKkW5EGQM9rQ5zdP8c",
+      "1cFRppLhj948bTrzz_Apiw",
+      "1cFRppLhj948bTrzz_ApiD",
+      "0ducQKkW5EGQM9rQ5zdPaT",
+      "0ducQKkW5EGQM9rQ5zdPwl",
+      "0ducQKkW5EGQM9rQ5zdPrw",
+      "0ducQKkW5EGQM9rQ5zdPqd",
+      "0ducQKkW5EGQM9rQ5zdPnm",
+      "0ducQKkW5EGQM9rQ5zdPmG",
+      "0ducQKkW5EGQM9rQ5zdM2q",
+      "0ducQKkW5EGQM9rQ5zdM1T",
+      "0ducQKkW5EGQM9rQ5zdM8G",
+      "0ducQKkW5EGQM9rQ5zdM3v",
+      "0ducQKkW5EGQM9rQ5zdM3l",
+      "0ducQKkW5EGQM9rQ5zdP$j",
+      "0ducQKkW5EGQM9rQ5zdPyj",
+      "0ducQKkW5EGQM9rQ5zdPbh",
+      "1cFRppLhj948bTrzz_Apu2",
+      "0ducQKkW5EGQM9rQ5zdPvI",
+      "0ducQKkW5EGQM9rQ5zdPFU",
+      "0ducQKkW5EGQM9rQ5zdPFm",
+      "3pFbansyD0KOHFtJHrTupl",
+      "0ducQKkW5EGQM9rQ5zdP1L",
+      "1q9pLykVT2tOtz_4XjbuoS",
+      "0ducQKkW5EGQM9rQ5zdPrq",
+      "0ducQKkW5EGQM9rQ5zdPrI",
+      "0ducQKkW5EGQM9rQ5zdPsq",
+      "0ducQKkW5EGQM9rQ5zdPm_",
+      "0ducQKkW5EGQM9rQ5zdPsI"
+    ]
+  },
+  {
+    "id": "AP_SK_294",
+    "type": "filler",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "1ebX2H7F12su$wtPbeYATe",
+    "ifc_class": "Window",
+    "query": "On Level 1, check the window beside the door at this location.",
+    "site_img": "assets/dataset/AP_SK_294_site.jpg",
+    "gt_slot": [
+      0,
+      3
+    ],
+    "pred_slot": [
+      0,
+      3
+    ],
+    "conf_raw": 1.0,
+    "conf_cal": 1.0,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 30
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 2
+      }
+    ],
+    "confusable_guids": [
+      "1ebX2H7F12su$wtPbeYAP4",
+      "1ebX2H7F12su$wtPbeYAIT",
+      "0xyFL4ySP5TexORi78qDB1",
+      "0xyFL4ySP5TexORi78qDYL",
+      "0HFJ4FEcn5UhECI1IyBBbs",
+      "3pFbansyD0KOHFtJHrTt$5",
+      "0HFJ4FEcn5UhECI1IyBBqj",
+      "0HFJ4FEcn5UhECI1IyBBv9",
+      "0xyFL4ySP5TexORi78qEFc",
+      "0HFJ4FEcn5UhECI1IyBq6E",
+      "0HFJ4FEcn5UhECI1IyBBr8",
+      "0xyFL4ySP5TexORi78qEKF",
+      "0ducQKkW5EGQM9rQ5zdOXl",
+      "1gdfXOIAf8ZBJUgAp$8ewJ",
+      "0HFJ4FEcn5UhECI1IyBqQx",
+      "0HFJ4FEcn5UhECI1IyBq3s",
+      "0HFJ4FEcn5UhECI1IyBqD7",
+      "0HFJ4FEcn5UhECI1IyBBz0",
+      "0HFJ4FEcn5UhECI1IyBBWG",
+      "0HFJ4FEcn5UhECI1IyBBXX",
+      "3pFbansyD0KOHFtJHrTsUB",
+      "3pFbansyD0KOHFtJHrTsSA",
+      "2BLn4xX2vF_gM9G5wfbPLu",
+      "2BLn4xX2vF_gM9G5wfbPWX",
+      "2BLn4xX2vF_gM9G5wfbVb4",
+      "2BLn4xX2vF_gM9G5wfbVaT",
+      "0xyFL4ySP5TexORi78qDG5",
+      "0xyFL4ySP5TexORi78qDIC",
+      "1ebX2H7F12su$wtPbeYBaq"
+    ]
+  },
+  {
+    "id": "AP_SK_316",
+    "type": "filler",
+    "storey": "4 - Fourth Floor",
+    "glb": "4_fourth_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV1W",
+    "ifc_class": "Window",
+    "query": "On Fourth Floor, check the window beside the window along this wall run.",
+    "site_img": "assets/dataset/AP_SK_316_site.jpg",
+    "gt_slot": [
+      2,
+      4
+    ],
+    "pred_slot": [
+      2,
+      4
+    ],
+    "conf_raw": 0.62,
+    "conf_cal": 0.84,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV1J",
+      "3ktY1kg3rAwgNBX_XWRV1R",
+      "3ktY1kg3rAwgNBX_XWRV1b",
+      "3ktY1kg3rAwgNBX_XWRV1g",
+      "3ktY1kg3rAwgNBX_XWRV1x",
+      "3ktY1kg3rAwgNBX_XWRV1H",
+      "3ktY1kg3rAwgNBX_XWRV1$",
+      "3ktY1kg3rAwgNBX_XWRV1f",
+      "3ktY1kg3rAwgNBX_XWRV1q",
+      "3ktY1kg3rAwgNBX_XWRV1u",
+      "3ktY1kg3rAwgNBX_XWRV1z",
+      "3ktY1kg3rAwgNBX_XWRV1h",
+      "3ktY1kg3rAwgNBX_XWRV11",
+      "3ktY1kg3rAwgNBX_XWRV1y",
+      "3ktY1kg3rAwgNBX_XWRV1i",
+      "3ktY1kg3rAwgNBX_XWRV12",
+      "3ktY1kg3rAwgNBX_XWRV1Z",
+      "3ktY1kg3rAwgNBX_XWRV1k",
+      "3ktY1kg3rAwgNBX_XWRV10",
+      "3ktY1kg3rAwgNBX_XWRV1Y",
+      "3ktY1kg3rAwgNBX_XWRV1j",
+      "3ktY1kg3rAwgNBX_XWRV1N",
+      "3ktY1kg3rAwgNBX_XWRV1X",
+      "3ktY1kg3rAwgNBX_XWRV1l",
+      "3ktY1kg3rAwgNBX_XWRV13",
+      "3ktY1kg3rAwgNBX_XWRV1S",
+      "3ktY1kg3rAwgNBX_XWRV1T",
+      "3ktY1kg3rAwgNBX_XWRV1U",
+      "3ktY1kg3rAwgNBX_XWRV1V",
+      "3ktY1kg3rAwgNBX_XWRV1O",
+      "3ktY1kg3rAwgNBX_XWRV1P",
+      "3ktY1kg3rAwgNBX_XWRV1G",
+      "3ktY1kg3rAwgNBX_XWRV1r",
+      "3ktY1kg3rAwgNBX_XWRV1w",
+      "3ktY1kg3rAwgNBX_XWRV1v",
+      "3ktY1kg3rAwgNBX_XWRV1_",
+      "3ktY1kg3rAwgNBX_XWRV1d",
+      "3ktY1kg3rAwgNBX_XWRV1c",
+      "3ktY1kg3rAwgNBX_XWRV1a",
+      "3ktY1kg3rAwgNBX_XWRV1e"
+    ]
+  },
+  {
+    "id": "AP_SK_320",
+    "type": "filler",
+    "storey": "3 - Third Floor",
+    "glb": "3_third_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV0K",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on Third Floor right next to the window on the same wall.",
+    "site_img": "assets/dataset/AP_SK_320_site.jpg",
+    "gt_slot": [
+      0,
+      9
+    ],
+    "pred_slot": [
+      0,
+      9
+    ],
+    "conf_raw": 0.67,
+    "conf_cal": 0.91,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV0i",
+      "3ktY1kg3rAwgNBX_XWRV0V",
+      "3ktY1kg3rAwgNBX_XWRV07",
+      "3ktY1kg3rAwgNBX_XWRV0H",
+      "3ktY1kg3rAwgNBX_XWRV0M",
+      "3ktY1kg3rAwgNBX_XWRV0d",
+      "3ktY1kg3rAwgNBX_XWRV0T",
+      "3ktY1kg3rAwgNBX_XWRV0h",
+      "3ktY1kg3rAwgNBX_XWRV0L",
+      "3ktY1kg3rAwgNBX_XWRV0W",
+      "3ktY1kg3rAwgNBX_XWRV0a",
+      "3ktY1kg3rAwgNBX_XWRV0f",
+      "3ktY1kg3rAwgNBX_XWRV0N",
+      "3ktY1kg3rAwgNBX_XWRV0D",
+      "3ktY1kg3rAwgNBX_XWRV0e",
+      "3ktY1kg3rAwgNBX_XWRV0O",
+      "3ktY1kg3rAwgNBX_XWRV0E",
+      "3ktY1kg3rAwgNBX_XWRV0l",
+      "3ktY1kg3rAwgNBX_XWRV0Q",
+      "3ktY1kg3rAwgNBX_XWRV0C",
+      "3ktY1kg3rAwgNBX_XWRV0k",
+      "3ktY1kg3rAwgNBX_XWRV0P",
+      "3ktY1kg3rAwgNBX_XWRV03",
+      "3ktY1kg3rAwgNBX_XWRV0j",
+      "3ktY1kg3rAwgNBX_XWRV0R",
+      "3ktY1kg3rAwgNBX_XWRV0F",
+      "3ktY1kg3rAwgNBX_XWRV08",
+      "3ktY1kg3rAwgNBX_XWRV09",
+      "3ktY1kg3rAwgNBX_XWRV0A",
+      "3ktY1kg3rAwgNBX_XWRV0B",
+      "3ktY1kg3rAwgNBX_XWRV04",
+      "3ktY1kg3rAwgNBX_XWRV05",
+      "3ktY1kg3rAwgNBX_XWRV0S",
+      "3ktY1kg3rAwgNBX_XWRV0X",
+      "3ktY1kg3rAwgNBX_XWRV0c",
+      "3ktY1kg3rAwgNBX_XWRV0b",
+      "3ktY1kg3rAwgNBX_XWRV0g",
+      "3ktY1kg3rAwgNBX_XWRV0J",
+      "3ktY1kg3rAwgNBX_XWRV0I",
+      "3ktY1kg3rAwgNBX_XWRV0G"
+    ]
+  },
+  {
+    "id": "AP_SK_325",
+    "type": "filler",
+    "storey": "1 - First Floor",
+    "glb": "1_first_floor.glb",
+    "target_guid": "1KMtYLyv9CyfGv8UjnMB31",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on First Floor right next to the window on the same wall.",
+    "site_img": "assets/dataset/AP_SK_325_site.jpg",
+    "gt_slot": [
+      2,
+      4
+    ],
+    "pred_slot": [
+      2,
+      4
+    ],
+    "conf_raw": 0.6,
+    "conf_cal": 0.79,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "1KMtYLyv9CyfGv8UjnMB3i",
+      "1KMtYLyv9CyfGv8UjnMB3Z",
+      "1KMtYLyv9CyfGv8UjnMB3y",
+      "1KMtYLyv9CyfGv8UjnMB3u",
+      "0HFJ4FEcn5UhECI1IyBBLe",
+      "1KMtYLyv9CyfGv8UjnMB3e",
+      "0pHBx4qSPCfPLZRKuUIKG1",
+      "1KMtYLyv9CyfGv8UjnMB3v",
+      "1gdfXOIAf8ZBJUgAp$8e1o",
+      "0pHBx4qSPCfPLZRKuUIKhq",
+      "0pHBx4qSPCfPLZRKuUIKPy",
+      "1KMtYLyv9CyfGv8UjnMB3$",
+      "1KMtYLyv9CyfGv8UjnMBSM",
+      "0pHBx4qSPCfPLZRKuUIKOJ",
+      "1KMtYLyv9CyfGv8UjnMB3p",
+      "1KMtYLyv9CyfGv8UjnMBSL",
+      "0pHBx4qSPCfPLZRKuUIKRO",
+      "1KMtYLyv9CyfGv8UjnMB3n",
+      "1KMtYLyv9CyfGv8UjnMBSN",
+      "0pHBx4qSPCfPLZRKuUIKQ9",
+      "1KMtYLyv9CyfGv8UjnMB3o",
+      "1KMtYLyv9CyfGv8UjnMB3d",
+      "0pHBx4qSPCfPLZRKuUIKTa",
+      "1KMtYLyv9CyfGv8UjnMB3m",
+      "1KMtYLyv9CyfGv8UjnMBSK",
+      "1KMtYLyv9CyfGv8UjnMBSR",
+      "1KMtYLyv9CyfGv8UjnMBSQ",
+      "1KMtYLyv9CyfGv8UjnMBSP",
+      "1KMtYLyv9CyfGv8UjnMBSO",
+      "1KMtYLyv9CyfGv8UjnMBSV",
+      "1KMtYLyv9CyfGv8UjnMBSU",
+      "1KMtYLyv9CyfGv8UjnMB3b",
+      "2Bm1R3arDAW8kJznnV4FrS",
+      "0HFJ4FEcn5UhECI1IyBAm7",
+      "0fjrUmmzDB4fngo1stt3cw",
+      "0pHBx4qSPCfPLZRKuUIKNz",
+      "1KMtYLyv9CyfGv8UjnMB32",
+      "1KMtYLyv9CyfGv8UjnMB33",
+      "1KMtYLyv9CyfGv8UjnMB3z",
+      "1KMtYLyv9CyfGv8UjnMB3x"
+    ]
+  },
+  {
+    "id": "AP_SK_329",
+    "type": "filler",
+    "storey": "5 - Fifth Floor",
+    "glb": "5_fifth_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV4C",
+    "ifc_class": "Window",
+    "query": "On Fifth Floor, check the window beside the window along this wall run.",
+    "site_img": "assets/dataset/AP_SK_329_site.jpg",
+    "gt_slot": [
+      8,
+      10
+    ],
+    "pred_slot": [
+      8,
+      10
+    ],
+    "conf_raw": 0.6,
+    "conf_cal": 0.79,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV45",
+      "3ktY1kg3rAwgNBX_XWRV7m",
+      "3ktY1kg3rAwgNBX_XWRV7u",
+      "3ktY1kg3rAwgNBX_XWRV4A",
+      "3ktY1kg3rAwgNBX_XWRV4F",
+      "3ktY1kg3rAwgNBX_XWRV4O",
+      "3ktY1kg3rAwgNBX_XWRV7s",
+      "3ktY1kg3rAwgNBX_XWRV4S",
+      "3ktY1kg3rAwgNBX_XWRV4E",
+      "3ktY1kg3rAwgNBX_XWRV4P",
+      "3ktY1kg3rAwgNBX_XWRV4T",
+      "3ktY1kg3rAwgNBX_XWRV42",
+      "3ktY1kg3rAwgNBX_XWRV48",
+      "3ktY1kg3rAwgNBX_XWRV7c",
+      "3ktY1kg3rAwgNBX_XWRV41",
+      "3ktY1kg3rAwgNBX_XWRV7n",
+      "3ktY1kg3rAwgNBX_XWRV7d",
+      "3ktY1kg3rAwgNBX_XWRV40",
+      "3ktY1kg3rAwgNBX_XWRV7p",
+      "3ktY1kg3rAwgNBX_XWRV7b",
+      "3ktY1kg3rAwgNBX_XWRV47",
+      "3ktY1kg3rAwgNBX_XWRV7o",
+      "3ktY1kg3rAwgNBX_XWRV7q",
+      "3ktY1kg3rAwgNBX_XWRV46",
+      "3ktY1kg3rAwgNBX_XWRV7W",
+      "3ktY1kg3rAwgNBX_XWRV7X",
+      "3ktY1kg3rAwgNBX_XWRV7Y",
+      "3ktY1kg3rAwgNBX_XWRV7Z",
+      "3ktY1kg3rAwgNBX_XWRV7y",
+      "3ktY1kg3rAwgNBX_XWRV7z",
+      "3ktY1kg3rAwgNBX_XWRV7_",
+      "3ktY1kg3rAwgNBX_XWRV7r",
+      "3ktY1kg3rAwgNBX_XWRV4Q",
+      "3ktY1kg3rAwgNBX_XWRV4V",
+      "3ktY1kg3rAwgNBX_XWRV4U",
+      "3ktY1kg3rAwgNBX_XWRV43",
+      "3ktY1kg3rAwgNBX_XWRV44",
+      "3ktY1kg3rAwgNBX_XWRV4B",
+      "3ktY1kg3rAwgNBX_XWRV49",
+      "3ktY1kg3rAwgNBX_XWRV4D"
+    ]
+  },
+  {
+    "id": "AP_SK_337",
+    "type": "filler",
+    "storey": "3 - Third Floor",
+    "glb": "3_third_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV0k",
+    "ifc_class": "Window",
+    "query": "On Third Floor, check the window beside the window along this wall run.",
+    "site_img": "assets/dataset/AP_SK_337_site.jpg",
+    "gt_slot": [
+      2,
+      9
+    ],
+    "pred_slot": [
+      2,
+      9
+    ],
+    "conf_raw": 0.67,
+    "conf_cal": 0.91,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV0i",
+      "3ktY1kg3rAwgNBX_XWRV0V",
+      "3ktY1kg3rAwgNBX_XWRV07",
+      "3ktY1kg3rAwgNBX_XWRV0H",
+      "3ktY1kg3rAwgNBX_XWRV0M",
+      "3ktY1kg3rAwgNBX_XWRV0d",
+      "3ktY1kg3rAwgNBX_XWRV0T",
+      "3ktY1kg3rAwgNBX_XWRV0h",
+      "3ktY1kg3rAwgNBX_XWRV0L",
+      "3ktY1kg3rAwgNBX_XWRV0W",
+      "3ktY1kg3rAwgNBX_XWRV0a",
+      "3ktY1kg3rAwgNBX_XWRV0f",
+      "3ktY1kg3rAwgNBX_XWRV0N",
+      "3ktY1kg3rAwgNBX_XWRV0D",
+      "3ktY1kg3rAwgNBX_XWRV0e",
+      "3ktY1kg3rAwgNBX_XWRV0O",
+      "3ktY1kg3rAwgNBX_XWRV0E",
+      "3ktY1kg3rAwgNBX_XWRV0l",
+      "3ktY1kg3rAwgNBX_XWRV0Q",
+      "3ktY1kg3rAwgNBX_XWRV0C",
+      "3ktY1kg3rAwgNBX_XWRV0P",
+      "3ktY1kg3rAwgNBX_XWRV03",
+      "3ktY1kg3rAwgNBX_XWRV0j",
+      "3ktY1kg3rAwgNBX_XWRV0R",
+      "3ktY1kg3rAwgNBX_XWRV0F",
+      "3ktY1kg3rAwgNBX_XWRV08",
+      "3ktY1kg3rAwgNBX_XWRV09",
+      "3ktY1kg3rAwgNBX_XWRV0A",
+      "3ktY1kg3rAwgNBX_XWRV0B",
+      "3ktY1kg3rAwgNBX_XWRV04",
+      "3ktY1kg3rAwgNBX_XWRV05",
+      "3ktY1kg3rAwgNBX_XWRV0S",
+      "3ktY1kg3rAwgNBX_XWRV0X",
+      "3ktY1kg3rAwgNBX_XWRV0c",
+      "3ktY1kg3rAwgNBX_XWRV0b",
+      "3ktY1kg3rAwgNBX_XWRV0g",
+      "3ktY1kg3rAwgNBX_XWRV0J",
+      "3ktY1kg3rAwgNBX_XWRV0I",
+      "3ktY1kg3rAwgNBX_XWRV0G",
+      "3ktY1kg3rAwgNBX_XWRV0K"
+    ]
+  },
+  {
+    "id": "AP_SK_340",
+    "type": "filler",
+    "storey": "4 - Fourth Floor",
+    "glb": "4_fourth_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV13",
+    "ifc_class": "Window",
+    "query": "On Fourth Floor, check the window beside the window along this wall run.",
+    "site_img": "assets/dataset/AP_SK_340_site.jpg",
+    "gt_slot": [
+      8,
+      17
+    ],
+    "pred_slot": [
+      8,
+      17
+    ],
+    "conf_raw": 0.52,
+    "conf_cal": 0.57,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV1W",
+      "3ktY1kg3rAwgNBX_XWRV1J",
+      "3ktY1kg3rAwgNBX_XWRV1R",
+      "3ktY1kg3rAwgNBX_XWRV1b",
+      "3ktY1kg3rAwgNBX_XWRV1g",
+      "3ktY1kg3rAwgNBX_XWRV1x",
+      "3ktY1kg3rAwgNBX_XWRV1H",
+      "3ktY1kg3rAwgNBX_XWRV1$",
+      "3ktY1kg3rAwgNBX_XWRV1f",
+      "3ktY1kg3rAwgNBX_XWRV1q",
+      "3ktY1kg3rAwgNBX_XWRV1u",
+      "3ktY1kg3rAwgNBX_XWRV1z",
+      "3ktY1kg3rAwgNBX_XWRV1h",
+      "3ktY1kg3rAwgNBX_XWRV11",
+      "3ktY1kg3rAwgNBX_XWRV1y",
+      "3ktY1kg3rAwgNBX_XWRV1i",
+      "3ktY1kg3rAwgNBX_XWRV12",
+      "3ktY1kg3rAwgNBX_XWRV1Z",
+      "3ktY1kg3rAwgNBX_XWRV1k",
+      "3ktY1kg3rAwgNBX_XWRV10",
+      "3ktY1kg3rAwgNBX_XWRV1Y",
+      "3ktY1kg3rAwgNBX_XWRV1j",
+      "3ktY1kg3rAwgNBX_XWRV1N",
+      "3ktY1kg3rAwgNBX_XWRV1X",
+      "3ktY1kg3rAwgNBX_XWRV1l",
+      "3ktY1kg3rAwgNBX_XWRV1S",
+      "3ktY1kg3rAwgNBX_XWRV1T",
+      "3ktY1kg3rAwgNBX_XWRV1U",
+      "3ktY1kg3rAwgNBX_XWRV1V",
+      "3ktY1kg3rAwgNBX_XWRV1O",
+      "3ktY1kg3rAwgNBX_XWRV1P",
+      "3ktY1kg3rAwgNBX_XWRV1G",
+      "3ktY1kg3rAwgNBX_XWRV1r",
+      "3ktY1kg3rAwgNBX_XWRV1w",
+      "3ktY1kg3rAwgNBX_XWRV1v",
+      "3ktY1kg3rAwgNBX_XWRV1_",
+      "3ktY1kg3rAwgNBX_XWRV1d",
+      "3ktY1kg3rAwgNBX_XWRV1c",
+      "3ktY1kg3rAwgNBX_XWRV1a",
+      "3ktY1kg3rAwgNBX_XWRV1e"
+    ]
+  },
+  {
+    "id": "AP_SK_346",
+    "type": "filler",
+    "storey": "3 - Third Floor",
+    "glb": "3_third_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV0a",
+    "ifc_class": "Window",
+    "query": "On Third Floor, check the window beside the window along this wall run.",
+    "site_img": "assets/dataset/AP_SK_346_site.jpg",
+    "gt_slot": [
+      3,
+      17
+    ],
+    "pred_slot": [
+      3,
+      17
+    ],
+    "conf_raw": 0.52,
+    "conf_cal": 0.57,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV0i",
+      "3ktY1kg3rAwgNBX_XWRV0V",
+      "3ktY1kg3rAwgNBX_XWRV07",
+      "3ktY1kg3rAwgNBX_XWRV0H",
+      "3ktY1kg3rAwgNBX_XWRV0M",
+      "3ktY1kg3rAwgNBX_XWRV0d",
+      "3ktY1kg3rAwgNBX_XWRV0T",
+      "3ktY1kg3rAwgNBX_XWRV0h",
+      "3ktY1kg3rAwgNBX_XWRV0L",
+      "3ktY1kg3rAwgNBX_XWRV0W",
+      "3ktY1kg3rAwgNBX_XWRV0f",
+      "3ktY1kg3rAwgNBX_XWRV0N",
+      "3ktY1kg3rAwgNBX_XWRV0D",
+      "3ktY1kg3rAwgNBX_XWRV0e",
+      "3ktY1kg3rAwgNBX_XWRV0O",
+      "3ktY1kg3rAwgNBX_XWRV0E",
+      "3ktY1kg3rAwgNBX_XWRV0l",
+      "3ktY1kg3rAwgNBX_XWRV0Q",
+      "3ktY1kg3rAwgNBX_XWRV0C",
+      "3ktY1kg3rAwgNBX_XWRV0k",
+      "3ktY1kg3rAwgNBX_XWRV0P",
+      "3ktY1kg3rAwgNBX_XWRV03",
+      "3ktY1kg3rAwgNBX_XWRV0j",
+      "3ktY1kg3rAwgNBX_XWRV0R",
+      "3ktY1kg3rAwgNBX_XWRV0F",
+      "3ktY1kg3rAwgNBX_XWRV08",
+      "3ktY1kg3rAwgNBX_XWRV09",
+      "3ktY1kg3rAwgNBX_XWRV0A",
+      "3ktY1kg3rAwgNBX_XWRV0B",
+      "3ktY1kg3rAwgNBX_XWRV04",
+      "3ktY1kg3rAwgNBX_XWRV05",
+      "3ktY1kg3rAwgNBX_XWRV0S",
+      "3ktY1kg3rAwgNBX_XWRV0X",
+      "3ktY1kg3rAwgNBX_XWRV0c",
+      "3ktY1kg3rAwgNBX_XWRV0b",
+      "3ktY1kg3rAwgNBX_XWRV0g",
+      "3ktY1kg3rAwgNBX_XWRV0J",
+      "3ktY1kg3rAwgNBX_XWRV0I",
+      "3ktY1kg3rAwgNBX_XWRV0G",
+      "3ktY1kg3rAwgNBX_XWRV0K"
+    ]
+  },
+  {
+    "id": "AP_SK_078",
+    "type": "filler",
+    "storey": "-1 - Garage",
+    "glb": "1_garage.glb",
+    "target_guid": "0ducQKkW5EGQM9rQ5zdPvI",
+    "ifc_class": "Door",
+    "query": "The door in the wall opening on Garage needs QA review.",
+    "site_img": "assets/dataset/AP_SK_078_site.jpg",
+    "gt_slot": [
+      0,
+      2
+    ],
+    "pred_slot": [
+      4,
+      11
+    ],
+    "conf_raw": 0.59,
+    "conf_cal": 0.77,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 45
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 45
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 3
+      }
+    ],
+    "confusable_guids": [
+      "1cFRppLhj948bTrzz_ApiD",
+      "0ducQKkW5EGQM9rQ5zdPFU",
+      "1cFRppLhj948bTrzz_ApRD",
+      "0ducQKkW5EGQM9rQ5zdP8c",
+      "3pFbansyD0KOHFtJHrTupl",
+      "3pFbansyD0KOHFtJHrTutI",
+      "1q9pLykVT2tOtz_4XjbuoS",
+      "1q9pLykVT2tOtz_4Xjbup3",
+      "1q9pLykVT2tOtz_4XjbvA1",
+      "1q9pLykVT2tOtz_4XjbvBZ",
+      "1q9pLykVT2tOtz_4XjbvqZ",
+      "1q9pLykVT2tOtz_4Xjbvw7",
+      "0ducQKkW5EGQM9rQ5zdOpb",
+      "0ducQKkW5EGQM9rQ5zdOvK",
+      "0ducQKkW5EGQM9rQ5zdP1L",
+      "0ducQKkW5EGQM9rQ5zdPFm",
+      "0ducQKkW5EGQM9rQ5zdPNP",
+      "0ducQKkW5EGQM9rQ5zdPbh",
+      "0ducQKkW5EGQM9rQ5zdPaT",
+      "0ducQKkW5EGQM9rQ5zdPnm",
+      "0ducQKkW5EGQM9rQ5zdPmG",
+      "0ducQKkW5EGQM9rQ5zdPm_",
+      "0ducQKkW5EGQM9rQ5zdPsI",
+      "0ducQKkW5EGQM9rQ5zdPsq",
+      "0ducQKkW5EGQM9rQ5zdPrI",
+      "0ducQKkW5EGQM9rQ5zdPrq",
+      "0ducQKkW5EGQM9rQ5zdPrw",
+      "0ducQKkW5EGQM9rQ5zdPqd",
+      "0ducQKkW5EGQM9rQ5zdPwl",
+      "0ducQKkW5EGQM9rQ5zdP$j",
+      "0ducQKkW5EGQM9rQ5zdPyj",
+      "0ducQKkW5EGQM9rQ5zdM3l",
+      "0ducQKkW5EGQM9rQ5zdM3v",
+      "0ducQKkW5EGQM9rQ5zdM2q",
+      "0ducQKkW5EGQM9rQ5zdM1T",
+      "0ducQKkW5EGQM9rQ5zdM8G",
+      "1cFRppLhj948bTrzz_Apiw",
+      "3GdhC2lQD5ifjmLdQ3yoHF",
+      "3GdhC2lQD5ifjmLdQ3yoHJ",
+      "1cFRppLhj948bTrzz_Ao_1"
+    ]
+  },
+  {
+    "id": "AP_SK_237",
+    "type": "filler",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "3pFbansyD0KOHFtJHrTsUB",
+    "ifc_class": "Window",
+    "query": "On Level 1, check the window beside the window along this wall run.",
+    "site_img": "assets/dataset/AP_SK_237_site.jpg",
+    "gt_slot": [
+      0,
+      4
+    ],
+    "pred_slot": [
+      1,
+      5
+    ],
+    "conf_raw": 0.64,
+    "conf_cal": 0.87,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 30
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "1gdfXOIAf8ZBJUgAp$8ewJ",
+      "0HFJ4FEcn5UhECI1IyBqQx",
+      "0HFJ4FEcn5UhECI1IyBq6E",
+      "0HFJ4FEcn5UhECI1IyBq3s",
+      "0HFJ4FEcn5UhECI1IyBqD7",
+      "0HFJ4FEcn5UhECI1IyBBqj",
+      "0HFJ4FEcn5UhECI1IyBBr8",
+      "0HFJ4FEcn5UhECI1IyBBz0",
+      "0HFJ4FEcn5UhECI1IyBBv9",
+      "0HFJ4FEcn5UhECI1IyBBbs",
+      "0HFJ4FEcn5UhECI1IyBBWG",
+      "0HFJ4FEcn5UhECI1IyBBXX",
+      "3pFbansyD0KOHFtJHrTsSA",
+      "3pFbansyD0KOHFtJHrTt$5",
+      "2BLn4xX2vF_gM9G5wfbPLu",
+      "2BLn4xX2vF_gM9G5wfbPWX",
+      "2BLn4xX2vF_gM9G5wfbVb4",
+      "2BLn4xX2vF_gM9G5wfbVaT",
+      "0ducQKkW5EGQM9rQ5zdOXl",
+      "0xyFL4ySP5TexORi78qDG5",
+      "0xyFL4ySP5TexORi78qDIC",
+      "0xyFL4ySP5TexORi78qDB1",
+      "0xyFL4ySP5TexORi78qDYL",
+      "0xyFL4ySP5TexORi78qEKF",
+      "0xyFL4ySP5TexORi78qEFc",
+      "1ebX2H7F12su$wtPbeYBaq",
+      "1ebX2H7F12su$wtPbeYAP4",
+      "1ebX2H7F12su$wtPbeYATe",
+      "1ebX2H7F12su$wtPbeYAIT"
+    ]
+  },
+  {
+    "id": "AP_SK_348",
+    "type": "filler",
+    "storey": "5 - Fifth Floor",
+    "glb": "5_fifth_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRV48",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on Fifth Floor right next to the window on the same wall.",
+    "site_img": "assets/dataset/AP_SK_348_site.jpg",
+    "gt_slot": [
+      4,
+      10
+    ],
+    "pred_slot": [
+      5,
+      11
+    ],
+    "conf_raw": 0.64,
+    "conf_cal": 0.87,
+    "tau": 0.4,
+    "decision": "ANSWER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 46
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3ktY1kg3rAwgNBX_XWRV45",
+      "3ktY1kg3rAwgNBX_XWRV7m",
+      "3ktY1kg3rAwgNBX_XWRV7u",
+      "3ktY1kg3rAwgNBX_XWRV4A",
+      "3ktY1kg3rAwgNBX_XWRV4F",
+      "3ktY1kg3rAwgNBX_XWRV4O",
+      "3ktY1kg3rAwgNBX_XWRV7s",
+      "3ktY1kg3rAwgNBX_XWRV4S",
+      "3ktY1kg3rAwgNBX_XWRV4E",
+      "3ktY1kg3rAwgNBX_XWRV4P",
+      "3ktY1kg3rAwgNBX_XWRV4T",
+      "3ktY1kg3rAwgNBX_XWRV42",
+      "3ktY1kg3rAwgNBX_XWRV7c",
+      "3ktY1kg3rAwgNBX_XWRV41",
+      "3ktY1kg3rAwgNBX_XWRV7n",
+      "3ktY1kg3rAwgNBX_XWRV7d",
+      "3ktY1kg3rAwgNBX_XWRV40",
+      "3ktY1kg3rAwgNBX_XWRV7p",
+      "3ktY1kg3rAwgNBX_XWRV7b",
+      "3ktY1kg3rAwgNBX_XWRV47",
+      "3ktY1kg3rAwgNBX_XWRV7o",
+      "3ktY1kg3rAwgNBX_XWRV7q",
+      "3ktY1kg3rAwgNBX_XWRV46",
+      "3ktY1kg3rAwgNBX_XWRV4C",
+      "3ktY1kg3rAwgNBX_XWRV7W",
+      "3ktY1kg3rAwgNBX_XWRV7X",
+      "3ktY1kg3rAwgNBX_XWRV7Y",
+      "3ktY1kg3rAwgNBX_XWRV7Z",
+      "3ktY1kg3rAwgNBX_XWRV7y",
+      "3ktY1kg3rAwgNBX_XWRV7z",
+      "3ktY1kg3rAwgNBX_XWRV7_",
+      "3ktY1kg3rAwgNBX_XWRV7r",
+      "3ktY1kg3rAwgNBX_XWRV4Q",
+      "3ktY1kg3rAwgNBX_XWRV4V",
+      "3ktY1kg3rAwgNBX_XWRV4U",
+      "3ktY1kg3rAwgNBX_XWRV43",
+      "3ktY1kg3rAwgNBX_XWRV44",
+      "3ktY1kg3rAwgNBX_XWRV4B",
+      "3ktY1kg3rAwgNBX_XWRV49",
+      "3ktY1kg3rAwgNBX_XWRV4D"
+    ]
+  },
+  {
+    "id": "AP_SK_314",
+    "type": "filler",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "2fypDDb212M80XzLYYLlIb",
+    "ifc_class": "Door",
+    "query": "On Level 1, check the door beside the window along this wall run.",
+    "site_img": "assets/dataset/AP_SK_314_site.jpg",
+    "gt_slot": [
+      5,
+      6
+    ],
+    "pred_slot": [
+      5,
+      6
+    ],
+    "conf_raw": 0.46,
+    "conf_cal": 0.37,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": true,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 78
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 36
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "0Pw4h9cu11p8EzOFUdpTBE",
+      "0xKelnDbLBsf$3TAffmUXs",
+      "2fypDDb212M80XzLYYLlJg",
+      "0xKelnDbLBsf$3TAffmU$u",
+      "0Pw4h9cu11p8EzOFUdpSlP",
+      "0HFJ4FEcn5UhECI1IyBq0G",
+      "0HFJ4FEcn5UhECI1IyBq10",
+      "3pFbansyD0KOHFtJHrTtfJ",
+      "3pFbansyD0KOHFtJHrTteh",
+      "3pFbansyD0KOHFtJHrTtde",
+      "3pFbansyD0KOHFtJHrTtwA",
+      "3pFbansyD0KOHFtJHrTtDE",
+      "3pFbansyD0KOHFtJHrTt4G",
+      "3pFbansyD0KOHFtJHrTtO7",
+      "3pFbansyD0KOHFtJHrTuhb",
+      "3pFbansyD0KOHFtJHrTulG",
+      "3pFbansyD0KOHFtJHrTuxk",
+      "34Ni6yH0HDjQqrjEsXbUMJ",
+      "2BLn4xX2vF_gM9G5wfbOeO",
+      "2BLn4xX2vF_gM9G5wfbP36",
+      "2BLn4xX2vF_gM9G5wfbP3_",
+      "2BLn4xX2vF_gM9G5wfbP7V",
+      "2BLn4xX2vF_gM9G5wfbPB_",
+      "2BLn4xX2vF_gM9G5wfbPR8",
+      "2BLn4xX2vF_gM9G5wfbPd3",
+      "2BLn4xX2vF_gM9G5wfbPhn",
+      "2BLn4xX2vF_gM9G5wfbPiL",
+      "2BLn4xX2vF_gM9G5wfbPwA",
+      "2BLn4xX2vF_gM9G5wfbU5X",
+      "2BLn4xX2vF_gM9G5wfbU4T",
+      "0ducQKkW5EGQM9rQ5zdOcN",
+      "0xyFL4ySP5TexORi78qE5c",
+      "3p6DR19bjD_PWb8lZMRTlD",
+      "3p6DR19bjD_PWb8lZMRTIN",
+      "1_jeQ1u6XFwed$AhVCoJi$"
+    ]
+  },
+  {
+    "id": "AP_SK_002",
+    "type": "wall",
+    "storey": "-1 - Garage",
+    "glb": "1_garage.glb",
+    "target_guid": "1KGNuJkf5FjQZDFQ6We96A",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "Please inspect the junction on Garage where the wall meets the wall.",
+    "site_img": "assets/dataset/AP_SK_002_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 84
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 12
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "0MOEoDTm9EnO9yKsXjjlj9",
+      "34Ni6yH0HDjQqrjEsXb0JF",
+      "34Ni6yH0HDjQqrjEsXb0TF",
+      "2dAxltRn524vY2d5KNMr$K",
+      "3U8bdGexDEOw9DXBmULq6a",
+      "3p6DR19bjD_PWb8lZMRTT8",
+      "3GzoWuxxn4WO8bCtw8H3AS",
+      "3naw$9in55$v8L5CpxnK31",
+      "3naw$9in55$v8L5CpxnK36",
+      "3GzoWuxxn4WO8bCtw8H3AT",
+      "0MOEoDTm9EnO9yKsXjjlkV"
+    ]
+  },
+  {
+    "id": "AP_SK_009",
+    "type": "wall",
+    "storey": "-1 - Garage",
+    "glb": "1_garage.glb",
+    "target_guid": "2dAxltRn524vY2d5KNMr$K",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "The wall junction between the wall and the wall on Garage needs QA review.",
+    "site_img": "assets/dataset/AP_SK_009_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 84
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 12
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "0MOEoDTm9EnO9yKsXjjlj9",
+      "34Ni6yH0HDjQqrjEsXb0JF",
+      "34Ni6yH0HDjQqrjEsXb0TF",
+      "1KGNuJkf5FjQZDFQ6We96A",
+      "3U8bdGexDEOw9DXBmULq6a",
+      "3p6DR19bjD_PWb8lZMRTT8",
+      "3GzoWuxxn4WO8bCtw8H3AS",
+      "3naw$9in55$v8L5CpxnK31",
+      "3naw$9in55$v8L5CpxnK36",
+      "3GzoWuxxn4WO8bCtw8H3AT",
+      "0MOEoDTm9EnO9yKsXjjlkV"
+    ]
+  },
+  {
+    "id": "AP_SK_016",
+    "type": "wall",
+    "storey": "-1 - Garage",
+    "glb": "1_garage.glb",
+    "target_guid": "3naw$9in55$v8L5CpxnKAh",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "The wall junction between the wall and the wall on Garage needs QA review.",
+    "site_img": "assets/dataset/AP_SK_016_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 84
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 72
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 5
+      }
+    ],
+    "confusable_guids": [
+      "3GdhC2lQD5ifjmLdQ3yo2f",
+      "1q9pLykVT2tOtz_4Xjbv_z",
+      "1cFRppLhj948bTrzz_AoFF",
+      "1q9pLykVT2tOtz_4XjbvqA",
+      "1q9pLykVT2tOtz_4XjbueK",
+      "0ducQKkW5EGQM9rQ5zdPdI",
+      "3U8bdGexDEOw9DXBmULrCi",
+      "3p6DR19bjD_PWb8lZMRTML",
+      "1cFRppLhj948bTrzz_AoiZ",
+      "1KMtYLyv9CyfGv8UjnMBCL",
+      "1KMtYLyv9CyfGv8UjnMBCG",
+      "3GdhC2lQD5ifjmLdQ3yo9v",
+      "3GdhC2lQD5ifjmLdQ3yoB_",
+      "3p6DR19bjD_PWb8lZMRTPc",
+      "2v8sGyGFXDsRc80mj95kV8",
+      "3p6DR19bjD_PWb8lZMRTOE",
+      "1cFRppLhj948bTrzz_Ao2N",
+      "3U8bdGexDEOw9DXBmULrD3",
+      "3GzoWuxxn4WO8bCtw8H3I4",
+      "3pFbansyD0KOHFtJHrTu9y",
+      "2dAxltRn524vY2d5KNMrvW",
+      "2dAxltRn524vY2d5KNMrWy",
+      "3pFbansyD0KOHFtJHrTuq$",
+      "1cFRppLhj948bTrzz_ApV0",
+      "1cFRppLhj948bTrzz_ApO1",
+      "1cFRppLhj948bTrzz_ApRW",
+      "1cFRppLhj948bTrzz_Apb_",
+      "1cFRppLhj948bTrzz_ApdW",
+      "1cFRppLhj948bTrzz_ApY4",
+      "2dAxltRn524vY2d5KNMrzR",
+      "1KMtYLyv9CyfGv8UjnMBCH",
+      "1q9pLykVT2tOtz_4XjbvWj",
+      "0ducQKkW5EGQM9rQ5zdPiu",
+      "1cFRppLhj948bTrzz_Apug",
+      "0ducQKkW5EGQM9rQ5zdPDs",
+      "0ducQKkW5EGQM9rQ5zdPJh",
+      "1KMtYLyv9CyfGv8UjnM8_h",
+      "0ducQKkW5EGQM9rQ5zdM1i",
+      "0ducQKkW5EGQM9rQ5zdM0J",
+      "1KMtYLyv9CyfGv8UjnM8y$"
+    ]
+  },
+  {
+    "id": "AP_SK_017",
+    "type": "wall",
+    "storey": "-1 - Garage",
+    "glb": "1_garage.glb",
+    "target_guid": "3p6DR19bjD_PWb8lZMRTML",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "The wall junction between the wall and the wall on Garage needs QA review.",
+    "site_img": "assets/dataset/AP_SK_017_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 84
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 72
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 5
+      }
+    ],
+    "confusable_guids": [
+      "3GdhC2lQD5ifjmLdQ3yo2f",
+      "1q9pLykVT2tOtz_4Xjbv_z",
+      "1cFRppLhj948bTrzz_AoFF",
+      "1q9pLykVT2tOtz_4XjbvqA",
+      "1q9pLykVT2tOtz_4XjbueK",
+      "0ducQKkW5EGQM9rQ5zdPdI",
+      "3U8bdGexDEOw9DXBmULrCi",
+      "1cFRppLhj948bTrzz_AoiZ",
+      "1KMtYLyv9CyfGv8UjnMBCL",
+      "1KMtYLyv9CyfGv8UjnMBCG",
+      "3GdhC2lQD5ifjmLdQ3yo9v",
+      "3GdhC2lQD5ifjmLdQ3yoB_",
+      "3p6DR19bjD_PWb8lZMRTPc",
+      "2v8sGyGFXDsRc80mj95kV8",
+      "3p6DR19bjD_PWb8lZMRTOE",
+      "3naw$9in55$v8L5CpxnKAh",
+      "1cFRppLhj948bTrzz_Ao2N",
+      "3U8bdGexDEOw9DXBmULrD3",
+      "3GzoWuxxn4WO8bCtw8H3I4",
+      "3pFbansyD0KOHFtJHrTu9y",
+      "2dAxltRn524vY2d5KNMrvW",
+      "2dAxltRn524vY2d5KNMrWy",
+      "3pFbansyD0KOHFtJHrTuq$",
+      "1cFRppLhj948bTrzz_ApV0",
+      "1cFRppLhj948bTrzz_ApO1",
+      "1cFRppLhj948bTrzz_ApRW",
+      "1cFRppLhj948bTrzz_Apb_",
+      "1cFRppLhj948bTrzz_ApdW",
+      "1cFRppLhj948bTrzz_ApY4",
+      "2dAxltRn524vY2d5KNMrzR",
+      "1KMtYLyv9CyfGv8UjnMBCH",
+      "1q9pLykVT2tOtz_4XjbvWj",
+      "0ducQKkW5EGQM9rQ5zdPiu",
+      "1cFRppLhj948bTrzz_Apug",
+      "0ducQKkW5EGQM9rQ5zdPDs",
+      "0ducQKkW5EGQM9rQ5zdPJh",
+      "1KMtYLyv9CyfGv8UjnM8_h",
+      "0ducQKkW5EGQM9rQ5zdM1i",
+      "0ducQKkW5EGQM9rQ5zdM0J",
+      "1KMtYLyv9CyfGv8UjnM8y$"
+    ]
+  },
+  {
+    "id": "AP_SK_022",
+    "type": "wall",
+    "storey": "1 - First Floor",
+    "glb": "1_first_floor.glb",
+    "target_guid": "0MOEoDTm9EnO9yKsXjjk39",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "Please inspect the junction on First Floor where the wall meets the wall.",
+    "site_img": "assets/dataset/AP_SK_022_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 290
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 100
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "0qKJYWbnv5I8o6vyLfHjRu",
+      "0qKJYWbnv5I8o6vyLfHiZW",
+      "28WUkjJ1r5wPzZDX9W1iEk",
+      "0MgESf4zL2juYwctbhVsl5",
+      "1KMtYLyv9CyfGv8UjnMBSD",
+      "1KMtYLyv9CyfGv8UjnMBSG",
+      "2sG0Vcmgb1Uverjtj49zb3",
+      "2sG0Vcmgb1Uverjtj49YtX",
+      "0MOEoDTm9EnO9yKsXjjlBg",
+      "0MgESf4zL2juYwctbhVsxF",
+      "2m6FhmO0r2OgRBRP7hD2Hh",
+      "3GzoWuxxn4WO8bCtw8H3Q3",
+      "0Zs4aBjAr5AggJ3MVmSIn8",
+      "0Zs4aBjAr5AggJ3MVmSIHS",
+      "0MOEoDTm9EnO9yKsXjjk5B",
+      "0MOEoDTm9EnO9yKsXjjk26",
+      "2sG0Vcmgb1Uverjtj49YsP",
+      "1KGNuJkf5FjQZDFQ6WeExu",
+      "0MOEoDTm9EnO9yKsXjjkNr",
+      "0Zs4aBjAr5AggJ3MVmSI9v",
+      "11MreptMzBDAizZWBG8n15",
+      "0X2$ayW0v5dBNxK3e4nwfs",
+      "28WUkjJ1r5wPzZDX9W1jI_",
+      "28WUkjJ1r5wPzZDX9W1jKw",
+      "1KMtYLyv9CyfGv8UjnMBSE",
+      "2BLn4xX2vF_gM9G5wfbPQf",
+      "2BLn4xX2vF_gM9G5wfbPbw",
+      "3DRhHSTRP15ukUYu1G74Jn",
+      "3pFbansyD0KOHFtJHrTucY",
+      "0MOEoDTm9EnO9yKsXjjl4H",
+      "0Zs4aBjAr5AggJ3MVmSImG",
+      "0Zs4aBjAr5AggJ3MVmSHkB",
+      "0MOEoDTm9EnO9yKsXjjlOO",
+      "1KGNuJkf5FjQZDFQ6WeFjc",
+      "2sG0Vcmgb1Uverjtj49zPp",
+      "2sG0Vcmgb1Uverjtj49zPS",
+      "2sG0Vcmgb1Uverjtj49zSM",
+      "2sG0Vcmgb1Uverjtj49zLG",
+      "2sG0Vcmgb1Uverjtj49za9",
+      "02b4vxvtD5HBo2EeUI63Px"
+    ]
+  },
+  {
+    "id": "AP_SK_032",
+    "type": "wall",
+    "storey": "1 - First Floor",
+    "glb": "1_first_floor.glb",
+    "target_guid": "0qKJYWbnv5I8o6vyLfHi8K",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "The wall junction between the wall and the wall on First Floor needs QA review.",
+    "site_img": "assets/dataset/AP_SK_032_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 290
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 27
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 2
+      }
+    ],
+    "confusable_guids": [
+      "2BLn4xX2vF_gM9G5wfbOzp",
+      "3pFbansyD0KOHFtJHrTubo",
+      "3pFbansyD0KOHFtJHrTuw8",
+      "0MOEoDTm9EnO9yKsXjjkL6",
+      "0Pw4h9cu11p8EzOFUdpSRt",
+      "3pFbansyD0KOHFtJHrTulz",
+      "3U8bdGexDEOw9DXBmULr9k",
+      "3pFbansyD0KOHFtJHrTukr",
+      "3GzoWuxxn4WO8bCtw8H3ES",
+      "3p6DR19bjD_PWb8lZMRTs5",
+      "3naw$9in55$v8L5CpxnK7f",
+      "1KMtYLyv9CyfGv8UjnMBSI",
+      "31F6eMknj99vYl9fb0Qb7F",
+      "2V6UQJFc92sfDYeuDKgYBU",
+      "3pFbansyD0KOHFtJHrTugD",
+      "0qKJYWbnv5I8o6vyLfHiAu",
+      "3pFbansyD0KOHFtJHrTuXa",
+      "0qKJYWbnv5I8o6vyLfHgDX",
+      "2BLn4xX2vF_gM9G5wfbUn3",
+      "0qKJYWbnv5I8o6vyLfHiut",
+      "3pFbansyD0KOHFtJHrTtNs",
+      "3pFbansyD0KOHFtJHrTuY0",
+      "0fjrUmmzDB4fngo1stt34i",
+      "0fjrUmmzDB4fngo1stt38O",
+      "0HFJ4FEcn5UhECI1IyBq1W",
+      "3U8bdGexDEOw9DXBmULrUn"
+    ]
+  },
+  {
+    "id": "AP_SK_041",
+    "type": "wall",
+    "storey": "1 - First Floor",
+    "glb": "1_first_floor.glb",
+    "target_guid": "3GzoWuxxn4WO8bCtw8H3D2",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "Please inspect the junction on First Floor where the wall meets the wall.",
+    "site_img": "assets/dataset/AP_SK_041_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 290
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 100
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "0qKJYWbnv5I8o6vyLfHjRu",
+      "0qKJYWbnv5I8o6vyLfHiZW",
+      "28WUkjJ1r5wPzZDX9W1iEk",
+      "0MgESf4zL2juYwctbhVsl5",
+      "1KMtYLyv9CyfGv8UjnMBSD",
+      "1KMtYLyv9CyfGv8UjnMBSG",
+      "2sG0Vcmgb1Uverjtj49zb3",
+      "2sG0Vcmgb1Uverjtj49YtX",
+      "0MOEoDTm9EnO9yKsXjjlBg",
+      "0MgESf4zL2juYwctbhVsxF",
+      "2m6FhmO0r2OgRBRP7hD2Hh",
+      "3GzoWuxxn4WO8bCtw8H3Q3",
+      "0Zs4aBjAr5AggJ3MVmSIn8",
+      "0Zs4aBjAr5AggJ3MVmSIHS",
+      "0MOEoDTm9EnO9yKsXjjk5B",
+      "0MOEoDTm9EnO9yKsXjjk26",
+      "2sG0Vcmgb1Uverjtj49YsP",
+      "0MOEoDTm9EnO9yKsXjjk39",
+      "1KGNuJkf5FjQZDFQ6WeExu",
+      "0MOEoDTm9EnO9yKsXjjkNr",
+      "0Zs4aBjAr5AggJ3MVmSI9v",
+      "11MreptMzBDAizZWBG8n15",
+      "0X2$ayW0v5dBNxK3e4nwfs",
+      "28WUkjJ1r5wPzZDX9W1jI_",
+      "28WUkjJ1r5wPzZDX9W1jKw",
+      "1KMtYLyv9CyfGv8UjnMBSE",
+      "2BLn4xX2vF_gM9G5wfbPQf",
+      "2BLn4xX2vF_gM9G5wfbPbw",
+      "3DRhHSTRP15ukUYu1G74Jn",
+      "3pFbansyD0KOHFtJHrTucY",
+      "0MOEoDTm9EnO9yKsXjjl4H",
+      "0Zs4aBjAr5AggJ3MVmSImG",
+      "0Zs4aBjAr5AggJ3MVmSHkB",
+      "0MOEoDTm9EnO9yKsXjjlOO",
+      "1KGNuJkf5FjQZDFQ6WeFjc",
+      "2sG0Vcmgb1Uverjtj49zPp",
+      "2sG0Vcmgb1Uverjtj49zPS",
+      "2sG0Vcmgb1Uverjtj49zSM",
+      "2sG0Vcmgb1Uverjtj49zLG",
+      "2sG0Vcmgb1Uverjtj49za9"
+    ]
+  },
+  {
+    "id": "AP_SK_046",
+    "type": "wall",
+    "storey": "6 - Sixth Floor",
+    "glb": "6_sixth_floor.glb",
+    "target_guid": "0Um_J2ClP45uPRcRbJqhvg",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "Please inspect the junction on Sixth Floor where the wall meets the wall.",
+    "site_img": "assets/dataset/AP_SK_046_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 7
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 6
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "0Um_J2ClP45uPRcRbJqhce",
+      "3ktY1kg3rAwgNBX_XWRSHc",
+      "3ktY1kg3rAwgNBX_XWRSTN",
+      "3ktY1kg3rAwgNBX_XWRSMp",
+      "3ktY1kg3rAwgNBX_XWRSGL"
+    ]
+  },
+  {
+    "id": "AP_SK_047",
+    "type": "wall",
+    "storey": "6 - Sixth Floor",
+    "glb": "6_sixth_floor.glb",
+    "target_guid": "3ktY1kg3rAwgNBX_XWRSGL",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "Please inspect the junction on Sixth Floor where the wall meets the wall.",
+    "site_img": "assets/dataset/AP_SK_047_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 7
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 6
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "0Um_J2ClP45uPRcRbJqhce",
+      "3ktY1kg3rAwgNBX_XWRSHc",
+      "3ktY1kg3rAwgNBX_XWRSTN",
+      "0Um_J2ClP45uPRcRbJqhvg",
+      "3ktY1kg3rAwgNBX_XWRSMp"
+    ]
+  },
+  {
+    "id": "AP_SK_054",
+    "type": "wall",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "0cRoQU_sD5R8MkkMkeodCe",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "On Level 1, check the connection point where the wall joins the wall.",
+    "site_img": "assets/dataset/AP_SK_054_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 290
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 163
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 23
+      }
+    ],
+    "confusable_guids": [
+      "2V6UQJFc92sfDYeuDKgYAW",
+      "2BLn4xX2vF_gM9G5wfbPe3",
+      "0ducQKkW5EGQM9rQ5zdOOx",
+      "3p6DR19bjD_PWb8lZMRTI1",
+      "2BLn4xX2vF_gM9G5wfbPoz",
+      "2BLn4xX2vF_gM9G5wfbPmS",
+      "2BLn4xX2vF_gM9G5wfbU0j",
+      "3pFbansyD0KOHFtJHrTtNC",
+      "0ducQKkW5EGQM9rQ5zdOTG",
+      "2BLn4xX2vF_gM9G5wfbPnV",
+      "0ducQKkW5EGQM9rQ5zdOVk",
+      "0xKelnDbLBsf$3TAffmUEN",
+      "3pFbansyD0KOHFtJHrTt4i",
+      "3p6DR19bjD_PWb8lZMRThy",
+      "2BLn4xX2vF_gM9G5wfbU8d",
+      "1NL4ZXkFP2thNiMT9sECsi",
+      "0MOEoDTm9EnO9yKsXjjiky",
+      "2BLn4xX2vF_gM9G5wfbU7b",
+      "3pFbansyD0KOHFtJHrTtlJ",
+      "2BLn4xX2vF_gM9G5wfbUBM",
+      "3pFbansyD0KOHFtJHrTtfb",
+      "0Pw4h9cu11p8EzOFUdpSqt",
+      "3pFbansyD0KOHFtJHrTtwh",
+      "2BLn4xX2vF_gM9G5wfbPRX",
+      "2BLn4xX2vF_gM9G5wfbP1t",
+      "2BLn4xX2vF_gM9G5wfbPHV",
+      "3pFbansyD0KOHFtJHrTuWx",
+      "3pFbansyD0KOHFtJHrTugv",
+      "1k8pVOGqX51f_yJjFvAcUe",
+      "3pFbansyD0KOHFtJHrTtSF",
+      "2BLn4xX2vF_gM9G5wfbOe6",
+      "0MOEoDTm9EnO9yKsXjjie3",
+      "0qPq0uZ5vABQlKT8FAVXQn",
+      "2V6UQJFc92sfDYeuDKgYFi",
+      "0o1QfH3m18FQ$FuQf8VgeR",
+      "0o1QfH3m18FQ$FuQf8VgfX",
+      "0o1QfH3m18FQ$FuQf8Vgg3",
+      "0o1QfH3m18FQ$FuQf8VgiA",
+      "0o1QfH3m18FQ$FuQf8VgjP",
+      "0SYs3s__10NgRHjGtRj2ZW"
+    ]
+  },
+  {
+    "id": "AP_SK_056",
+    "type": "wall",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "0cRoQU_sD5R8MkkMkeodGm",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "Please inspect the junction on Level 1 where the wall meets the wall.",
+    "site_img": "assets/dataset/AP_SK_056_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 290
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 163
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 5
+      }
+    ],
+    "confusable_guids": [
+      "2V6UQJFc92sfDYeuDKgYAW",
+      "2BLn4xX2vF_gM9G5wfbPe3",
+      "0ducQKkW5EGQM9rQ5zdOOx",
+      "3p6DR19bjD_PWb8lZMRTI1",
+      "2BLn4xX2vF_gM9G5wfbPoz",
+      "2BLn4xX2vF_gM9G5wfbPmS",
+      "2BLn4xX2vF_gM9G5wfbU0j",
+      "3pFbansyD0KOHFtJHrTtNC",
+      "0ducQKkW5EGQM9rQ5zdOTG",
+      "2BLn4xX2vF_gM9G5wfbPnV",
+      "0ducQKkW5EGQM9rQ5zdOVk",
+      "0xKelnDbLBsf$3TAffmUEN",
+      "3pFbansyD0KOHFtJHrTt4i",
+      "3p6DR19bjD_PWb8lZMRThy",
+      "2BLn4xX2vF_gM9G5wfbU8d",
+      "1NL4ZXkFP2thNiMT9sECsi",
+      "0MOEoDTm9EnO9yKsXjjiky",
+      "2BLn4xX2vF_gM9G5wfbU7b",
+      "3pFbansyD0KOHFtJHrTtlJ",
+      "2BLn4xX2vF_gM9G5wfbUBM",
+      "3pFbansyD0KOHFtJHrTtfb",
+      "0Pw4h9cu11p8EzOFUdpSqt",
+      "3pFbansyD0KOHFtJHrTtwh",
+      "2BLn4xX2vF_gM9G5wfbPRX",
+      "2BLn4xX2vF_gM9G5wfbP1t",
+      "2BLn4xX2vF_gM9G5wfbPHV",
+      "3pFbansyD0KOHFtJHrTuWx",
+      "3pFbansyD0KOHFtJHrTugv",
+      "1k8pVOGqX51f_yJjFvAcUe",
+      "3pFbansyD0KOHFtJHrTtSF",
+      "2BLn4xX2vF_gM9G5wfbOe6",
+      "0MOEoDTm9EnO9yKsXjjie3",
+      "0qPq0uZ5vABQlKT8FAVXQn",
+      "2V6UQJFc92sfDYeuDKgYFi",
+      "0o1QfH3m18FQ$FuQf8VgeR",
+      "0o1QfH3m18FQ$FuQf8VgfX",
+      "0o1QfH3m18FQ$FuQf8Vgg3",
+      "0o1QfH3m18FQ$FuQf8VgiA",
+      "0o1QfH3m18FQ$FuQf8VgjP",
+      "0SYs3s__10NgRHjGtRj2ZW"
+    ]
+  },
+  {
+    "id": "AP_SK_062",
+    "type": "wall",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "1k8pVOGqX51f_yJjFvAcuQ",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "Please inspect the junction on Level 1 where the wall meets the wall.",
+    "site_img": "assets/dataset/AP_SK_062_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 290
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 163
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "2V6UQJFc92sfDYeuDKgYAW",
+      "2BLn4xX2vF_gM9G5wfbPe3",
+      "0ducQKkW5EGQM9rQ5zdOOx",
+      "3p6DR19bjD_PWb8lZMRTI1",
+      "2BLn4xX2vF_gM9G5wfbPoz",
+      "2BLn4xX2vF_gM9G5wfbPmS",
+      "2BLn4xX2vF_gM9G5wfbU0j",
+      "3pFbansyD0KOHFtJHrTtNC",
+      "0ducQKkW5EGQM9rQ5zdOTG",
+      "2BLn4xX2vF_gM9G5wfbPnV",
+      "0ducQKkW5EGQM9rQ5zdOVk",
+      "0xKelnDbLBsf$3TAffmUEN",
+      "3pFbansyD0KOHFtJHrTt4i",
+      "3p6DR19bjD_PWb8lZMRThy",
+      "2BLn4xX2vF_gM9G5wfbU8d",
+      "1NL4ZXkFP2thNiMT9sECsi",
+      "0MOEoDTm9EnO9yKsXjjiky",
+      "2BLn4xX2vF_gM9G5wfbU7b",
+      "3pFbansyD0KOHFtJHrTtlJ",
+      "2BLn4xX2vF_gM9G5wfbUBM",
+      "3pFbansyD0KOHFtJHrTtfb",
+      "0Pw4h9cu11p8EzOFUdpSqt",
+      "3pFbansyD0KOHFtJHrTtwh",
+      "2BLn4xX2vF_gM9G5wfbPRX",
+      "2BLn4xX2vF_gM9G5wfbP1t",
+      "2BLn4xX2vF_gM9G5wfbPHV",
+      "3pFbansyD0KOHFtJHrTuWx",
+      "3pFbansyD0KOHFtJHrTugv",
+      "1k8pVOGqX51f_yJjFvAcUe",
+      "3pFbansyD0KOHFtJHrTtSF",
+      "2BLn4xX2vF_gM9G5wfbOe6",
+      "0MOEoDTm9EnO9yKsXjjie3",
+      "0qPq0uZ5vABQlKT8FAVXQn",
+      "2V6UQJFc92sfDYeuDKgYFi",
+      "0o1QfH3m18FQ$FuQf8VgeR",
+      "0o1QfH3m18FQ$FuQf8VgfX",
+      "0o1QfH3m18FQ$FuQf8Vgg3",
+      "0o1QfH3m18FQ$FuQf8VgiA",
+      "0o1QfH3m18FQ$FuQf8VgjP",
+      "0SYs3s__10NgRHjGtRj2ZW"
+    ]
+  },
+  {
+    "id": "AP_SK_066",
+    "type": "wall",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "2V6UQJFc92sfDYeuDKgYAW",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "On Level 1, check the connection point where the wall joins the wall.",
+    "site_img": "assets/dataset/AP_SK_066_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 290
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 163
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "2BLn4xX2vF_gM9G5wfbPe3",
+      "0ducQKkW5EGQM9rQ5zdOOx",
+      "3p6DR19bjD_PWb8lZMRTI1",
+      "2BLn4xX2vF_gM9G5wfbPoz",
+      "2BLn4xX2vF_gM9G5wfbPmS",
+      "2BLn4xX2vF_gM9G5wfbU0j",
+      "3pFbansyD0KOHFtJHrTtNC",
+      "0ducQKkW5EGQM9rQ5zdOTG",
+      "2BLn4xX2vF_gM9G5wfbPnV",
+      "0ducQKkW5EGQM9rQ5zdOVk",
+      "0xKelnDbLBsf$3TAffmUEN",
+      "3pFbansyD0KOHFtJHrTt4i",
+      "3p6DR19bjD_PWb8lZMRThy",
+      "2BLn4xX2vF_gM9G5wfbU8d",
+      "1NL4ZXkFP2thNiMT9sECsi",
+      "0MOEoDTm9EnO9yKsXjjiky",
+      "2BLn4xX2vF_gM9G5wfbU7b",
+      "3pFbansyD0KOHFtJHrTtlJ",
+      "2BLn4xX2vF_gM9G5wfbUBM",
+      "3pFbansyD0KOHFtJHrTtfb",
+      "0Pw4h9cu11p8EzOFUdpSqt",
+      "3pFbansyD0KOHFtJHrTtwh",
+      "2BLn4xX2vF_gM9G5wfbPRX",
+      "2BLn4xX2vF_gM9G5wfbP1t",
+      "2BLn4xX2vF_gM9G5wfbPHV",
+      "3pFbansyD0KOHFtJHrTuWx",
+      "3pFbansyD0KOHFtJHrTugv",
+      "1k8pVOGqX51f_yJjFvAcUe",
+      "3pFbansyD0KOHFtJHrTtSF",
+      "2BLn4xX2vF_gM9G5wfbOe6",
+      "0MOEoDTm9EnO9yKsXjjie3",
+      "0qPq0uZ5vABQlKT8FAVXQn",
+      "2V6UQJFc92sfDYeuDKgYFi",
+      "0o1QfH3m18FQ$FuQf8VgeR",
+      "0o1QfH3m18FQ$FuQf8VgfX",
+      "0o1QfH3m18FQ$FuQf8Vgg3",
+      "0o1QfH3m18FQ$FuQf8VgiA",
+      "0o1QfH3m18FQ$FuQf8VgjP",
+      "0SYs3s__10NgRHjGtRj2ZW",
+      "0SYs3s__10NgRHjGtRj2ZO"
+    ]
+  },
+  {
+    "id": "AP_SK_071",
+    "type": "wall",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "3pFbansyD0KOHFtJHrTucY",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "Please inspect the junction on Level 1 where the wall meets the wall.",
+    "site_img": "assets/dataset/AP_SK_071_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 290
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 100
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "0qKJYWbnv5I8o6vyLfHjRu",
+      "0qKJYWbnv5I8o6vyLfHiZW",
+      "28WUkjJ1r5wPzZDX9W1iEk",
+      "0MgESf4zL2juYwctbhVsl5",
+      "1KMtYLyv9CyfGv8UjnMBSD",
+      "1KMtYLyv9CyfGv8UjnMBSG",
+      "2sG0Vcmgb1Uverjtj49zb3",
+      "2sG0Vcmgb1Uverjtj49YtX",
+      "0MOEoDTm9EnO9yKsXjjlBg",
+      "0MgESf4zL2juYwctbhVsxF",
+      "2m6FhmO0r2OgRBRP7hD2Hh",
+      "3GzoWuxxn4WO8bCtw8H3Q3",
+      "0Zs4aBjAr5AggJ3MVmSIn8",
+      "0Zs4aBjAr5AggJ3MVmSIHS",
+      "0MOEoDTm9EnO9yKsXjjk5B",
+      "0MOEoDTm9EnO9yKsXjjk26",
+      "2sG0Vcmgb1Uverjtj49YsP",
+      "0MOEoDTm9EnO9yKsXjjk39",
+      "1KGNuJkf5FjQZDFQ6WeExu",
+      "0MOEoDTm9EnO9yKsXjjkNr",
+      "0Zs4aBjAr5AggJ3MVmSI9v",
+      "11MreptMzBDAizZWBG8n15",
+      "0X2$ayW0v5dBNxK3e4nwfs",
+      "28WUkjJ1r5wPzZDX9W1jI_",
+      "28WUkjJ1r5wPzZDX9W1jKw",
+      "1KMtYLyv9CyfGv8UjnMBSE",
+      "2BLn4xX2vF_gM9G5wfbPQf",
+      "2BLn4xX2vF_gM9G5wfbPbw",
+      "3DRhHSTRP15ukUYu1G74Jn",
+      "0MOEoDTm9EnO9yKsXjjl4H",
+      "0Zs4aBjAr5AggJ3MVmSImG",
+      "0Zs4aBjAr5AggJ3MVmSHkB",
+      "0MOEoDTm9EnO9yKsXjjlOO",
+      "1KGNuJkf5FjQZDFQ6WeFjc",
+      "2sG0Vcmgb1Uverjtj49zPp",
+      "2sG0Vcmgb1Uverjtj49zPS",
+      "2sG0Vcmgb1Uverjtj49zSM",
+      "2sG0Vcmgb1Uverjtj49zLG",
+      "2sG0Vcmgb1Uverjtj49za9",
+      "02b4vxvtD5HBo2EeUI63Px"
+    ]
+  },
+  {
+    "id": "AP_SK_088",
+    "type": "other",
+    "storey": "1 - First Floor",
+    "glb": "1_first_floor.glb",
+    "target_guid": "3GzoWuxxn4WO8bCtw8H3UC",
+    "ifc_class": "Door",
+    "query": "The door in the wall opening on First Floor needs QA review.",
+    "site_img": "assets/dataset/AP_SK_088_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 78
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 1
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": []
+  },
+  {
+    "id": "AP_SK_091",
+    "type": "filler",
+    "storey": "1 - First Floor",
+    "glb": "1_first_floor.glb",
+    "target_guid": "1KMtYLyv9CyfGv8UjnMB3e",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on First Floor installed in the wall opening.",
+    "site_img": "assets/dataset/AP_SK_091_site.jpg",
+    "gt_slot": [
+      2,
+      10
+    ],
+    "pred_slot": [
+      7,
+      10
+    ],
+    "conf_raw": 0.31,
+    "conf_cal": 0.06,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "0fjrUmmzDB4fngo1stt3cw",
+      "0pHBx4qSPCfPLZRKuUIKNz",
+      "1KMtYLyv9CyfGv8UjnMB3Y",
+      "1KMtYLyv9CyfGv8UjnMB33",
+      "1KMtYLyv9CyfGv8UjnMB3X",
+      "1KMtYLyv9CyfGv8UjnMB3l",
+      "1KMtYLyv9CyfGv8UjnMB31",
+      "1KMtYLyv9CyfGv8UjnMB3i",
+      "1KMtYLyv9CyfGv8UjnMB3Z",
+      "1KMtYLyv9CyfGv8UjnMB3y",
+      "1KMtYLyv9CyfGv8UjnMB3W",
+      "1KMtYLyv9CyfGv8UjnMB3u",
+      "0HFJ4FEcn5UhECI1IyBBLe",
+      "0pHBx4qSPCfPLZRKuUIKG1",
+      "1KMtYLyv9CyfGv8UjnMB3z",
+      "1KMtYLyv9CyfGv8UjnMB3v",
+      "1KMtYLyv9CyfGv8UjnMB32",
+      "1gdfXOIAf8ZBJUgAp$8e1o",
+      "0pHBx4qSPCfPLZRKuUIKhq",
+      "0pHBx4qSPCfPLZRKuUIKPy",
+      "1KMtYLyv9CyfGv8UjnMB3$",
+      "1KMtYLyv9CyfGv8UjnMBSM",
+      "0pHBx4qSPCfPLZRKuUIKOJ",
+      "1KMtYLyv9CyfGv8UjnMB3p",
+      "1KMtYLyv9CyfGv8UjnMBSL",
+      "0pHBx4qSPCfPLZRKuUIKRO",
+      "1KMtYLyv9CyfGv8UjnMB3n",
+      "1KMtYLyv9CyfGv8UjnMBSN",
+      "0pHBx4qSPCfPLZRKuUIKQ9",
+      "1KMtYLyv9CyfGv8UjnMB3o",
+      "1KMtYLyv9CyfGv8UjnMB3d",
+      "0pHBx4qSPCfPLZRKuUIKTa",
+      "1KMtYLyv9CyfGv8UjnMB3m",
+      "1KMtYLyv9CyfGv8UjnMBSK",
+      "1KMtYLyv9CyfGv8UjnMB3x",
+      "0HFJ4FEcn5UhECI1IyBAm7",
+      "1KMtYLyv9CyfGv8UjnMBSR",
+      "1KMtYLyv9CyfGv8UjnMBSQ",
+      "1KMtYLyv9CyfGv8UjnMBSP",
+      "1KMtYLyv9CyfGv8UjnMBSO"
+    ]
+  },
+  {
+    "id": "AP_SK_092",
+    "type": "filler",
+    "storey": "1 - First Floor",
+    "glb": "1_first_floor.glb",
+    "target_guid": "1KMtYLyv9CyfGv8UjnMB3m",
+    "ifc_class": "Window",
+    "query": "On First Floor, check the window set into the wall opening at this location.",
+    "site_img": "assets/dataset/AP_SK_092_site.jpg",
+    "gt_slot": [
+      8,
+      10
+    ],
+    "pred_slot": [
+      1,
+      10
+    ],
+    "conf_raw": 0.29,
+    "conf_cal": 0.05,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "0fjrUmmzDB4fngo1stt3cw",
+      "0pHBx4qSPCfPLZRKuUIKNz",
+      "1KMtYLyv9CyfGv8UjnMB3Y",
+      "1KMtYLyv9CyfGv8UjnMB33",
+      "1KMtYLyv9CyfGv8UjnMB3X",
+      "1KMtYLyv9CyfGv8UjnMB3l",
+      "1KMtYLyv9CyfGv8UjnMB31",
+      "1KMtYLyv9CyfGv8UjnMB3i",
+      "1KMtYLyv9CyfGv8UjnMB3Z",
+      "1KMtYLyv9CyfGv8UjnMB3y",
+      "1KMtYLyv9CyfGv8UjnMB3W",
+      "1KMtYLyv9CyfGv8UjnMB3u",
+      "0HFJ4FEcn5UhECI1IyBBLe",
+      "1KMtYLyv9CyfGv8UjnMB3e",
+      "0pHBx4qSPCfPLZRKuUIKG1",
+      "1KMtYLyv9CyfGv8UjnMB3z",
+      "1KMtYLyv9CyfGv8UjnMB3v",
+      "1KMtYLyv9CyfGv8UjnMB32",
+      "1gdfXOIAf8ZBJUgAp$8e1o",
+      "0pHBx4qSPCfPLZRKuUIKhq",
+      "0pHBx4qSPCfPLZRKuUIKPy",
+      "1KMtYLyv9CyfGv8UjnMB3$",
+      "1KMtYLyv9CyfGv8UjnMBSM",
+      "0pHBx4qSPCfPLZRKuUIKOJ",
+      "1KMtYLyv9CyfGv8UjnMB3p",
+      "1KMtYLyv9CyfGv8UjnMBSL",
+      "0pHBx4qSPCfPLZRKuUIKRO",
+      "1KMtYLyv9CyfGv8UjnMB3n",
+      "1KMtYLyv9CyfGv8UjnMBSN",
+      "0pHBx4qSPCfPLZRKuUIKQ9",
+      "1KMtYLyv9CyfGv8UjnMB3o",
+      "1KMtYLyv9CyfGv8UjnMB3d",
+      "0pHBx4qSPCfPLZRKuUIKTa",
+      "1KMtYLyv9CyfGv8UjnMBSK",
+      "1KMtYLyv9CyfGv8UjnMB3x",
+      "0HFJ4FEcn5UhECI1IyBAm7",
+      "1KMtYLyv9CyfGv8UjnMBSR",
+      "1KMtYLyv9CyfGv8UjnMBSQ",
+      "1KMtYLyv9CyfGv8UjnMBSP",
+      "1KMtYLyv9CyfGv8UjnMBSO"
+    ]
+  },
+  {
+    "id": "AP_SK_137",
+    "type": "filler",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "0xyFL4ySP5TexORi78qEKF",
+    "ifc_class": "Window",
+    "query": "On Level 1, check the window set into the wall opening at this location.",
+    "site_img": "assets/dataset/AP_SK_137_site.jpg",
+    "gt_slot": [
+      10,
+      14
+    ],
+    "pred_slot": [
+      11,
+      15
+    ],
+    "conf_raw": 0.46,
+    "conf_cal": 0.37,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 30
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "1gdfXOIAf8ZBJUgAp$8ewJ",
+      "0HFJ4FEcn5UhECI1IyBqQx",
+      "0HFJ4FEcn5UhECI1IyBq6E",
+      "0HFJ4FEcn5UhECI1IyBq3s",
+      "0HFJ4FEcn5UhECI1IyBqD7",
+      "0HFJ4FEcn5UhECI1IyBBqj",
+      "0HFJ4FEcn5UhECI1IyBBr8",
+      "0HFJ4FEcn5UhECI1IyBBz0",
+      "0HFJ4FEcn5UhECI1IyBBv9",
+      "0HFJ4FEcn5UhECI1IyBBbs",
+      "0HFJ4FEcn5UhECI1IyBBWG",
+      "0HFJ4FEcn5UhECI1IyBBXX",
+      "3pFbansyD0KOHFtJHrTsUB",
+      "3pFbansyD0KOHFtJHrTsSA",
+      "3pFbansyD0KOHFtJHrTt$5",
+      "2BLn4xX2vF_gM9G5wfbPLu",
+      "2BLn4xX2vF_gM9G5wfbPWX",
+      "2BLn4xX2vF_gM9G5wfbVb4",
+      "2BLn4xX2vF_gM9G5wfbVaT",
+      "0ducQKkW5EGQM9rQ5zdOXl",
+      "0xyFL4ySP5TexORi78qDG5",
+      "0xyFL4ySP5TexORi78qDIC",
+      "0xyFL4ySP5TexORi78qDB1",
+      "0xyFL4ySP5TexORi78qDYL",
+      "0xyFL4ySP5TexORi78qEFc",
+      "1ebX2H7F12su$wtPbeYBaq",
+      "1ebX2H7F12su$wtPbeYAP4",
+      "1ebX2H7F12su$wtPbeYATe",
+      "1ebX2H7F12su$wtPbeYAIT"
+    ]
+  },
+  {
+    "id": "AP_SK_158",
+    "type": "filler",
+    "storey": "1 - First Floor",
+    "glb": "1_first_floor.glb",
+    "target_guid": "1gdfXOIAf8ZBJUgAp$8e1o",
+    "ifc_class": "Window",
+    "query": "Please inspect the window on First Floor right next to the window on the same wall.",
+    "site_img": "assets/dataset/AP_SK_158_site.jpg",
+    "gt_slot": [
+      3,
+      10
+    ],
+    "pred_slot": [
+      6,
+      10
+    ],
+    "conf_raw": 0.31,
+    "conf_cal": 0.06,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 46
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "1KMtYLyv9CyfGv8UjnMB31",
+      "1KMtYLyv9CyfGv8UjnMB3i",
+      "1KMtYLyv9CyfGv8UjnMB3Z",
+      "1KMtYLyv9CyfGv8UjnMB3y",
+      "1KMtYLyv9CyfGv8UjnMB3u",
+      "0HFJ4FEcn5UhECI1IyBBLe",
+      "1KMtYLyv9CyfGv8UjnMB3e",
+      "0pHBx4qSPCfPLZRKuUIKG1",
+      "1KMtYLyv9CyfGv8UjnMB3v",
+      "0pHBx4qSPCfPLZRKuUIKhq",
+      "0pHBx4qSPCfPLZRKuUIKPy",
+      "1KMtYLyv9CyfGv8UjnMB3$",
+      "1KMtYLyv9CyfGv8UjnMBSM",
+      "0pHBx4qSPCfPLZRKuUIKOJ",
+      "1KMtYLyv9CyfGv8UjnMB3p",
+      "1KMtYLyv9CyfGv8UjnMBSL",
+      "0pHBx4qSPCfPLZRKuUIKRO",
+      "1KMtYLyv9CyfGv8UjnMB3n",
+      "1KMtYLyv9CyfGv8UjnMBSN",
+      "0pHBx4qSPCfPLZRKuUIKQ9",
+      "1KMtYLyv9CyfGv8UjnMB3o",
+      "1KMtYLyv9CyfGv8UjnMB3d",
+      "0pHBx4qSPCfPLZRKuUIKTa",
+      "1KMtYLyv9CyfGv8UjnMB3m",
+      "1KMtYLyv9CyfGv8UjnMBSK",
+      "1KMtYLyv9CyfGv8UjnMBSR",
+      "1KMtYLyv9CyfGv8UjnMBSQ",
+      "1KMtYLyv9CyfGv8UjnMBSP",
+      "1KMtYLyv9CyfGv8UjnMBSO",
+      "1KMtYLyv9CyfGv8UjnMBSV",
+      "1KMtYLyv9CyfGv8UjnMBSU",
+      "1KMtYLyv9CyfGv8UjnMB3b",
+      "2Bm1R3arDAW8kJznnV4FrS",
+      "0HFJ4FEcn5UhECI1IyBAm7",
+      "0fjrUmmzDB4fngo1stt3cw",
+      "0pHBx4qSPCfPLZRKuUIKNz",
+      "1KMtYLyv9CyfGv8UjnMB32",
+      "1KMtYLyv9CyfGv8UjnMB33",
+      "1KMtYLyv9CyfGv8UjnMB3z",
+      "1KMtYLyv9CyfGv8UjnMB3x"
+    ]
+  },
+  {
+    "id": "AP_SK_217",
+    "type": "filler",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "0ducQKkW5EGQM9rQ5zdOcN",
+    "ifc_class": "Door",
+    "query": "Please inspect the door on Level 1 right next to the window on the same wall.",
+    "site_img": "assets/dataset/AP_SK_217_site.jpg",
+    "gt_slot": [
+      13,
+      14
+    ],
+    "pred_slot": [
+      14,
+      15
+    ],
+    "conf_raw": 0.46,
+    "conf_cal": 0.37,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 78
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 36
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "2fypDDb212M80XzLYYLlIb",
+      "0Pw4h9cu11p8EzOFUdpTBE",
+      "0xKelnDbLBsf$3TAffmUXs",
+      "2fypDDb212M80XzLYYLlJg",
+      "0xKelnDbLBsf$3TAffmU$u",
+      "3p6DR19bjD_PWb8lZMRTlD",
+      "0HFJ4FEcn5UhECI1IyBq0G",
+      "0Pw4h9cu11p8EzOFUdpSlP",
+      "0xyFL4ySP5TexORi78qE5c",
+      "1_jeQ1u6XFwed$AhVCoJi$",
+      "0HFJ4FEcn5UhECI1IyBq10",
+      "3pFbansyD0KOHFtJHrTtfJ",
+      "3pFbansyD0KOHFtJHrTteh",
+      "3pFbansyD0KOHFtJHrTtde",
+      "3pFbansyD0KOHFtJHrTtwA",
+      "3pFbansyD0KOHFtJHrTtDE",
+      "3pFbansyD0KOHFtJHrTt4G",
+      "3pFbansyD0KOHFtJHrTtO7",
+      "3pFbansyD0KOHFtJHrTuhb",
+      "3pFbansyD0KOHFtJHrTulG",
+      "3pFbansyD0KOHFtJHrTuxk",
+      "34Ni6yH0HDjQqrjEsXbUMJ",
+      "2BLn4xX2vF_gM9G5wfbOeO",
+      "2BLn4xX2vF_gM9G5wfbP36",
+      "2BLn4xX2vF_gM9G5wfbP3_",
+      "2BLn4xX2vF_gM9G5wfbP7V",
+      "2BLn4xX2vF_gM9G5wfbPB_",
+      "2BLn4xX2vF_gM9G5wfbPR8",
+      "2BLn4xX2vF_gM9G5wfbPd3",
+      "2BLn4xX2vF_gM9G5wfbPhn",
+      "2BLn4xX2vF_gM9G5wfbPiL",
+      "2BLn4xX2vF_gM9G5wfbPwA",
+      "2BLn4xX2vF_gM9G5wfbU5X",
+      "2BLn4xX2vF_gM9G5wfbU4T",
+      "3p6DR19bjD_PWb8lZMRTIN"
+    ]
+  },
+  {
+    "id": "AP_SK_228",
+    "type": "filler",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "0ducQKkW5EGQM9rQ5zdOXl",
+    "ifc_class": "Window",
+    "query": "On Level 1, check the window beside the door along this wall run.",
+    "site_img": "assets/dataset/AP_SK_228_site.jpg",
+    "gt_slot": [
+      12,
+      14
+    ],
+    "pred_slot": [
+      13,
+      15
+    ],
+    "conf_raw": 0.46,
+    "conf_cal": 0.37,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 76
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 30
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "1ebX2H7F12su$wtPbeYAP4",
+      "1ebX2H7F12su$wtPbeYAIT",
+      "0xyFL4ySP5TexORi78qDB1",
+      "0xyFL4ySP5TexORi78qDYL",
+      "1ebX2H7F12su$wtPbeYATe",
+      "0HFJ4FEcn5UhECI1IyBBbs",
+      "3pFbansyD0KOHFtJHrTt$5",
+      "0HFJ4FEcn5UhECI1IyBBqj",
+      "0HFJ4FEcn5UhECI1IyBBv9",
+      "0xyFL4ySP5TexORi78qEFc",
+      "0HFJ4FEcn5UhECI1IyBq6E",
+      "0HFJ4FEcn5UhECI1IyBBr8",
+      "0xyFL4ySP5TexORi78qEKF",
+      "1gdfXOIAf8ZBJUgAp$8ewJ",
+      "0HFJ4FEcn5UhECI1IyBqQx",
+      "0HFJ4FEcn5UhECI1IyBq3s",
+      "0HFJ4FEcn5UhECI1IyBqD7",
+      "0HFJ4FEcn5UhECI1IyBBz0",
+      "0HFJ4FEcn5UhECI1IyBBWG",
+      "0HFJ4FEcn5UhECI1IyBBXX",
+      "3pFbansyD0KOHFtJHrTsUB",
+      "3pFbansyD0KOHFtJHrTsSA",
+      "2BLn4xX2vF_gM9G5wfbPLu",
+      "2BLn4xX2vF_gM9G5wfbPWX",
+      "2BLn4xX2vF_gM9G5wfbVb4",
+      "2BLn4xX2vF_gM9G5wfbVaT",
+      "0xyFL4ySP5TexORi78qDG5",
+      "0xyFL4ySP5TexORi78qDIC",
+      "1ebX2H7F12su$wtPbeYBaq"
+    ]
+  },
+  {
+    "id": "AP_SK_250",
+    "type": "wall",
+    "storey": "1 - First Floor",
+    "glb": "1_first_floor.glb",
+    "target_guid": "1KGNuJkf5FjQZDFQ6WeExu",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "On First Floor, check the wall beside the door at this location.",
+    "site_img": "assets/dataset/AP_SK_250_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 290
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 63
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 3
+      }
+    ],
+    "confusable_guids": [
+      "2sG0Vcmgb1Uverjtj49YsP",
+      "0MOEoDTm9EnO9yKsXjjkNr",
+      "0MOEoDTm9EnO9yKsXjjlBg",
+      "11MreptMzBDAizZWBG8n15",
+      "0MOEoDTm9EnO9yKsXjjk26",
+      "0X2$ayW0v5dBNxK3e4nwfs",
+      "1KGNuJkf5FjQZDFQ6WeFjc",
+      "2sG0Vcmgb1Uverjtj49YtX",
+      "2sG0Vcmgb1Uverjtj49zSM",
+      "2sG0Vcmgb1Uverjtj49zLG",
+      "02b4vxvtD5HBo2EeUI63Px",
+      "0X2$ayW0v5dBNxK3e4nwvt",
+      "0Zs4aBjAr5AggJ3MVmSIHS",
+      "0Zs4aBjAr5AggJ3MVmSIRv",
+      "3DRhHSTRP15ukUYu1G74Jn",
+      "0MOEoDTm9EnO9yKsXjjkTj",
+      "2sG0Vcmgb1Uverjtj49zb3",
+      "2sG0Vcmgb1Uverjtj49za9",
+      "1KGNuJkf5FjQZDFQ6WeElF",
+      "0Zs4aBjAr5AggJ3MVmSIoU",
+      "0Zs4aBjAr5AggJ3MVmSIn8",
+      "0Zs4aBjAr5AggJ3MVmSImG",
+      "11MreptMzBDAizZWBG8nhd",
+      "0Zs4aBjAr5AggJ3MVmSIAn",
+      "0Zs4aBjAr5AggJ3MVmSI9v",
+      "3GzoWuxxn4WO8bCtw8H3N2",
+      "3GzoWuxxn4WO8bCtw8H3Gv",
+      "3GzoWuxxn4WO8bCtw8H3Hp",
+      "3GzoWuxxn4WO8bCtw8H3Hm",
+      "3GzoWuxxn4WO8bCtw8H3Gq",
+      "3GzoWuxxn4WO8bCtw8H3Gd",
+      "3GzoWuxxn4WO8bCtw8H3D2",
+      "3GzoWuxxn4WO8bCtw8H3ES",
+      "2m6FhmO0r2OgRBRP7hD41n",
+      "2m6FhmO0r2OgRBRP7hD47b",
+      "2m6FhmO0r2OgRBRP7hD4wq",
+      "2m6FhmO0r2OgRBRP7hD2Hh",
+      "3GzoWuxxn4WO8bCtw8H3fu",
+      "2m6FhmO0r2OgRBRP7hD4GE",
+      "2m6FhmO0r2OgRBRP7hD4vi"
+    ]
+  },
+  {
+    "id": "AP_SK_260",
+    "type": "wall",
+    "storey": "-1 - Garage",
+    "glb": "1_garage.glb",
+    "target_guid": "0ducQKkW5EGQM9rQ5zdP1J",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "Please inspect the wall on Garage next to the door.",
+    "site_img": "assets/dataset/AP_SK_260_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 84
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 48
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 3
+      }
+    ],
+    "confusable_guids": [
+      "1KMtYLyv9CyfGv8UjnM8_h",
+      "1KMtYLyv9CyfGv8UjnM8y$",
+      "1cFRppLhj948bTrzz_An4w",
+      "1cFRppLhj948bTrzz_AoiZ",
+      "1KMtYLyv9CyfGv8UjnMBCL",
+      "1KMtYLyv9CyfGv8UjnMBCG",
+      "0ducQKkW5EGQM9rQ5zdPiu",
+      "1cFRppLhj948bTrzz_Apug",
+      "3GdhC2lQD5ifjmLdQ3ype4",
+      "3p6DR19bjD_PWb8lZMRTML",
+      "3GzoWuxxn4WO8bCtw8H3I4",
+      "0ducQKkW5EGQM9rQ5zdPMt",
+      "1cFRppLhj948bTrzz_ApdW",
+      "1cFRppLhj948bTrzz_Apqc",
+      "1cFRppLhj948bTrzz_Apb_",
+      "1cFRppLhj948bTrzz_ApY4",
+      "1cFRppLhj948bTrzz_ApRW",
+      "0ducQKkW5EGQM9rQ5zdM0J",
+      "0ducQKkW5EGQM9rQ5zdM1i",
+      "0ducQKkW5EGQM9rQ5zdP_b",
+      "0ducQKkW5EGQM9rQ5zdP$n",
+      "0ducQKkW5EGQM9rQ5zdPSm",
+      "1cFRppLhj948bTrzz_ApO1",
+      "1cFRppLhj948bTrzz_ApBx",
+      "1q9pLykVT2tOtz_4Xjbucy",
+      "1q9pLykVT2tOtz_4Xjbudy",
+      "1q9pLykVT2tOtz_4XjbuaX",
+      "1q9pLykVT2tOtz_4XjbuzE",
+      "1q9pLykVT2tOtz_4XjbuwS",
+      "1cFRppLhj948bTrzz_ApAd",
+      "1q9pLykVT2tOtz_4XjbueK",
+      "0ducQKkW5EGQM9rQ5zdPJh",
+      "0ducQKkW5EGQM9rQ5zdPDs",
+      "0ducQKkW5EGQM9rQ5zdPEJ",
+      "3GdhC2lQD5ifjmLdQ3yoT7",
+      "0ducQKkW5EGQM9rQ5zdP9Z",
+      "3pFbansyD0KOHFtJHrTuoC",
+      "0ducQKkW5EGQM9rQ5zdOtF",
+      "3GdhC2lQD5ifjmLdQ3yoB_",
+      "3p6DR19bjD_PWb8lZMRTPc"
+    ]
+  },
+  {
+    "id": "AP_SK_264",
+    "type": "wall",
+    "storey": "-1 - Garage",
+    "glb": "1_garage.glb",
+    "target_guid": "1cFRppLhj948bTrzz_ApY4",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "On Garage, check the wall beside the door at this location.",
+    "site_img": "assets/dataset/AP_SK_264_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 84
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 48
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 10
+      }
+    ],
+    "confusable_guids": [
+      "1KMtYLyv9CyfGv8UjnM8_h",
+      "1KMtYLyv9CyfGv8UjnM8y$",
+      "1cFRppLhj948bTrzz_An4w",
+      "1cFRppLhj948bTrzz_AoiZ",
+      "1KMtYLyv9CyfGv8UjnMBCL",
+      "1KMtYLyv9CyfGv8UjnMBCG",
+      "0ducQKkW5EGQM9rQ5zdPiu",
+      "1cFRppLhj948bTrzz_Apug",
+      "3GdhC2lQD5ifjmLdQ3ype4",
+      "3p6DR19bjD_PWb8lZMRTML",
+      "3GzoWuxxn4WO8bCtw8H3I4",
+      "0ducQKkW5EGQM9rQ5zdPMt",
+      "1cFRppLhj948bTrzz_ApdW",
+      "1cFRppLhj948bTrzz_Apqc",
+      "1cFRppLhj948bTrzz_Apb_",
+      "1cFRppLhj948bTrzz_ApRW",
+      "0ducQKkW5EGQM9rQ5zdM0J",
+      "0ducQKkW5EGQM9rQ5zdM1i",
+      "0ducQKkW5EGQM9rQ5zdP_b",
+      "0ducQKkW5EGQM9rQ5zdP$n",
+      "0ducQKkW5EGQM9rQ5zdPSm",
+      "1cFRppLhj948bTrzz_ApO1",
+      "1cFRppLhj948bTrzz_ApBx",
+      "1q9pLykVT2tOtz_4Xjbucy",
+      "1q9pLykVT2tOtz_4Xjbudy",
+      "1q9pLykVT2tOtz_4XjbuaX",
+      "1q9pLykVT2tOtz_4XjbuzE",
+      "1q9pLykVT2tOtz_4XjbuwS",
+      "1cFRppLhj948bTrzz_ApAd",
+      "1q9pLykVT2tOtz_4XjbueK",
+      "0ducQKkW5EGQM9rQ5zdPJh",
+      "0ducQKkW5EGQM9rQ5zdPDs",
+      "0ducQKkW5EGQM9rQ5zdPEJ",
+      "3GdhC2lQD5ifjmLdQ3yoT7",
+      "0ducQKkW5EGQM9rQ5zdP1J",
+      "0ducQKkW5EGQM9rQ5zdP9Z",
+      "3pFbansyD0KOHFtJHrTuoC",
+      "0ducQKkW5EGQM9rQ5zdOtF",
+      "3GdhC2lQD5ifjmLdQ3yoB_",
+      "3p6DR19bjD_PWb8lZMRTPc"
+    ]
+  },
+  {
+    "id": "AP_SK_268",
+    "type": "wall",
+    "storey": "-1 - Garage",
+    "glb": "1_garage.glb",
+    "target_guid": "1cFRppLhj948bTrzz_ApBx",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "On Garage, check the wall beside the door at this location.",
+    "site_img": "assets/dataset/AP_SK_268_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 84
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 48
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 9
+      }
+    ],
+    "confusable_guids": [
+      "1KMtYLyv9CyfGv8UjnM8_h",
+      "1KMtYLyv9CyfGv8UjnM8y$",
+      "1cFRppLhj948bTrzz_An4w",
+      "1cFRppLhj948bTrzz_AoiZ",
+      "1KMtYLyv9CyfGv8UjnMBCL",
+      "1KMtYLyv9CyfGv8UjnMBCG",
+      "0ducQKkW5EGQM9rQ5zdPiu",
+      "1cFRppLhj948bTrzz_Apug",
+      "3GdhC2lQD5ifjmLdQ3ype4",
+      "3p6DR19bjD_PWb8lZMRTML",
+      "3GzoWuxxn4WO8bCtw8H3I4",
+      "0ducQKkW5EGQM9rQ5zdPMt",
+      "1cFRppLhj948bTrzz_ApdW",
+      "1cFRppLhj948bTrzz_Apqc",
+      "1cFRppLhj948bTrzz_Apb_",
+      "1cFRppLhj948bTrzz_ApY4",
+      "1cFRppLhj948bTrzz_ApRW",
+      "0ducQKkW5EGQM9rQ5zdM0J",
+      "0ducQKkW5EGQM9rQ5zdM1i",
+      "0ducQKkW5EGQM9rQ5zdP_b",
+      "0ducQKkW5EGQM9rQ5zdP$n",
+      "0ducQKkW5EGQM9rQ5zdPSm",
+      "1cFRppLhj948bTrzz_ApO1",
+      "1q9pLykVT2tOtz_4Xjbucy",
+      "1q9pLykVT2tOtz_4Xjbudy",
+      "1q9pLykVT2tOtz_4XjbuaX",
+      "1q9pLykVT2tOtz_4XjbuzE",
+      "1q9pLykVT2tOtz_4XjbuwS",
+      "1cFRppLhj948bTrzz_ApAd",
+      "1q9pLykVT2tOtz_4XjbueK",
+      "0ducQKkW5EGQM9rQ5zdPJh",
+      "0ducQKkW5EGQM9rQ5zdPDs",
+      "0ducQKkW5EGQM9rQ5zdPEJ",
+      "3GdhC2lQD5ifjmLdQ3yoT7",
+      "0ducQKkW5EGQM9rQ5zdP1J",
+      "0ducQKkW5EGQM9rQ5zdP9Z",
+      "3pFbansyD0KOHFtJHrTuoC",
+      "0ducQKkW5EGQM9rQ5zdOtF",
+      "3GdhC2lQD5ifjmLdQ3yoB_",
+      "3p6DR19bjD_PWb8lZMRTPc"
+    ]
+  },
+  {
+    "id": "AP_SK_270",
+    "type": "wall",
+    "storey": "-1 - Garage",
+    "glb": "1_garage.glb",
+    "target_guid": "0ducQKkW5EGQM9rQ5zdP$n",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "On Garage, check the wall beside the door at this location.",
+    "site_img": "assets/dataset/AP_SK_270_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 84
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 48
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 9
+      }
+    ],
+    "confusable_guids": [
+      "1KMtYLyv9CyfGv8UjnM8_h",
+      "1KMtYLyv9CyfGv8UjnM8y$",
+      "1cFRppLhj948bTrzz_An4w",
+      "1cFRppLhj948bTrzz_AoiZ",
+      "1KMtYLyv9CyfGv8UjnMBCL",
+      "1KMtYLyv9CyfGv8UjnMBCG",
+      "0ducQKkW5EGQM9rQ5zdPiu",
+      "1cFRppLhj948bTrzz_Apug",
+      "3GdhC2lQD5ifjmLdQ3ype4",
+      "3p6DR19bjD_PWb8lZMRTML",
+      "3GzoWuxxn4WO8bCtw8H3I4",
+      "0ducQKkW5EGQM9rQ5zdPMt",
+      "1cFRppLhj948bTrzz_ApdW",
+      "1cFRppLhj948bTrzz_Apqc",
+      "1cFRppLhj948bTrzz_Apb_",
+      "1cFRppLhj948bTrzz_ApY4",
+      "1cFRppLhj948bTrzz_ApRW",
+      "0ducQKkW5EGQM9rQ5zdM0J",
+      "0ducQKkW5EGQM9rQ5zdM1i",
+      "0ducQKkW5EGQM9rQ5zdP_b",
+      "0ducQKkW5EGQM9rQ5zdPSm",
+      "1cFRppLhj948bTrzz_ApO1",
+      "1cFRppLhj948bTrzz_ApBx",
+      "1q9pLykVT2tOtz_4Xjbucy",
+      "1q9pLykVT2tOtz_4Xjbudy",
+      "1q9pLykVT2tOtz_4XjbuaX",
+      "1q9pLykVT2tOtz_4XjbuzE",
+      "1q9pLykVT2tOtz_4XjbuwS",
+      "1cFRppLhj948bTrzz_ApAd",
+      "1q9pLykVT2tOtz_4XjbueK",
+      "0ducQKkW5EGQM9rQ5zdPJh",
+      "0ducQKkW5EGQM9rQ5zdPDs",
+      "0ducQKkW5EGQM9rQ5zdPEJ",
+      "3GdhC2lQD5ifjmLdQ3yoT7",
+      "0ducQKkW5EGQM9rQ5zdP1J",
+      "0ducQKkW5EGQM9rQ5zdP9Z",
+      "3pFbansyD0KOHFtJHrTuoC",
+      "0ducQKkW5EGQM9rQ5zdOtF",
+      "3GdhC2lQD5ifjmLdQ3yoB_",
+      "3p6DR19bjD_PWb8lZMRTPc"
+    ]
+  },
+  {
+    "id": "AP_SK_279",
+    "type": "wall",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "3pFbansyD0KOHFtJHrTtlJ",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "On Level 1, check the wall beside the door at this location.",
+    "site_img": "assets/dataset/AP_SK_279_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 290
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 19
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3pFbansyD0KOHFtJHrTukr",
+      "2BLn4xX2vF_gM9G5wfbU8d",
+      "2BLn4xX2vF_gM9G5wfbU7b",
+      "2BLn4xX2vF_gM9G5wfbPmS",
+      "0MOEoDTm9EnO9yKsXjjie3",
+      "2V6UQJFc92sfDYeuDKgYAW",
+      "2BLn4xX2vF_gM9G5wfbU0j",
+      "2BLn4xX2vF_gM9G5wfbOe6",
+      "2BLn4xX2vF_gM9G5wfbP1t",
+      "2BLn4xX2vF_gM9G5wfbOzp",
+      "3pFbansyD0KOHFtJHrTuw8",
+      "0Pw4h9cu11p8EzOFUdpSRt",
+      "3pFbansyD0KOHFtJHrTugD",
+      "3pFbansyD0KOHFtJHrTuY0",
+      "3pFbansyD0KOHFtJHrTtwh",
+      "2BLn4xX2vF_gM9G5wfbPRX",
+      "3pFbansyD0KOHFtJHrTtfb",
+      "0HFJ4FEcn5UhECI1IyBq1W"
+    ]
+  },
+  {
+    "id": "AP_SK_280",
+    "type": "other",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "3pFbansyD0KOHFtJHrTtfJ",
+    "ifc_class": "Door",
+    "query": "On Level 1, check the door beside the wall at this location.",
+    "site_img": "assets/dataset/AP_SK_280_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 78
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 14
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 9
+      }
+    ],
+    "confusable_guids": [
+      "3p6DR19bjD_PWb8lZMRTlD",
+      "3pFbansyD0KOHFtJHrTuxk",
+      "2BLn4xX2vF_gM9G5wfbU4T",
+      "2BLn4xX2vF_gM9G5wfbU5X",
+      "2BLn4xX2vF_gM9G5wfbPB_",
+      "2BLn4xX2vF_gM9G5wfbPiL",
+      "3pFbansyD0KOHFtJHrTtwA",
+      "2BLn4xX2vF_gM9G5wfbP3_",
+      "2BLn4xX2vF_gM9G5wfbP36",
+      "2BLn4xX2vF_gM9G5wfbP7V",
+      "3pFbansyD0KOHFtJHrTuhb",
+      "3p6DR19bjD_PWb8lZMRTIN",
+      "0HFJ4FEcn5UhECI1IyBq10"
+    ]
+  },
+  {
+    "id": "AP_SK_282",
+    "type": "other",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "2BLn4xX2vF_gM9G5wfbU5X",
+    "ifc_class": "Door",
+    "query": "On Level 1, check the door beside the wall at this location.",
+    "site_img": "assets/dataset/AP_SK_282_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 78
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 14
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 9
+      }
+    ],
+    "confusable_guids": [
+      "3p6DR19bjD_PWb8lZMRTlD",
+      "3pFbansyD0KOHFtJHrTuxk",
+      "2BLn4xX2vF_gM9G5wfbU4T",
+      "2BLn4xX2vF_gM9G5wfbPB_",
+      "2BLn4xX2vF_gM9G5wfbPiL",
+      "3pFbansyD0KOHFtJHrTtwA",
+      "2BLn4xX2vF_gM9G5wfbP3_",
+      "2BLn4xX2vF_gM9G5wfbP36",
+      "2BLn4xX2vF_gM9G5wfbP7V",
+      "3pFbansyD0KOHFtJHrTuhb",
+      "3p6DR19bjD_PWb8lZMRTIN",
+      "3pFbansyD0KOHFtJHrTtfJ",
+      "0HFJ4FEcn5UhECI1IyBq10"
+    ]
+  },
+  {
+    "id": "AP_SK_285",
+    "type": "wall",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "3pFbansyD0KOHFtJHrTtwh",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "On Level 1, check the wall beside the door at this location.",
+    "site_img": "assets/dataset/AP_SK_285_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 290
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 19
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "3pFbansyD0KOHFtJHrTukr",
+      "2BLn4xX2vF_gM9G5wfbU8d",
+      "2BLn4xX2vF_gM9G5wfbU7b",
+      "2BLn4xX2vF_gM9G5wfbPmS",
+      "0MOEoDTm9EnO9yKsXjjie3",
+      "2V6UQJFc92sfDYeuDKgYAW",
+      "2BLn4xX2vF_gM9G5wfbU0j",
+      "2BLn4xX2vF_gM9G5wfbOe6",
+      "2BLn4xX2vF_gM9G5wfbP1t",
+      "2BLn4xX2vF_gM9G5wfbOzp",
+      "3pFbansyD0KOHFtJHrTuw8",
+      "0Pw4h9cu11p8EzOFUdpSRt",
+      "3pFbansyD0KOHFtJHrTugD",
+      "3pFbansyD0KOHFtJHrTuY0",
+      "2BLn4xX2vF_gM9G5wfbPRX",
+      "3pFbansyD0KOHFtJHrTtfb",
+      "3pFbansyD0KOHFtJHrTtlJ",
+      "0HFJ4FEcn5UhECI1IyBq1W"
+    ]
+  },
+  {
+    "id": "AP_SK_291",
+    "type": "wall",
+    "storey": "Level 1",
+    "glb": "level_1.glb",
+    "target_guid": "0qPq0uZ5vABQlKT8FAVXQn",
+    "ifc_class": "IfcWallStandardCase",
+    "query": "On Level 1, check the wall beside the window at this location.",
+    "site_img": "assets/dataset/AP_SK_291_site.jpg",
+    "gt_slot": null,
+    "pred_slot": null,
+    "conf_raw": 0.0,
+    "conf_cal": 0.0,
+    "tau": 0.4,
+    "decision": "DEFER",
+    "correct": false,
+    "waterfall": [
+      {
+        "stage": "retrieved pool",
+        "n": 290
+      },
+      {
+        "stage": "+ storey + class",
+        "n": 8
+      },
+      {
+        "stage": "+ spatial address",
+        "n": 1
+      }
+    ],
+    "confusable_guids": [
+      "2BLn4xX2vF_gM9G5wfbU0j",
+      "1NL4ZXkFP2thNiMT9sECsi",
+      "0MOEoDTm9EnO9yKsXjjie3",
+      "2V6UQJFc92sfDYeuDKgYAW",
+      "3pFbansyD0KOHFtJHrTt4i",
+      "31F6eMknj99vYl9fb0Qb7F",
+      "0MOEoDTm9EnO9yKsXjjiky"
     ]
   }
 ]

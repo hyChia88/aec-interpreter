@@ -30,6 +30,7 @@
   .chip{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;background:#fff;color:#333}
   .chip:hover{border-color:var(--accent)}
   .chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  .chip.defer{color:#9aa3ad}.chip.defer .d{color:var(--red)}
   .chip .d{font-size:10px}
   figure{margin:0 0 14px}img.site{width:100%;border:1px solid var(--line);border-radius:10px;display:block}
   figcaption{font-size:12.5px;color:var(--muted);margin-top:6px;font-style:italic}
@@ -75,6 +76,7 @@
 <div class="app">
   <aside class="panel">
     <span class="kicker">Held-out cases</span>
+    <p id="casesSummary" style="font-size:12px;color:var(--muted);margin:6px 0 0"></p>
     <div class="chips" id="chips"></div>
     <div id="detail"></div>
     <div class="note" id="servenote" style="display:none">
@@ -221,24 +223,48 @@ function frame(root, hits){
 
 // ---- left panel ----
 let CASES = [];
-fetch('assets/3d/cases.json').then(r=>r.json()).then(cs => {
-  CASES = cs;
-  const chips = document.getElementById('chips');
-  cs.forEach((c,i)=>{
-    const b = document.createElement('div'); b.className='chip'; b.dataset.i=i;
-    b.innerHTML = `${c.id.replace('AP_SK_','#')} <span class="d">${c.decision[0]}</span>`;
-    b.onclick = ()=>select(i); chips.appendChild(b);
-  });
-  if(cs.length) select(0);
-}).catch(()=>{ document.getElementById('detail').innerHTML='<p class="bad">Could not load cases.json — serve over HTTP.</p>';
-  document.getElementById('servenote').style.display='block'; });
+let LIVE = false;            // is the FastAPI backend reachable? (false on static GitHub Pages)
+
+// Probe the backend first so the live button only appears where it can actually run.
+// On GitHub Pages /health 404s → LIVE stays false → the page shows the cached realized
+// result for all 60 cases (no Modal/Neo4j needed).
+(function init(){
+  const done = () => loadCases();
+  if (location.protocol === 'file:') return done();
+  fetch('health').then(r => r.ok ? r.json() : null)
+    .then(h => { LIVE = !!(h && h.status === 'ok'); })
+    .catch(() => {})
+    .finally(done);
+})();
+
+function loadCases(){
+  fetch('assets/3d/cases.json').then(r=>r.json()).then(cs => {
+    CASES = cs;
+    const chips = document.getElementById('chips');
+    cs.forEach((c,i)=>{
+      const b = document.createElement('div'); b.className='chip'; b.dataset.i=i;
+      b.classList.toggle('defer', c.decision !== 'ANSWER');
+      b.innerHTML = `${c.id.replace('AP_SK_','#')} <span class="d">${c.decision[0]}</span>`;
+      b.onclick = ()=>select(i); chips.appendChild(b);
+    });
+    const ans = cs.filter(c=>c.decision==='ANSWER').length;
+    const cor = cs.filter(c=>c.correct).length;
+    document.getElementById('casesSummary').textContent =
+      `${cs.length} held-out · ${ans} ANSWER · ${cor} grounded correctly` +
+      (LIVE ? ' · live backend ✓' : ' · cached (static)');
+    if(cs.length) select(0);
+  }).catch(()=>{ document.getElementById('detail').innerHTML='<p class="bad">Could not load cases.json — serve over HTTP.</p>';
+    document.getElementById('servenote').style.display='block'; });
+}
 
 function select(i){
   const c = CASES[i];
   document.querySelectorAll('.chip').forEach((el,j)=>el.classList.toggle('on', j===i));
   const dec = `<span class="badge ${c.decision}">${c.decision}</span>`;
-  const mark = c.correct ? '<span class="ok">✓ correct</span>' : '<span class="bad">✗ mismatch</span>';
-  const slot = c.pred_slot ? `${c.pred_slot[0]} of ${c.pred_slot[1]}` : 'abstained';
+  const isFiller = c.type === 'filler' || c.gt_slot;            // walls/other carry no image-recoverable slot
+  const mark = !isFiller ? '' : (c.correct ? '<span class="ok">✓ correct</span>' : '<span class="bad">✗ mismatch</span>');
+  const slot = c.pred_slot ? `${c.pred_slot[0]} of ${c.pred_slot[1]}` : (isFiller ? 'abstained' : 'n/a (no ordinal slot)');
+  const gtStr = c.gt_slot ? `${c.gt_slot[0]} of ${c.gt_slot[1]}` : '—';
   // backend candidate-pool waterfall (what's happening inside the interpreter)
   const wf = c.waterfall || [];
   const wfMax = wf.length ? wf[0].n : 1;
@@ -258,16 +284,19 @@ function select(i){
     <span class="kicker" style="display:block;margin-top:16px">Spatial address — predicted</span>
     <div class="row"><span class="k">element</span><span class="v">${c.ifc_class} · ${c.storey}</span></div>
     <div class="row"><span class="k">predicted slot</span><span class="v">${slot}</span></div>
-    <div class="row"><span class="k">ground truth</span><span class="v">${c.gt_slot[0]} of ${c.gt_slot[1]} &nbsp;${mark}</span></div>
+    <div class="row"><span class="k">ground truth</span><span class="v">${gtStr} &nbsp;${mark}</span></div>
     <div class="row"><span class="k">confidence</span><span class="v">${c.conf_raw} → ${c.conf_cal} (cal)</span></div>
     <div class="row"><span class="k">decision (τ=${c.tau})</span><span class="v">${dec}</span></div>
     <p style="font-size:13px;color:#3a3f47;margin:10px 0 0">
-      ${c.correct?'A correct <b>ANSWER</b> — the system commits to this GUID.':
-        (c.decision==='DEFER'?'A <b>DEFER</b> — the prediction is wrong but its confidence is below threshold, so the system abstains and returns the candidates instead.':'')}</p>
+      ${!isFiller
+        ? 'This is a <b>'+(c.type==='wall'?'wall':'non-filler')+'</b> — it has no image-recoverable ordinal slot (its discriminating fingerprint is graph-only, the paper\'s negative result), so the realized system <b>DEFERs</b> and returns the candidate set. The GT element is still highlighted below.'
+        : (c.correct?'A correct <b>ANSWER</b> — the system commits to this GUID.':
+        (c.decision==='DEFER'?'A <b>DEFER</b> — the prediction is wrong but its confidence is below threshold, so the system abstains and returns the candidates instead.':'A wrong <b>ANSWER</b> — committed above threshold but the slot is off.'))}</p>
     <div class="legend"><span><span class="sw" style="background:#ef7d00"></span>grounded element</span>
       <span><span class="sw" style="background:#4a90e2"></span>look-alikes (same storey+class)</span>
       <span><span class="sw" style="background:#cdd3da"></span>context</span></div>
-    <button id="liveBtn" class="livebtn">⚡ Run live inference</button>
+    ${LIVE ? '<button id="liveBtn" class="livebtn">⚡ Run live inference</button>'
+           : '<p class="livenote">Showing the <b>cached</b> realized result (computed offline from the frozen G8 trace + OpenCV slot — what the live pipeline reproduces). The live <b>Run inference</b> button (real Modal VLM + Neo4j) is available in the local build: <code>uvicorn aec_interpreter.service.app:app --port 8000 --app-dir src</code>.</p>'}
     <div id="liveResult"></div>`;
   const lb = document.getElementById('liveBtn');
   if (lb) lb.onclick = ()=>runLive(i);
@@ -385,7 +414,7 @@ function renderKG(c){
     element is selected by a typed relation pattern, not by image similarity alone.</p>
     <div class="mini">
       <span>Benchmark basis</span><b>AP n=60</b>
-      <span>Demo subset</span><b>6 cases</b>
+      <span>Demo coverage</span><b>${CASES.length} cases</b>
       <span>Slot extractor eval</span><b>35 fillers</b>
       <span>Calibrated conf</span><b>${confidence.toFixed(2)}</b>
       <span>Status</span><b style="color:${decisionColor}">${status}</b>

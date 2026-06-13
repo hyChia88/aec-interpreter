@@ -81,9 +81,125 @@ def extract_storey_glb(storey_name: str, out_path: Path) -> bool:
     return True
 
 
+IMG_MAXSIDE = 1000          # downscale long side for the web demo
+IMG_QUALITY = 82
+
+
 def img_rel(name: str) -> str | None:
+    # page-relative (same convention as the GLB path) so it resolves on GitHub Pages
+    # (page at /repo/demo.html) AND under local uvicorn (page at /). The web-sized JPEG
+    # is written into site/assets/dataset/ by copy_site_images().
     p = DATASET / "imgs" / f"{name}_site.png"
-    return f"../assets/dataset/{name}_site.png" if p.exists() else None
+    return f"assets/dataset/{name}_site.jpg" if p.exists() else None
+
+
+def copy_site_images(case_ids) -> int:
+    """Re-encode each case's site photo to a web-sized JPEG in site/assets/dataset/ so the
+    static demo is self-contained and small enough to commit (≈8MB for 60 vs ≈120MB of PNGs)."""
+    from PIL import Image
+    dst = OUT.parent / "dataset"; dst.mkdir(parents=True, exist_ok=True)
+    n = 0
+    for cid in case_ids:
+        src = DATASET / "imgs" / f"{cid}_site.png"
+        if not src.exists():
+            continue
+        im = Image.open(src).convert("RGB")
+        if max(im.size) > IMG_MAXSIDE:
+            im.thumbnail((IMG_MAXSIDE, IMG_MAXSIDE), Image.LANCZOS)
+        im.save(dst / f"{cid}_site.jpg", "JPEG", quality=IMG_QUALITY, optimize=True)
+        n += 1
+    print(f"re-encoded {n}/{len(case_ids)} site images -> {dst} (JPEG q{IMG_QUALITY}, ≤{IMG_MAXSIDE}px)")
+    return n
+
+
+def _entry(sid, c, gt, idx, pos, wallfp, gslot, pred, T):
+    """One manifest entry for a held-out case (filler -> realized slot; else DEFER).
+
+    The result is computed from the FROZEN G8 trace (= what live VLM reproduces) + the
+    OpenCV slot specialist, so the static page shows the *realized* neuro-symbolic
+    grounding with no Modal/Neo4j. Fillers get a slot + calibrated ANSWER/DEFER; walls
+    and 'other' carry no image-recoverable slot -> the system correctly DEFERs (the
+    paper's negative result), but the case is still browsable in 3D (GT + look-alikes).
+    """
+    e = idx[gt]
+    st = e.get("storey_name", "")
+    is_filler = gt in gslot
+    pi, pM, conf = pred(c) if is_filler else (None, None, 0.0)
+    cal = apply_T(conf, T) if pi is not None else 0.0
+    gi = gM = None
+    match = False
+    if is_filler:
+        gi, gM = gslot[gt]["wall_position_index"], gslot[gt]["wall_child_total"]
+        match = pi == gi and pM == gM
+    pool = pool_candidates(c)
+    gf = cand_feats(gt, pool[gt], idx, pos)
+    gaddr = spatial_address(gt, pos, wallfp)
+    confusable = [g for g in pool
+                  if cand_feats(g, pool[g], idx, pos).get("storey") == gf.get("storey")
+                  and cand_feats(g, pool[g], idx, pos).get("ifc_class") == gf.get("ifc_class")]
+    addr_match = [g for g in confusable if spatial_address(g, pos, wallfp) == gaddr]
+    return {
+        "id": sid,
+        "type": "filler" if is_filler else ("wall" if e.get("ifc_class", "").startswith("IfcWall") else "other"),
+        "storey": st,
+        "glb": f"{slug(st)}.glb",
+        "target_guid": gt,
+        "ifc_class": e.get("ifc_class", "").replace("IfcWindow", "Window").replace("IfcDoor", "Door"),
+        "query": c["scenario"].get("query_text", ""),
+        "site_img": img_rel(sid),
+        "gt_slot": [gi, gM] if gi is not None else None,
+        "pred_slot": [pi, pM] if pi is not None else None,
+        "conf_raw": round(conf, 2),
+        "conf_cal": round(cal, 2),
+        "tau": TAU,
+        "decision": "ANSWER" if cal >= TAU else "DEFER",
+        "correct": bool(match),
+        "waterfall": [
+            {"stage": "retrieved pool", "n": len(pool)},
+            {"stage": "+ storey + class", "n": len(confusable)},
+            {"stage": "+ spatial address", "n": max(len(addr_match), 1)},
+        ],
+        "confusable_guids": [g for g in confusable if g != gt][:40],
+    }
+
+
+def build_all():
+    """All-60-held-out manifest: extract every needed storey GLB (8 total, cached),
+    emit a manifest entry per case. Static, offline — feeds the GitHub-Pages demo."""
+    OUT.mkdir(parents=True, exist_ok=True)
+    idx = load_index(DEFAULT_INDEX)
+    cases = load_cases(DEFAULT_TRACES)
+    pos = load_position_index(DEFAULT_POS)
+    wallfp = load_wall_fingerprint(DEFAULT_WALL)
+    gslot = cv.build_global_slot(idx, pos)
+    pred = cv.make_predictor(idx)
+    fillers = [c for c in cases if c["scenario"]["ground_truth"]["target_guid"] in gslot]
+    T = fit_temperature(collect_pairs(pred, fillers, gslot))
+
+    # every storey the 60 cases live on -> extract its GLB once (cached)
+    storeys = {}
+    for c in cases:
+        st = idx[c["scenario"]["ground_truth"]["target_guid"]].get("storey_name", "")
+        storeys.setdefault(st, slug(st))
+    print(f"storeys across 60 cases: {len(storeys)} -> {sorted(storeys.values())}")
+    ok = {st: extract_storey_glb(st, OUT / f"{sl}.glb") for st, sl in storeys.items()}
+
+    manifest = []
+    for c in cases:
+        sid = c["scenario_id"]; gt = c["scenario"]["ground_truth"]["target_guid"]
+        st = idx[gt].get("storey_name", "")
+        if not ok.get(st):
+            print(f"  skip {sid}: no GLB for storey {st!r}")
+            continue
+        manifest.append(_entry(sid, c, gt, idx, pos, wallfp, gslot, pred, T))
+    copy_site_images([m["id"] for m in manifest])
+    # showcase first: ANSWER+correct fillers, then the rest
+    manifest.sort(key=lambda m: (m["decision"] != "ANSWER", not m["correct"], m["id"]))
+    (OUT / "cases.json").write_text(json.dumps(manifest, indent=2))
+    ans = sum(m["decision"] == "ANSWER" for m in manifest)
+    cor = sum(m["correct"] for m in manifest)
+    print(f"\nmanifest: {len(manifest)} cases -> {OUT/'cases.json'}  "
+          f"(ANSWER {ans}, correct {cor})")
 
 
 def main():
@@ -178,4 +294,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if "--all" in sys.argv:
+        build_all()
+    else:
+        main()
