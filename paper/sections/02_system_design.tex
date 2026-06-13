@@ -17,10 +17,16 @@ independent of the image's coordinate frame --- a coordinate-free relational add
 discriminative signal is relational, not pixel-local: what separates two visually identical windows is
 graph topology (``the third of five fillers along an external wall''), which a pixel matcher would
 have to re-derive inside its own weights --- unreliably, as the classical opening-count baseline
-(${\sim}27\%$) illustrates \citep{chiahuiyen_mscd_thesis}. Third, the end-to-end matcher is our
-measured baseline, and it plateaus: the strongest fine-tuned multimodal reranker reaches Top-1 6.7\%
-with the answer in the pool 100\% of the time, while the same pool reorders to 78.5\% when the
-relational address is supplied (\secref{sec:eval-oracle}). Finally, construction compliance requires
+(${\sim}27\%$) illustrates. Third, our strongest \emph{learned}
+configuration plateaus on this discrimination: the fine-tuned-VLM extraction pipeline (\emph{G8}),
+feeding deterministic retrieval with no within-pool reranking, reaches Top-1 6.7\% with the answer
+in the pool 100\% of the time, and generic lexical/dense retrievers over the same pool reach Top-1
+$\le 1.7\%$ (\secref{sec:eval-oracle}); the same pool reorders to 78.5\% when the relational address
+is supplied. We do not train a dedicated end-to-end cross-attention matcher over the pool: its
+inputs would be the site image against text-identical sibling candidates (the graph nodes carry no
+images), so it would have to recover the same relational signal internally --- the configuration we
+argue against; a zero-shot VLM reranker as the off-the-shelf upper-bound of that family is left as a
+baseline to add (\secref{sec:limitations}). Finally, construction compliance requires
 repeatability and audit: a scalar matching score is not auditable, not correctable, and cannot be
 gated by per-field calibrated confidence. Trade-off accepted: less end-to-end flexibility, in exchange
 for recall guarantees, auditability, and zero-shot transfer of the address to any IFC model.
@@ -110,7 +116,7 @@ spatial\_relations:[\{predicate, object\_type, direction\}]\}} --- and nothing e
 describes, it never queries} (Figure~\ref{fig:vlmimpl}). Fine-tuning on the synthetic corpus is what
 makes the spatial fields exist at all: spatial-direction accuracy reaches 82\% where zero-shot
 prompting scores ${\sim}0\%$, and the coarse fields (storey, \texttt{ifc\_class}) saturate at 100\%
-versus 30--63\% zero-shot \citep{chiahuiyen_mscd_thesis}. The G-series ablation also exposes a
+versus 30--63\% zero-shot. The G-series ablation also exposes a
 multi-task capacity trade-off under a fixed adapter rank: under-resourced adapters collapse on spatial
 extraction while the coarse fields stay saturated, so topology-specific supervision and added
 position-context capacity are needed to recover spatial fingerprints --- and, as the per-field profile
@@ -135,8 +141,8 @@ computation yields, for every element, its ground-truth address and relational c
 --- visual synthesis:} Blender renders scenes with deliberate hard negatives --- identical-looking
 adjacent rooms --- so the model cannot shortcut on appearance. \emph{Stage 3 --- text generation:} an
 LLM writes site-note queries at varying specificity, and an LLM-as-judge filter removes degenerate
-cases. The output is 990 training cases on the studied project, a 60-case held-out benchmark (the
-evaluation set throughout \secref{sec:eval}), and a 116-case cross-IFC generalization benchmark.
+cases. The output is 990 training cases on the studied project and a 60-case held-out benchmark (the
+evaluation set throughout \secref{sec:eval}).
 
 \subsection{Symbolic layer: deterministic query compilation with a recall-safe cascade}
 \label{sec:symbolic}

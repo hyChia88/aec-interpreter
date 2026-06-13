@@ -82,21 +82,20 @@
   url       = {https://arxiv.org/abs/1904.12584}
 }
 
-% [SELF-CITATION — author's own prior MSCD thesis; ⚠️ CONFIRM title/year/dept before camera-ready.
-%  Source of the opening-count baseline (~27%) and the depth-3 training-capacity findings.]
-% NOTE: inline % is NOT a comment inside a BibTeX entry — keep TODOs out of the braces.
-% TODO before camera-ready: confirm the exact title and year of this prior thesis.
-@mastersthesis{chiahuiyen_mscd_thesis,
-  title  = {{Neuro-Symbolic VLM-to-IFC Element Grounding}},
-  author = {Chia, Hui Yen},
-  school = {Carnegie Mellon University},
-  type   = {{MSCD} Thesis},
-  year   = {2025},
-  note   = {Prior thesis; source of the opening-count baseline and depth-3 capacity findings}
-}
+% (Removed the self-citation to the author's MSCD thesis: this paper IS that thesis project,
+%  so those findings are reported here as our own work, not cited as prior external work.)
 
 % ============ Related-work entries (programmatically verified 2026-06-12) ============
 % All fetched via arXiv API search + doi.org BibTeX content negotiation. NOT from memory.
+
+% [From the author's MSCD thesis bibliography, ref [39]] VLM-based scene-graph extraction.
+@misc{wang2024vlmscenegraph,
+  title  = {{VLM}-based Scene Graph Generation for Industrial Spatial Intelligence},
+  author = {Wang, Zuoxu and Yan, Zhijie and Li, Shufei and Liu, Jihong},
+  year   = {2024},
+  note   = {Preprint, submitted to Elsevier},
+  url    = {https://ssrn.com/abstract=4926945}
+}
 
 % [VERIFIED arXiv:2401.12168 — Chen et al., 2024] VLM spatial reasoning via synthetic data.
 @misc{chen2024spatialvlm,

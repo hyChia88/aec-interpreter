@@ -66,16 +66,13 @@ def lexical_scores(query: str, pool: dict, idx: dict) -> dict:
 
 
 def dense_scores(model, query: str, pool: dict, idx: dict, cache: dict) -> dict:
+    """Cosine of query vs each candidate's text embedding. `cache` is keyed by candidate
+    TEXT (siblings share text, so this dedupes encodes across cases)."""
     import numpy as np
-    texts, guids = [], []
-    for g in pool:
-        t = cand_text(g, idx)
-        if t not in cache:
-            texts.append(t); guids.append(t)
-    if texts:
-        embs = model.encode(texts, normalize_embeddings=True, show_progress_bar=False)
-        for t, v in zip(guids, embs):
-            cache[t] = v
+    missing = list(dict.fromkeys(t for g in pool if (t := cand_text(g, idx)) not in cache))
+    if missing:
+        embs = model.encode(missing, normalize_embeddings=True, show_progress_bar=False)
+        cache.update(zip(missing, embs))
     qv = model.encode([query], normalize_embeddings=True, show_progress_bar=False)[0]
     return {g: float(np.dot(qv, cache[cand_text(g, idx)])) for g in pool}
 
@@ -112,8 +109,8 @@ def make_figure(rows, out_path):
         ax.text(i + 0.2, v + 1, f"{v:.0f}", ha="center", fontsize=9)
     ax.set_xticks(list(x)); ax.set_xticklabels(names, fontsize=9, rotation=12, ha="right")
     ax.set_ylabel("held-out accuracy (%)"); ax.set_ylim(0, 105)
-    ax.set_title("External retrieval baselines vs the structured spatial address\n"
-                 "off-the-shelf dense/lexical retrieval cannot discriminate identical siblings", fontsize=11)
+    ax.set_title("External baselines vs the structured spatial address\n"
+                 "off-the-shelf text retrieval AND a zero-shot VLM stay at chance on identical siblings", fontsize=11)
     ax.legend(); fig.tight_layout(); fig.savefig(out_path, dpi=130)
     print("figure →", out_path)
 
@@ -128,6 +125,18 @@ def main():
     rows = {}
     rows["lexical\n(BM25)"] = evaluate(lambda q, p, i: lexical_scores(q, p, i), cases, idx)
     rows["dense\n(MiniLM)"] = evaluate(lambda q, p, i: dense_scores(model, q, p, i, cache), cases, idx)
+    # zero-shot VLM reranker (item #5) — base Qwen2.5-VL-7B, no adapter; pulled from its
+    # own run so the figure stays in sync. Shuffled candidates → order-copying = chance.
+    vlm_path = OUT / "vlm_reranker_baseline.json"
+    if vlm_path.exists():
+        vj = json.load(open(vlm_path)).get("scopes", {})
+        for sc, lbl in (("full", "zero-shot VLM\n(full pool)"),
+                        ("siblings", "zero-shot VLM\n(siblings)")):
+            if sc in vj:
+                a = vj[sc]["all"]
+                rows[lbl] = {"top1": a["top1"], "top10": a["top10"], "mrr": a["mrr"], "n": a["n"]}
+    else:
+        print(f"[note] {vlm_path.name} not found — run eval/vlm_reranker_baseline.py to add the VLM rows")
     # reference points (from the ledger) for the figure
     rows["our realized\n(G8)"] = {"top1": 6.7, "top10": 30.0, "mrr": 0.110, "n": 60}
     rows["+ address\n(oracle)"] = {"top1": 78.5, "top10": 98.1, "mrr": 0.854, "n": 60}

@@ -8,13 +8,15 @@ supervision, with no real on-site labels. The task is hard because many candidat
 \emph{visually identical}, the target identity lives in \emph{graph} space while the evidence lives
 in \emph{image} space, and a cold-start deployment has no paired site-image training set. Our method
 recovers a \textbf{type-conditional spatial address} --- a class-specific relational key, such as an
-opening's ordinal position-slot or a wall's connectivity fingerprint, that is computable from the
-raw IFC model and recoverable from image/plan evidence. A vocabulary-constrained neural layer reads
+opening's ordinal position-slot or a wall's connectivity fingerprint, computable from the raw IFC
+model with no labels. The opening slot is also image-recoverable and we realize it; the wall
+fingerprint is oracle-discriminative but \emph{not} image-realizable (its fields collapse in the
+floorplan), so its numbers are reported at oracle level only. A vocabulary-constrained neural layer reads
 coarse semantics; deterministic visual specialists recover discriminating address fields; and a
 symbolic executor consumes a per-field \texttt{\{value, confidence, source\}} contract through
 recall-safe reranking and selective prediction. Supplied at an oracle level, the address lifts pool
-Top-1 from 4.9\% to \textbf{78.5\%} at zero recall cost; a single realizable position-slot extractor
-lifts the addressable subset from a 6.6\% floor to \textbf{67.6\%}; its confidence passes an ECE
-calibration gate (AUROC 0.80); and deferring the least-confident fifth raises answered-set Top-1 to
-\textbf{80.6\%}. The result is an auditable spatial multimodal grounding layer for AEC: ontology is
+Top-1 from 4.9\% to \textbf{78.5\%} at zero recall cost (an upper-bound ceiling, all 60 cases); the
+one realized extractor --- a deterministic position-slot detector --- lifts the addressable filler
+subset ($n=35$) from a 6.6\% floor to \textbf{67.6\%}; its confidence passes an ECE calibration gate
+(AUROC 0.80); and deferring the least-confident fifth raises answered-set Top-1 to \textbf{80.6\%}. The result is an auditable spatial multimodal grounding layer for AEC: ontology is
 the guardrail, topology is the discriminator, and the system knows when to abstain.

@@ -18,12 +18,12 @@ model but no history of labelled site imagery; on day one they want to point a p
 add a short note, and be told \emph{which} modelled element it is. The final step is a selection from
 a retrieved candidate pool in which the ground truth is present (median 76, in-pool 100\%), so the
 difficulty is not retrieval but \textbf{discrimination among visually identical siblings}, in a regime
-with no paired supervision to learn that discrimination from. The natural baseline --- fine-tune a
-multimodal reranker to score the pool end-to-end --- is exactly the configuration that plateaus: it
-reaches Top-1 6.7\% with the answer already in the pool, because the signal that separates two
+with no paired supervision to learn that discrimination from. Our strongest learned configuration ---
+a fine-tuned-VLM extraction pipeline feeding deterministic retrieval, with no within-pool reranking
+--- plateaus at Top-1 6.7\% with the answer already in the pool, because the signal that separates two
 identical windows is not in either window's pixels but in the building's relational structure, which a
-black-box matcher must reconstruct internally and unreliably (we develop this design rationale in
-\secref{sec:rationale}~\citep{sutton2019bitter}).
+black-box matcher would have to reconstruct internally and unreliably (we develop this design rationale
+in \secref{sec:rationale}~\citep{sutton2019bitter}).
 
 \subsection{Research questions}
 
@@ -67,9 +67,8 @@ the middle.
 \paragraph{Vision-language spatial perception.} One line endows VLMs with spatial reasoning by
 training on synthetic spatial-QA data; SpatialVLM demonstrates that metric and relational spatial
 judgments are learnable from generated supervision \citep{chen2024spatialvlm}, and VLM-based
-scene-graph extraction recovers object-relation structure from images.
-% TODO [CITATION NEEDED]: the org note also names "Li et al. 2024" and "Wang et al. 2024"
-% (pixels-to-graphs VLMs) — could not verify which papers these are; confirm before adding.
+scene-graph extraction recovers object-relation structure from images
+\citep{wang2024vlmscenegraph}.
 These systems answer in \emph{image} space --- a region, a relation, a distance --- and stop at the
 image boundary: none of them names an element in a building's authoritative model.
 
@@ -105,10 +104,12 @@ line \citep{mao2019nscl}.
   retrieval: the neural layer describes evidence, but only the symbolic layer names GUIDs
   (\secref{sec:design}).
 
-  \item \textbf{A type-conditional, image-recoverable spatial address} --- the ordinal position-slot
-  for openings, a connectivity fingerprint for walls --- computable from the raw IFC model with no
-  human labels, that reorders the retrieved pool from Top-1 4.9\% to 78.5\% at an oracle level and
-  underlies the realized 67.6\% (\secref{sec:eval-oracle}, \secref{sec:eval-realized}).
+  \item \textbf{A type-conditional spatial address} --- the ordinal position-slot
+  for openings and a connectivity fingerprint for walls --- computable from the raw IFC model with no
+  human labels, that reorders the retrieved pool from Top-1 4.9\% to 78.5\% at an oracle level. The
+  opening slot is image-recoverable and we realize it (67.6\% on the filler subset); the wall
+  fingerprint contributes the oracle gain but is \emph{not} image-realizable and is reported at
+  oracle level only (\secref{sec:eval-oracle}, \secref{sec:eval-realized}).
 
   \item \textbf{An oracle-based evaluation methodology} that decomposes retrieval failure into the
   symbolic-layer ceiling versus neural extraction quality --- demonstrating 100\% ground-truth
