@@ -11,9 +11,10 @@ Two modes (see docs/ROADMAP.md, Phase 0):
   --live        : run the real symbolic pipeline (plan -> retrieve -> rank) against a
                   live Neo4j graph, using the frozen G8 extraction as precomputed
                   constraints (no GPU/VLM). Proves the in-repo graph build + planner
-                  reconstruct the frozen retrieval. GT-in-pool + pool sizes reproduce
-                  exactly; Top-k order needs the Gemini rerank (GOOGLE_API_KEY) to match.
-                  See eval/live_runner.py.
+                  reconstruct the frozen retrieval. GT-in-pool, Top-1, Top-5, and pool
+                  sizes reproduce EXACTLY; Top-10/MRR differ by 2 cases (deterministic
+                  tie-break ordering of identical siblings in the pool tail — the frozen
+                  G8 used no rerank). See eval/live_runner.py.
 
 Retrieval (Track B) metrics, every rate reported with a bootstrap 95% CI:
   GT-in-pool (over the FULL retrieved pool), Top-1, Top-5, Top-10, MRR@10,
@@ -263,8 +264,8 @@ def main() -> None:
         # Live retrieval reproduction: plan -> retrieve -> rank against a running Neo4j,
         # using the frozen G8 extraction as precomputed constraints (no GPU/VLM). Proves
         # the in-repo graph build + planner reconstruct the frozen pipeline's retrieval.
-        # GT-in-pool + pool sizes reproduce exactly; Top-k may differ (Gemini rerank not in
-        # the offline live path). See eval/live_runner.py.
+        # GT-in-pool, Top-1, Top-5, pool sizes reproduce exactly; Top-10/MRR differ by 2
+        # cases (tie-break ordering of identical siblings in the tail). See eval/live_runner.py.
         from live_runner import run_live
         name = args.name or "live"
         rows = run_live(args.p0_strategy)

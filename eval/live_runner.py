@@ -6,9 +6,13 @@ the documented Phase-0 live-closeout path (config.yaml lines 40-41): it proves t
 graph build (scripts/graph_build 01->02) + QueryPlanner + RetrievalBackend faithfully
 reconstruct the frozen pipeline's retrieval, which is the gate for retiring `mscd_demo`.
 
-What reproduces exactly: GT-in-pool and pool sizes (rerank-invariant). Top-k ORDER may differ
-from the frozen traces because the frozen Top-k included a Gemini graph-RAG rerank that needs
-GOOGLE_API_KEY (absent in offline closeout); the live path ranks by retrieval ORDER BY only.
+What reproduces exactly: GT-in-pool, Top-1, Top-5, and pool sizes. Top-10/MRR differ by 2 cases
+(Top-10 26.7 vs frozen 30.0) because of deterministic tie-break ordering among IDENTICAL siblings
+in the pool tail: the fresh in-repo graph inserts nodes in a different order than the original
+mscd_demo graph, so same-storey+type siblings (indistinguishable without the spatial address) sort
+differently past rank 5. The frozen G8 used NO rerank (rerank_gain=None on all 60 cases; shortlist
+== raw retrieval order), so this is not a rerank gap. The live pipeline is itself fully deterministic
+(two runs are byte-identical, 60/60) — the repeatability the design claims.
 
 Usage (via run_benchmark):  python eval/run_benchmark.py --live
 Returns rows in the same shape score_case() consumes from frozen traces.

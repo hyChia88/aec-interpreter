@@ -9,9 +9,11 @@
 realized extractor + calibration + selective prediction (6.6→67.6, defer→80.6), RQ3 depth law;
 research paper restructured (publish-target) with verified related-work citations; HTML project page.
 **Live closeout landed (2026-06-12):** Neo4j up via Docker, in-repo graph build (01→02) reproduces the
-frozen G8 retrieval EXACTLY (GT-in-pool 100%, Top-1 6.7, Top-5 16.7, pool median 76 / mean 118.4);
-Top-10/MRR need the Gemini rerank arm (API-key-gated, rerank-only). **mscd_demo retrieval layer is now
-reproducible in-repo → retire-able.**
+frozen G8 retrieval EXACTLY (GT-in-pool 100%, Top-1 6.7, Top-5 16.7, pool median 76 / mean 118.4).
+Top-10/MRR differ by 2 cases — deterministic tie-break ordering of *identical* siblings in the pool
+tail (fresh graph inserts nodes in a different order than mscd_demo; frozen G8 used NO rerank,
+rerank_gain=None). Live pipeline is itself byte-identical across runs (60/60 — repeatability verified).
+**mscd_demo retrieval layer is now reproducible in-repo → retire-able.**
 
 ---
 

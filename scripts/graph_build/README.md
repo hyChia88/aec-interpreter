@@ -53,12 +53,15 @@ MATCH ()-[r]->() RETURN type(r), count(*) ...:
 ```bash
 python eval/run_benchmark.py --live --reference eval/fixtures/metrics/g8_posctx_dim.json
 ```
-Reproduces the frozen G8 retrieval EXACTLY on the rerank-invariant metrics (GT-in-pool 100%,
-Top-1 6.7, Top-5 16.7, pool median 76 / mean 118.4). Top-10/MRR differ by 2 cases because the
-frozen Top-k included a Gemini graph-RAG rerank that needs `GOOGLE_API_KEY` (absent offline);
-the live path ranks by retrieval ORDER BY only. This closes the publish gate for the graph +
-retrieval layer — `mscd_demo` is reproducible in-repo and can be retired. (Engine:
-`eval/live_runner.py`.)
+Reproduces the frozen G8 retrieval EXACTLY on GT-in-pool (100%), Top-1 (6.7), Top-5 (16.7), and
+pool sizes (median 76 / mean 118.4). Top-10 (26.7 vs 30.0) and MRR differ by 2 cases due to
+deterministic tie-break ordering of *identical* siblings in the pool tail: the fresh in-repo graph
+inserts nodes in a different order than the original mscd_demo graph, so same-storey+type siblings
+(indistinguishable without the spatial address) sort differently past rank 5. The frozen G8 used NO
+rerank (rerank_gain=None on all 60 cases; shortlist == raw retrieval order). The live pipeline is
+itself byte-identical across runs (60/60), confirming determinism/repeatability. This closes the
+publish gate for the graph + retrieval layer — `mscd_demo` is reproducible in-repo and can be
+retired. (Engine: `eval/live_runner.py`.)
 
 ## Assets (gitignored — see docs/DATA_INVENTORY.md)
 - `data/ifc_models/AdvancedProject.ifc` (43M)
