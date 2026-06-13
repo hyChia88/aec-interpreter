@@ -25,10 +25,13 @@ ANSWER/DEFER; `site/demo.html` got a "⚡ Run live inference" button that overla
 re-highlights the live top-1 in the 3D viewer. Verified end-to-end (uvicorn → /health 1257 elems →
 /api/ground AP_SK_107 → live VLM "7th of 17", pool 46). Run: `uvicorn aec_interpreter.service.app:app
 --port 8000 --app-dir src` then open `http://localhost:8000/`.
-**Known gaps (next):** (1) the live route is pure-VLM — the OpenCV slot specialist + soft-rerank (the
-67.6% path) is not yet merged in, so live slot predictions can be wrong (e.g. AP_SK_107 hallucinated
-"7th of 17" vs GT slot 0/3); (2) live demo is case-pick only, not arbitrary photo upload (needs
-on-the-fly storey GLB extraction).
+**Live route now realizes the full neuro-symbolic pipeline (2026-06-12):** `eval/live_rerank.py` adds the
+OpenCV position-slot specialist + temperature-calibrated soft-rerank over the live Neo4j pool (the
+67.6% mechanism). `/api/ground` = Modal VLM (storey+class) → live retrieve → OpenCV slot rerank →
+grounded GUID + ANSWER/DEFER. Verified: AP_SK_108 & AP_SK_107 → ANSWER, rank 1, correct; AP_SK_092 →
+DEFER (slot wrong, cal-conf 0.05, correctly abstains — the paper's worked defer case). Slot scored vs
+gslot (GLOBAL_REF convention lock). **Remaining gap:** live demo is case-pick only, not arbitrary photo
+upload (needs a click-to-mark → world-coord mapping for the slot detector + on-the-fly storey GLB).
 
 ---
 

@@ -46,17 +46,19 @@ _STATE: dict = {}
 
 
 def _load_state():
-    """Build engine+backend once, load held-out cases + the demo manifest."""
+    """Build engine+backend + slot-rerank context once; load held-out cases + manifest."""
     import json
     from live_runner import build_engine_backend, CASES, _load_jsonl
+    from live_rerank import build_rerank_context
 
     if "engine" in _STATE:
         return _STATE
     engine, backend = build_engine_backend("p0_union_p1")
+    rerank_ctx = build_rerank_context()
     cases = {c["case_id"]: c for c in _load_jsonl(CASES)}
     manifest_path = SITE / "assets" / "3d" / "cases.json"
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else []
-    _STATE.update(engine=engine, backend=backend, cases=cases,
+    _STATE.update(engine=engine, backend=backend, rerank_ctx=rerank_ctx, cases=cases,
                   manifest={m["id"]: m for m in manifest})
     return _STATE
 
@@ -102,15 +104,25 @@ async def api_ground(req: GroundRequest):
         raise HTTPException(404, f"unknown case_id {req.case_id!r}")
     scaffold = st["manifest"].get(req.case_id, {})
 
+    from live_rerank import rerank_live
+
+    # 1) VLM (Modal GPU) → coarse prefix (storey, class) + relations.
     imgs = li._case_images(case, li.DEFAULT_DATA_ROOT)
     vlm = await li.call_modal_vlm(imgs, li._chat_text(case), li._metadata_text(case))
     constraints = li.parsed_to_constraints(vlm.get("parsed") or {})
 
+    # 2) live Neo4j retrieval → the recall-safe candidate pool.
     row = await li.run_case_live(case, constraints, st["engine"], st["backend"])
-    rank, gt, shortlist = li._rank(row)
-    conf = float(constraints.confidence)
-    decision = "ANSWER" if conf >= TAU else "DEFER"
-    top1 = shortlist[0] if shortlist else None
+    gt = ((row.get("scenario") or {}).get("ground_truth") or {}).get("target_guid")
+    pool_guids = [c["guid"] for r in (row.get("internals") or {}).get("retrieval_results") or []
+                  for c in r.get("candidates") or [] if c.get("guid")]
+    pool_guids = list(dict.fromkeys(pool_guids))   # dedup, keep order
+
+    # 3) realized neuro-symbolic rerank: OpenCV slot specialist + calibrated soft-rerank
+    #    (this is the 67.6% mechanism; VLM gives storey/class, OpenCV gives the slot).
+    rr = rerank_live(gt, pool_guids, constraints.storey_name, constraints.ifc_class, st["rerank_ctx"])
+    ranked = rr["ranked"]
+    rank = (ranked.index(gt) + 1) if gt in ranked else None
 
     return {
         "case_id": req.case_id,
@@ -122,13 +134,17 @@ async def api_ground(req: GroundRequest):
             "position_context": constraints.position_context,
             "n_relations": len(constraints.spatial_relations),
         },
-        "confidence": round(conf, 2),
-        "tau": TAU,
-        "decision": decision,
-        "top1_guid": top1,
+        # realized address: OpenCV slot + temperature-calibrated confidence
+        "slot": rr["slot"],
+        "conf_raw": rr["conf_raw"],
+        "confidence": rr["conf_cal"],          # calibrated; drives the gate
+        "tau": rr["tau"],
+        "decision": rr["decision"],
+        "top1_guid": rr["top1_guid"],
         "rank": rank,
-        "pool_size": row.get("final_pool_size"),
-        "shortlist": shortlist[:10],
+        "pool_size": row.get("final_pool_size") or len(pool_guids),
+        "n_slot_matches": rr["n_slot_matches"],
+        "shortlist": ranked[:10],
         "gt_guid": gt,
         "correct": bool(rank == 1),
         # viewer scaffold reused from the precomputed manifest (storey GLB + look-alikes)

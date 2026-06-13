@@ -297,17 +297,18 @@ async function runLive(i){
     const hit = d.rank===1 ? '<span class="ok">✓ rank 1</span>'
               : (d.rank ? `<span class="bad">rank ${d.rank}</span>` : '<span class="bad">not in top-10</span>');
     const k = d.constraints || {};
+    const slot = d.slot ? `${d.slot[0]} of ${d.slot[1]}` : 'no slot';
     out.innerHTML = `
       <div class="livecard">
-        <div class="livehd"><span class="livetag">LIVE</span> real VLM + graph, just now</div>
-        <div class="row"><span class="k">VLM storey · class</span><span class="v">${esc(k.storey_name)} · ${esc(k.ifc_class)}</span></div>
-        <div class="row"><span class="k">VLM position</span><span class="v">${esc(k.position_context)||'—'}</span></div>
-        <div class="row"><span class="k">VLM confidence</span><span class="v">${d.confidence}</span></div>
+        <div class="livehd"><span class="livetag">LIVE</span> real neuro-symbolic run, just now</div>
+        <div class="row"><span class="k">VLM (neuro) storey · class</span><span class="v">${esc(k.storey_name)} · ${esc(k.ifc_class)}</span></div>
+        <div class="row"><span class="k">OpenCV (symbolic) slot</span><span class="v">${slot}</span></div>
+        <div class="row"><span class="k">confidence (raw → cal)</span><span class="v">${d.conf_raw} → ${d.confidence}</span></div>
         <div class="row"><span class="k">decision (τ=${d.tau})</span><span class="v">${dec}</span></div>
         <div class="row"><span class="k">predicted GUID</span><span class="v" style="font-size:11px">${esc(d.top1_guid)||'—'}</span></div>
         <div class="row"><span class="k">result</span><span class="v">${hit} · pool ${d.pool_size}</span></div>
-        <p class="livenote">Highlighting the live top-1 in 3D (orange). This is the pure-VLM path;
-          the OpenCV slot specialist that lifts fillers to 67.6% is not yet in the live route.</p>
+        <p class="livenote">Live pipeline: Modal VLM (storey + class) → OpenCV slot specialist →
+          calibrated soft-rerank over the live Neo4j pool. Highlighting the grounded top-1 in 3D (orange).</p>
       </div>`;
     // re-highlight the LIVE prediction in the 3D scene (fallback to GT highlight if missing)
     if (d.top1_guid) show(c.glb, d.top1_guid, c.confusable_guids);
