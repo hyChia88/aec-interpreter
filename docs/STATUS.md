@@ -4,12 +4,14 @@
 > [`ROADMAP.md`](ROADMAP.md) (plan), [`results_ledger.md`](results_ledger.md) (numbers),
 > [`DATA_INVENTORY.md`](DATA_INVENTORY.md) (assets), and `git log` (timeline).
 
-**Last updated:** 2026-06-11
-**Current position:** **MVP (locked scope) COMPLETE** — RQ1 oracle address (78.5), RQ2 ONE realized
-extractor + calibration + selective prediction (6.6→67.6, defer→80.6), RQ3 depth law; demo live arm +
-method-spine figure built; all 5 thesis sections drafted with verified citations + HTML project page.
-**Remaining build is optional/strengthening** (wall detector = 2nd extractor; live closeout blocked on
-Docker; leakage split = honesty fix not affecting the deterministic headline numbers).
+**Last updated:** 2026-06-12
+**Current position:** **MVP COMPLETE + LIVE CLOSEOUT DONE** — RQ1 oracle address (78.5), RQ2 ONE
+realized extractor + calibration + selective prediction (6.6→67.6, defer→80.6), RQ3 depth law;
+research paper restructured (publish-target) with verified related-work citations; HTML project page.
+**Live closeout landed (2026-06-12):** Neo4j up via Docker, in-repo graph build (01→02) reproduces the
+frozen G8 retrieval EXACTLY (GT-in-pool 100%, Top-1 6.7, Top-5 16.7, pool median 76 / mean 118.4);
+Top-10/MRR need the Gemini rerank arm (API-key-gated, rerank-only). **mscd_demo retrieval layer is now
+reproducible in-repo → retire-able.**
 
 ---
 

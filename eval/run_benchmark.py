@@ -8,10 +8,12 @@ Two modes (see docs/ROADMAP.md, Phase 0):
                   No Neo4j, no GPU. Used for harness validation, thesis parity,
                   and as a fast regression baseline over frozen traces.
 
-  --live        : run the real pipeline (extract -> plan -> retrieve -> rerank).
-                  Needs Neo4j + model inference. NOT YET IMPLEMENTED — gated on the
-                  Phase 0 live-closeout (dockerize Neo4j + migrate IFC model +
-                  model-adapter access) that must land before mscd_demo is retired.
+  --live        : run the real symbolic pipeline (plan -> retrieve -> rank) against a
+                  live Neo4j graph, using the frozen G8 extraction as precomputed
+                  constraints (no GPU/VLM). Proves the in-repo graph build + planner
+                  reconstruct the frozen retrieval. GT-in-pool + pool sizes reproduce
+                  exactly; Top-k order needs the Gemini rerank (GOOGLE_API_KEY) to match.
+                  See eval/live_runner.py.
 
 Retrieval (Track B) metrics, every rate reported with a bootstrap 95% CI:
   GT-in-pool (over the FULL retrieved pool), Top-1, Top-5, Top-10, MRR@10,
@@ -244,7 +246,10 @@ def main() -> None:
     mode.add_argument("--from-traces", type=Path, metavar="TRACE.jsonl",
                       help="score a saved e2e trace JSONL offline")
     mode.add_argument("--variant", help="named variant from experiments.yaml (offline)")
-    mode.add_argument("--live", action="store_true", help="run the real pipeline (NOT IMPLEMENTED)")
+    mode.add_argument("--live", action="store_true",
+                      help="run the real symbolic pipeline against live Neo4j (precomputed extraction)")
+    ap.add_argument("--p0-strategy", dest="p0_strategy", default="p0_union_p1",
+                    help="P0 retrieval strategy for --live (default p0_union_p1, the paper-canonical union)")
     ap.add_argument("--reference", type=Path, help="frozen *_metrics.json for parity check")
     ap.add_argument("--name", help="label for the run (default: trace/variant name)")
     ap.add_argument("--experiments", type=Path, default=DEFAULT_EXPERIMENTS)
@@ -255,7 +260,24 @@ def main() -> None:
     args = ap.parse_args()
 
     if args.live:
-        sys.exit("--live is not implemented yet (Phase 0 live-closeout gate; see docs/ROADMAP.md).")
+        # Live retrieval reproduction: plan -> retrieve -> rank against a running Neo4j,
+        # using the frozen G8 extraction as precomputed constraints (no GPU/VLM). Proves
+        # the in-repo graph build + planner reconstruct the frozen pipeline's retrieval.
+        # GT-in-pool + pool sizes reproduce exactly; Top-k may differ (Gemini rerank not in
+        # the offline live path). See eval/live_runner.py.
+        from live_runner import run_live
+        name = args.name or "live"
+        rows = run_live(args.p0_strategy)
+        cases = [score_case(r) for r in rows]
+        agg = aggregate(cases, args.bootstrap, args.seed)
+        ref_path = args.reference
+        parity = parity_check(agg, ref_path) if ref_path else None
+        ok = print_report(name, agg, parity)
+        if args.out:
+            args.out.parent.mkdir(parents=True, exist_ok=True)
+            args.out.write_text(json.dumps({"name": name, "mode": "live", **agg}, indent=2))
+            print(f"\nwrote {args.out}")
+        sys.exit(0 if (parity is None or ok) else 1)
 
     if args.variant:
         trace_path, ref_path, name = resolve_variant(args.variant, args.experiments)
