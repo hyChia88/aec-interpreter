@@ -42,6 +42,12 @@ dev = [
 geom = [
     "open3d>=0.17.0",
 ]
+# live pipeline: Neo4j retrieval (run_benchmark --live) + Modal GPU VLM inference
+# (eval/live_infer.py calls the deployed mscd-vlm-lora3-inference app).
+live = [
+    "py2neo>=2021.2",
+    "modal>=1.5",
+]
 # legacy V1 agent + interactive chat (NOT used by the neuro-symbolic pipeline; kept
 # only if the old agent path is run for qualitative comparison)
 agent = [

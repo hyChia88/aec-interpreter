@@ -12,8 +12,14 @@ research paper restructured (publish-target) with verified related-work citation
 frozen G8 retrieval EXACTLY (GT-in-pool 100%, Top-1 6.7, Top-5 16.7, pool median 76 / mean 118.4).
 Top-10/MRR differ by 2 cases — deterministic tie-break ordering of *identical* siblings in the pool
 tail (fresh graph inserts nodes in a different order than mscd_demo; frozen G8 used NO rerank,
-rerank_gain=None). Live pipeline is itself byte-identical across runs (60/60 — repeatability verified).
-**mscd_demo retrieval layer is now reproducible in-repo → retire-able.**
+rerank_gain=None). **LIVE VLM INFERENCE landed (2026-06-12):** `eval/live_infer.py` calls the deployed
+Modal A100 endpoint (mscd-vlm-lora3-inference / G8ModelPredictor, canonical G8 adapter from the
+checkpoint volume) on a real photo+note → Constraints → live Neo4j retrieve → ranked GUID + ANSWER/DEFER.
+Verified end-to-end: AP_SK_108 (window) → live VLM extracts "7th of 10 openings", GT at rank 5/pool 46 →
+ANSWER. So the FULL pipeline now runs live (no precomputed traces). The precomputed `--live` path is
+itself byte-identical across runs (60/60 — repeatability verified). **mscd_demo is now reproducible
+in-repo (retrieval + live VLM) → retire-able.** Remaining: web-demo wiring (FastAPI /ground + browser
+upload → 3D highlight); the OpenCV slot specialist is not yet in the live G8 path (pure-VLM only).
 
 ---
 

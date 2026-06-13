@@ -68,17 +68,20 @@ def _row_from_traces(eval_trace: Any, pipeline_trace: Any) -> dict:
     return row
 
 
-async def _run_all(p0_strategy: str) -> list[dict]:
+def build_engine_backend(p0_strategy: str = "p0_union_p1"):
+    """Connect Neo4j, parse the IFC into an IFCEngine, build a neo4j RetrievalBackend.
+
+    Shared by the precomputed `--live` reproduction (live_runner) and the live VLM
+    inference CLI (live_infer). Returns (engine, backend).
+    """
     from py2neo import Graph
     from aec_interpreter.ifc_engine import IFCEngine
     from aec_interpreter.neurosym.retrieval_backend import RetrievalBackend
-    from aec_interpreter.neurosym.pipeline import run_pipeline_case
 
     graph = Graph("bolt://localhost:7687", auth=("neo4j", "password"))
     print(f"[live] Neo4j connected — {graph.run('MATCH (e:IFCElement) RETURN count(e)').evaluate()} elements")
     print("[live] parsing IFC (populates engine.spatial_index for pool sizing)…", flush=True)
     engine = IFCEngine(str(IFC), neo4j_conn=graph)
-
     backend = RetrievalBackend(
         engine=engine,
         retrieval_mode="neo4j",
@@ -88,27 +91,47 @@ async def _run_all(p0_strategy: str) -> list[dict]:
         size_cluster_mode="soft",       # matches config.yaml
         size_band_mode="hard",
     )
+    return engine, backend
 
+
+async def run_case_live(case: dict, constraints, engine, backend) -> dict:
+    """Run plan->retrieve->rank for one case with given constraints; return a scored-ready row.
+
+    `constraints` is a Constraints object (from frozen traces OR a live Modal VLM call).
+    Passed via precomputed_constraints so run_pipeline_case skips all VLM/LLM inference.
+    """
+    from aec_interpreter.neurosym.pipeline import run_pipeline_case
+
+    cid = case.get("case_id", "")
+    eval_trace, pipeline_trace = await run_pipeline_case(
+        case=case,
+        condition_overrides={"use_images": False},
+        constraints_model="lora",          # + precomputed => no local VLM/LLM call
+        retrieval_backend=backend,
+        llm=None,
+        run_id="live",
+        image_dir="",
+        engine=engine,
+        image_parser=None,
+        lora_extractor=None,
+        precomputed_constraints={cid: constraints} if constraints is not None else None,
+    )
+    return _row_from_traces(eval_trace, pipeline_trace)
+
+
+async def _run_all(p0_strategy: str) -> list[dict]:
+    from aec_interpreter.neurosym.pipeline import run_pipeline_case  # noqa: F401 (warms import)
+
+    engine, backend = build_engine_backend(p0_strategy)
     cases = _load_jsonl(CASES)
     precomp = _precomputed_constraints(_load_jsonl(FROZEN))
     print(f"[live] {len(cases)} cases, {len(precomp)} precomputed constraints, p0_strategy={p0_strategy}")
 
     rows: list[dict] = []
     for i, case in enumerate(cases, 1):
-        eval_trace, pipeline_trace = await run_pipeline_case(
-            case=case,
-            condition_overrides={"use_images": False},
-            constraints_model="lora",          # + precomputed => no VLM/LLM call
-            retrieval_backend=backend,
-            llm=None,
-            run_id="live",
-            image_dir="",
-            engine=engine,
-            image_parser=None,
-            lora_extractor=None,
-            precomputed_constraints=precomp,
-        )
-        rows.append(_row_from_traces(eval_trace, pipeline_trace))
+        cid = case.get("case_id", "")
+        row = await run_case_live(case, precomp.get(cid), engine, backend)
+        rows.append(row)
         if i % 10 == 0:
             print(f"[live]   {i}/{len(cases)} cases", flush=True)
     return rows
