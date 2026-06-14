@@ -1,431 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AEC Interpreter: Cross-Modal Grounding &amp; Ontology-Driven Retrieval</title>
-<meta name="description" content="A neuro-symbolic spatial multimodal grounding system that translates construction-site photos, notes, and floorplan evidence into exact IFC/BIM element GUIDs — auditable, hallucination-resistant, and calibrated to abstain.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="article.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEC Interpreter — Cross-Modal Grounding &amp; Ontology-Driven Retrieval</title>
+  <meta name="description" content="A neuro-symbolic AI middleware that grounds construction-site photos, notes, and floorplan evidence to exact IFC/BIM element GUIDs — auditable, hallucination-resistant, and calibrated to abstain.">
+  <link rel="stylesheet" href="article.css">
 </head>
 <body>
 
-<nav class="bar"><div class="wrap">
-  <span class="brand">AEC&nbsp;<b>Interpreter</b></span>
-  <a href="#problem">Problem</a><a href="#system">Workflow</a><a href="#components">Engineering</a>
-  <a href="#spatial">Spatial interpretation</a><a href="#results">Results</a>
-  <a href="#impact">Impact</a><a href="#demo">Demo</a>
-  <a class="back" href="https://hychia88.github.io/" target="_blank" rel="noopener">↗ Portfolio</a>
-</div></nav>
-
 <!-- Hero -->
-<header class="hero"><div class="wrap">
-  <span class="eyebrow">CMU MSCD Thesis · Spatial intelligence for AEC workflows</span>
-  <h1>AEC Interpreter: Cross-Modal Grounding &amp; Ontology-Driven Retrieval
-    <span class="sub">A neuro-symbolic interpreter that maps unstructured site evidence to the exact IFC element in a BIM knowledge graph.</span>
-  </h1>
-  <p class="lede">Construction-site evidence is egocentric and messy: phone photos, marked plans,
-    and short notes. BIM is allocentric and structured: IFC types, topology, and globally unique
-    element IDs. AEC Interpreter is the translation layer between them. It answers the first
-    question every downstream workflow depends on: <em>where exactly is this in the model?</em>,
-    using only the BIM model itself, <b>with no history of labelled site photos</b>, and it
-    <b>refuses to guess when it is unsure</b>.</p>
-  <p class="byline">Chia&nbsp;Hui&nbsp;Yen</p>
-  <p class="affil">M.Sc. Computational Design · <b>Carnegie Mellon University</b></p>
-  <div class="btns">
-    <a class="btn" href="https://github.com/hyChia88/aec-interpreter.git" target="_blank" rel="noopener">💻 Git Repo</a>
-    <a class="btn ghost" href="demo.html">▶ Interactive 3D demo</a>
-    <a class="btn ghost" href="#results">📊 Results</a>
+<header class="hero">
+  <div class="wrap">
+    <h1>
+      <span class="title-line">An Interpreter Layer for AEC:</span>
+      <span class="title-line">Cross-Modal Grounding &amp; Ontology-Driven Retrieval</span>
+    </h1>
+    <p class="sub">
+      A neuro-symbolic AI middleware that grounds site photos and field notes to specific IFC element
+      GUIDs in a BIM model — hallucination-free, fully traceable.</p>
+    <p class="authors"><strong>Chia Hui Yen</strong></p>
+    <p class="affil">M.Sc. Computational Design · Carnegie Mellon University</p>
+    <div class="btns">
+      <a class="btn" href="https://github.com/hyChia88/aec-interpreter.git" target="_blank" rel="noopener">💻 Git Repo</a>
+      <a class="btn ghost" href="assets/pdfs/MSCD_Thesis.pdf" target="_blank" rel="noopener">📄 Thesis (PDF)</a>
+      <a class="btn ghost" href="#demo">▶ Video Demo</a>
+    </div>
   </div>
-  <div class="pills">
-    <span class="pill">site photo + note + plan&nbsp;→&nbsp;<b>IFC element GUID</b></span>
-    <span class="pill"><b>zero</b> hallucinated IDs</span>
-    <span class="pill">cold-start: <b>no real labels</b></span>
-    <span class="pill">VLM extraction&nbsp;·&nbsp;IFC knowledge graph&nbsp;·&nbsp;spatial address</span>
-  </div>
-  <div class="stats">
-    <div class="stat"><div class="n">100%</div><div class="l">the answer is <b>always retrievable</b><br>(ground truth in the candidate pool)</div></div>
-    <div class="stat"><div class="n up">67.6%</div><div class="l"><b>realized</b> right-first<br>slot specialist on 35 filler cases</div></div>
-    <div class="stat"><div class="n up">78.5%</div><div class="l"><b>diagnostic ceiling</b><br>perfect address on 60 held-out cases</div></div>
-    <div class="stat"><div class="n up">76×</div><div class="l">less expected triage effort<br>(median inspections 38 → 0.5)</div></div>
-  </div>
-</div></header>
+</header>
 
 <!-- Problem -->
-<section id="problem"><div class="wrap">
-  <h2><span class="num">The Problem</span>The physical-to-digital traceability gap</h2>
-  <p>Construction and facilities teams standardise on
-    <span class="term" title="Open, vendor-neutral ISO standard for sharing BIM models">OpenBIM/IFC</span>, yet
-    day-to-day coordination still runs on manual interpretive labour: people translate unstructured evidence —
-    photos, chat messages, floorplan markups — into model-linked records by hand. The front-line worker sees a
-    local condition but not the BIM GUID; the coordinator sees the model but not the site context. In dense
-    buildings, that gap becomes a grounding bottleneck: many windows, doors, and walls are visually and
-    semantically repeated.</p>
-  <p>The final step is choosing one element from a retrieved shortlist that <b>already contains the answer</b>
-    (median 76 candidates, ground truth present 100% of the time). So the difficulty is not simply
-    <em>retrieval</em> but <b>discriminating among visually identical siblings</b>. What separates two windows
-    is not in their pixels; it is in the building's <em>relational structure</em>. A black-box matcher plateaus
-    at <b>6.7%</b> right-first with the answer already in the pool. The contribution is to make that relational
-    signal explicit as a spatial address that can be read from evidence and executed against BIM.</p>
-  <figure>
-    <img src="assets/portfolio/fig-problem-workflow.png" alt="AEC workflow with information loss between physical site and digital BIM cloud.">
-    <figcaption>Coordination spans the physical site and the digital BIM cloud across many stakeholders —
-      <b>every manual handoff leaks context</b>.</figcaption>
-  </figure>
-</div></section>
-
-<!-- Workflow -->
-<section id="system"><div class="wrap">
-  <h2><span class="num">Workflow</span>Evidence first, graph reasoning second, 3D verification last</h2>
-  <p><span class="term" title="Pairing a neural network for perception with deterministic symbolic logic for execution">Neuro-symbolic</span>
-    means a neural network does the <em>perceiving</em> and a deterministic symbolic engine does the
-    <em>deciding</em>. In this project, ontology is the guardrail — legal IFC vocabulary, storeys,
-    classes, and GUIDs — while topology is the discriminator: the local spatial structure that separates
-    look-alike elements. Evidence flows through one pipeline:</p>
-
-  <div class="flow">
-    <div class="st"><span class="n">① INPUT</span><h4>Evidence</h4><p>site photo + field note + (optional) marked floorplan</p></div>
-    <div class="arr">→</div>
-    <div class="st"><span class="n">② PERCEPTION</span><h4>Field extraction</h4><p>a fine-tuned VLM + deterministic visual specialists read the evidence into typed fields</p></div>
-    <div class="arr">→</div>
-    <div class="st"><span class="n">③ ADDRESS</span><h4>Spatial address</h4><p>storey, class, host relation, and sibling slot become an auditable address record</p></div>
-    <div class="arr">→</div>
-    <div class="st"><span class="n">④ SYMBOLIC</span><h4>IFC graph retrieval</h4><p>deterministic Cypher over ON_STOREY, FILLS, NEXT_TO, and CONNECTS_TO ranks candidates</p></div>
-    <div class="arr">→</div>
-    <div class="st"><span class="n">⑤ OUTPUT</span><h4>Answer or defer</h4><p>the system returns a ranked GUID with 3D verification, or abstains when confidence is too low</p></div>
+<section id="problem">
+  <div class="wrap">
+    <h2><span class="num">The Problem</span>The physical–digital traceability gap</h2>
+    <p class="lead">
+      AEC projects standardise on OpenBIM/IFC, yet day-to-day site coordination still runs on manual
+      interpretive labour: people translate unstructured evidence — photos, chat messages, floorplan
+      patches — into model-linked, schema-compliant records. The front-line worker sees a local
+      condition but not the BIM GUID; the coordinator sees the model but not the site context.
+    </p>
+    <p>
+      The final step is choosing one element from a retrieved shortlist that <strong>already contains the
+      answer</strong> (median 76 candidates, ground truth present 100% of the time). So the difficulty is
+      not <em>retrieval</em> but <strong>discriminating among visually identical siblings</strong> — what
+      separates two windows is not in their pixels, it is in the building's relational structure. A
+      black-box matcher plateaus at <strong>6.7%</strong> right-first with the answer already in the pool.
+      This work makes that relational signal explicit as a <em>spatial address</em> that can be read from
+      evidence and executed against BIM.
+    </p>
+    <figure>
+      <img src="assets/portfolio/fig-problem-workflow.png"
+           alt="Multi-stakeholder AEC workflow showing information loss between physical site and digital BIM cloud">
+      <figcaption>Coordination spans physical site and the digital BIM cloud across many stakeholders —
+        every manual handoff leaks context.</figcaption>
+    </figure>
   </div>
+</section>
 
-  <p>The load-bearing design choice is <em>auditable execution over free-form generation</em>: <b>the neural
-    network never writes a database query.</b> It emits a structured description; deterministic templates turn
-    that into graph operations. The neural side translates evidence into a typed spatial address; the symbolic
-    side names only GUIDs that exist in the model. Every error is therefore traceable to a specific field or
-    stage — type, floor, position, confidence, or ranking.</p>
-  <figure>
-    <img src="assets/system_decomposition.png" alt="System decomposition from site evidence to spatial address, IFC graph retrieval, and 3D verification.">
-    <figcaption><b>System decomposition.</b> The page uses the same visual grammar as the worked examples:
-      evidence enters from the left, each module owns a specific intermediate field, the spatial address becomes
-      a graph-readable contract, and the IFC knowledge graph returns only verifiable GUIDs.</figcaption>
-  </figure>
-</div></section>
-
-<!-- Engineering -->
-<section id="components"><div class="wrap">
-  <h2><span class="num">Engineering</span>Engineering decisions, measured against alternatives</h2>
-  <p>The project was built as a set of explicit contracts rather than one opaque model call. Each contract has
-    an experiment behind it: what to let the VLM do, what to push into deterministic geometry, when to trust an
-    extracted address, and how much graph context is recoverable from site evidence. This is the ownership layer:
-    IFC parsing, graph enrichment, constrained generation, calibrated routing, evaluation harnesses, figures,
-    and the browser demo all expose where the system succeeds or fails.</p>
-
-  <table class="decisions">
-    <thead><tr><th>Engineering question</th><th>Decision</th><th>Comparison / evidence</th><th>Owned implementation</th></tr></thead>
-    <tbody>
-      <tr><td>Should the VLM directly name the BIM element?</td>
-        <td>No. The VLM emits typed JSON; deterministic graph queries name only IFC GUIDs that exist in the model.</td>
-        <td>Fine-tuned VLM gets GT-in-pool to 100% but only 6.7% Top-1, showing that final sibling selection needs explicit spatial structure.</td>
-        <td>VLM schema, query templates, evaluator</td></tr>
-      <tr><td>Can generic retrieval solve the task?</td>
-        <td>No. Retrieval is ontology-constrained, then re-ranked by a spatial address over the IFC graph.</td>
-        <td>Lexical and dense baselines stay at 1.7% Top-1; the address ceiling reaches 78.5% Top-1 and 98.1% Top-10 on 60 held-out AP cases.</td>
-        <td>IFC KG, Cypher planner, baselines</td></tr>
-      <tr><td>Should noisy address fields hard-filter candidates?</td>
-        <td>No. The address is a soft prior with calibrated answer/defer routing, preserving recall when the detector is uncertain.</td>
-        <td>Hard and soft matching both reach 67.6% on the realized filler subset; selective prediction improves answered-case accuracy to 80.6%.</td>
-        <td>confidence contract, calibration gate</td></tr>
-      <tr><td>How deep should graph context go?</td>
-        <td>Compile useful one-hop context into the element record; do not ask the image model to recover deep relation chains.</td>
-        <td>Realizable discrimination saturates at one hop: median confusable set shrinks from 13 to about 8, with little further realized gain.</td>
-        <td>graph enrichment, depth study</td></tr>
-      <tr><td>What belongs to learned perception vs deterministic specialists?</td>
-        <td>Use the VLM for coarse semantics; use OpenCV/ResNet-style specialists for count, ordinal slot, and size cues.</td>
-        <td>The VLM reaches 100% on storey/class but 0% on slot/size; the realized slot specialist reaches 67.6% Top-1 on 35 window/door filler cases.</td>
-        <td>specialists, ablations, demo trace</td></tr>
-    </tbody>
-  </table>
-
-  <h3 class="in"><span class="lbl">Evidence flow</span>The engineered pieces, in execution order</h3>
-
-  <h3 class="in"><span class="lbl">② Perception — reading the evidence</span>From pixels and prose to a typed description</h3>
-  <div class="grid2">
-    <div class="imgcard"><img src="assets/vlm_implementation.png" alt="Fine-tuned VLM implementation: multimodal inputs to typed Constraints JSON, with spatial-direction accuracy improvement.">
-      <div class="cap"><b>Fine-tuned VLM — the perception engine.</b> A LoRA-tuned Qwen2.5-VL reads photo,
-        note, and floorplan evidence into a typed contract:
-        <span class="mono">{storey, ifc_class, spatial_relations[]}</span>. It <em>describes</em>; it never
-        queries the graph. Direct impact: spatial-direction accuracy improves from 0% zero-shot Gemini to
-        <b>82%</b> after fine-tuning. &nbsp;<i>Qwen2.5-VL · LoRA · Constraints JSON</i></div></div>
-    <div class="imgcard"><img src="assets/portfolio/fig-visual-heuristics.png" alt="Deterministic visual specialists: OpenCV counting and ResNet size classification.">
-      <div class="cap"><b>Deterministic visual specialists.</b> OpenCV counts openings and reads ordinal position;
-        ResNet classifies size bands — the sub-tasks a VLM does <em>unreliably</em>. Each emits its own
-        <em>confidence</em>, and this is the seed of the spatial-interpretation work below. &nbsp;<i>OpenCV · ResNet</i></div></div>
-  </div>
-  <figure>
-    <img src="assets/vlm_profile.png" alt="Fine-tuned VLM per-field extraction: coarse 100%, discriminating fields 0%.">
-    <figcaption><b>Perception takeaway.</b> This summary is intentionally downstream-facing: VLM-only grounding
-      stays low because coarse semantics are not enough to identify repeated siblings. Adding the realized
-      slot specialist lifts the addressable subset from <b>6.7%</b> to <b>67.6%</b>, while the address ceiling
-      shows the remaining headroom if all address fields are extracted correctly.</figcaption>
-  </figure>
-
-  <h3 class="in"><span class="lbl">③ Symbolic backend — the deterministic engine</span>An IFC-native knowledge graph + a deterministic planner</h3>
-  <div class="grid2">
-    <div class="imgcard"><img src="assets/portfolio/fig-ifc-parse-engine.png" alt="IFC parse engine building an enriched knowledge graph.">
-      <div class="cap"><b>IFC Parse &amp; Enrich Engine.</b> Converts the raw IFC into a
-        <span class="term" title="The model stored as nodes (elements) and typed edges (relations)">knowledge graph</span> —
-        nodes are elements, edges are relations — enriched beyond native containment with retrieval-oriented
-        topology: <span class="mono">NEXT_TO, CONNECTS_TO, ADJACENT_TO, ON_STOREY</span>. &nbsp;<i>IfcOpenShell · Neo4j</i></div></div>
-    <div class="imgcard"><img src="assets/portfolio/fig-symbolic-retrieval.png" alt="Symbolic retrieval planner with attribute filter and topology rerank.">
-      <div class="cap"><b>Symbolic Planner + Graph-RAG.</b> A recall-preserving <span class="mono">p0∪p1</span> union
-        planner combines attribute filtering with spatial-topology ranking; templates are deterministic — same
-        input, same query, same result. &nbsp;<i>Cypher · priority cascade</i></div></div>
-  </div>
-
-  <h3 class="in"><span class="lbl">④ Control — adaptive routing</span>An orchestration layer that knows when to defer</h3>
-  <div class="grid2">
-    <div class="card">
-      <span class="tag">Orchestration &amp; routing</span>
-      <h3>Confidence-driven control</h3>
-      <p>Every extracted field carries a <span class="mono">{value, confidence, source}</span> record. An
-        orchestration layer routes on that confidence — which deterministic specialist to trust, which constraint
-        to apply softly, and <b>when to defer to a human</b> instead of guessing. The policy is studied as an
-        ablation, from a static calibrated threshold → a learned router → an
-        <b>LLM-agent orchestrator</b> (same backbone), scored on accuracy, latency, and <em>repeatability</em>.</p>
-      <div class="meta">static → learned router → agent · the adaptivity arm</div>
+<!-- Abstract -->
+<section id="abstract">
+  <div class="wrap">
+    <h2><span class="num">Abstract</span>Overview</h2>
+    <div class="abstract">
+      <p>
+        Coordinating AEC projects means constantly translating messy site evidence into the structured
+        BIM record — error-prone, manual work. This thesis asks: <em>how can AI act as an interpreter
+        middleware to reliably align unstructured site evidence with digital project data?</em> The answer
+        is a <strong>hierarchical neuro-symbolic architecture</strong>: a fine-tuned vision-language model
+        extracts typed spatial constraints, and a deterministic symbolic layer runs a priority-ordered
+        traversal over an enriched IFC knowledge graph, with a Graph-RAG reranker producing the final
+        ranked candidates. The load-bearing idea is a <strong>type-conditional spatial address</strong> —
+        a relational key computable from the BIM model with no labels and recoverable from a flat image.
+        Supplied perfectly it lifts pool right-first from 4.9% to <strong>78.5%</strong>; one realized
+        deterministic detector lifts the addressable subset to <strong>58.9% end-to-end</strong>, and a
+        calibrated answer/defer gate raises the answered subset to <strong>73.4%</strong> — the system
+        knows when to abstain.
+      </p>
     </div>
-    <div class="imgcard"><img src="assets/portfolio/fig-data-pipeline.png" alt="Synthetic data pipeline: IFC mining, Blender synthesis, LLM-as-judge filtering.">
-      <div class="cap"><b>Trained with zero real labels.</b> Skeleton-first generation fixes ground truth before
-        adding stochastic visual evidence: IFC mining → Blender renders with hard negatives → LLM text →
-        LLM-as-judge filter → <b>990 cases</b>, no human annotation. &nbsp;<i>Blender · Gemini · LLM-judge</i></div></div>
   </div>
-</div></section>
+</section>
 
-<!-- Innovation -->
-<section id="spatial" style="background:linear-gradient(180deg,#fafcff,#fff)"><div class="wrap">
-  <h2><span class="num">Innovation</span>Reading <em>space</em> from a flat image — the spatial-interpretation layer</h2>
-  <p>The thesis proved the architecture sound: with perfect perception the symbolic engine keeps the correct
-    element <b>100%</b> of the time and compresses the shortlist toward a single answer — so the bottleneck is
-    <em>perception</em>, not graph logic. The core advance deepens the deterministic visual specialists into a
-    principled <b>spatial-interpretation layer</b>: instead of ad-hoc cues, the system recovers a
-    <span class="term" title="A relational key, e.g. 'the 3rd of 5 windows along this wall', that pins one element among look-alikes">spatial address</span>
-    — a relational key read from plain 2D images and floorplans, computable from the BIM model and recoverable
-    from the evidence. Three questions, answered with measurements:</p>
-
-  <div class="grid3">
-    <div class="card"><span class="tag">① Representation</span>
-      <h3>What is the minimal address?</h3>
-      <p>It is <b>type-conditional</b>: a coarse prefix (storey + class) is necessary but <em>saturated</em>; the
-        discriminator is class-specific — a <b>position-slot</b> <span class="mono">(i of M)</span> for an opening,
-        a <b>connectivity fingerprint</b> for a wall.</p>
-      <div class="res">ceiling: right-first 4.9% → <b>78.5%</b> (n=60)</div></div>
-    <div class="card"><span class="tag">② Mechanism</span>
-      <h3>How to use a noisy address?</h3>
-      <p>Hard filtering deletes the answer, so the address is a <b>soft prior</b> in a recall-fixed pool. One real
-        detector closes most of the gap; its confidence passes a <b>calibration gate</b>, and its payoff is
-        <b>knowing when to abstain</b> — not blind reweighting.</p>
-      <div class="res">realized slot: 6.6% → <b>67.6%</b> · defer → <b>80.6%</b> (n=35)</div></div>
-    <div class="card"><span class="tag">③ Architecture</span>
-      <h3>How deep should context go?</h3>
-      <p>A <b>depth law</b>: deeper relations are more unique but their recovery from an image collapses with
-        distance, so discrimination <b>saturates at one hop</b> — compile the relation into the element rather
-        than chase deep chains.</p>
-      <div class="res">confusable set 13 → <b>8</b> at one hop</div></div>
+<!-- Contributions -->
+<section id="contributions">
+  <div class="wrap">
+    <h2><span class="num">Contributions</span>What this work delivers</h2>
+    <div class="cards">
+      <div class="card">
+        <span class="tag">Reliability</span>
+        <h3>Zero hallucinated GUIDs</h3>
+        <p>The VLM never writes Cypher. A fine-tuned extractor emits a typed Constraints JSON that fills
+          deterministic query templates — the system can only return GUIDs that exist in the model.</p>
+      </div>
+      <div class="card">
+        <span class="tag">ML Engineering</span>
+        <h3>Pipeline under zero real labels</h3>
+        <p>An IFC Parse &amp; Enrich engine generates training data deterministically from raw IFC:
+          structure mining → Blender synthesis with hard negatives → LLM-as-judge filtering → 990
+          grounded cases.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Architecture</span>
+        <h3>Decomposable failures</h3>
+        <p>Decoupling probabilistic extraction from deterministic retrieval removes black-box failure:
+          every error is traceable to a specific stage — type, floor, position, confidence, or ranking.</p>
+      </div>
+    </div>
   </div>
+</section>
 
-  <figure>
-    <img src="assets/pipeline.png" alt="The spatial-interpretation pipeline traced through one real case, stages (a)-(e).">
-    <figcaption><b>Spatial interpretation, traced through one real case.</b> <b>(a)</b> evidence →
-      <b>(b)</b> per-field extraction, each a <span class="mono">{value, confidence, source}</span> record (VLM →
-      storey/class; OpenCV → the position-slot; ResNet → size) → <b>(c)</b> the depth-1 spatial-address record →
-      <b>(d)</b> calibrated routing → <b>(e)</b> the knowledge-graph shortlist collapses (46 → 46 → 1) to a GUID.
-      The orange lane is the confidence-routing path that binds the answer/defer decision.</figcaption>
-  </figure>
-</div></section>
+<!-- Architecture -->
+<section id="system">
+  <div class="wrap">
+    <h2><span class="num">Architecture</span>The neuro-symbolic interpreter</h2>
+    <p class="lead">
+      Five stages: <strong>multimodal input → neural extraction (VLM + LoRA) → Constraints JSON →
+      symbolic retrieval (priority Cypher cascade over a Neo4j IFC graph) → Graph-RAG reranking → ranked
+      GUIDs.</strong> The neural side translates evidence into a typed spatial address; the symbolic side
+      names only GUIDs that exist in the model. Design rationale: reliability over flexibility
+      (deterministic templates instead of Text-to-Cypher), and an IFC-native graph built from the schema
+      itself rather than noisy document-level extraction.
+    </p>
+    <figure>
+      <img src="assets/graph_reasoning.png"
+           alt="Module decomposition as graph reasoning on a real case: pool narrows from 76 to 46 same-class siblings, the position-slot resolves to rank 1">
+      <figcaption><strong>Module decomposition as graph reasoning</strong> (real case AP_SK_092). The
+        layout is the <em>real</em> knowledge graph — a force-directed layout on the actual
+        <code>FILLS</code> (window→host-wall hub) and <code>NEXT_TO</code> (consecutive openings) edges,
+        held fixed across all four panels. The recall-safe pool of 76 candidates narrows to 46
+        same-storey+class windows in 6 host-wall clusters; the target's wall is a 10-opening chain and
+        the position-slot (8 of 10) re-weights the siblings (none removed); the target lands at rank 1.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- Key Modules / Engineering -->
+<section id="components">
+  <div class="wrap">
+    <h2><span class="num">Key Modules</span>How it works under the hood</h2>
+    <div class="mods">
+      <div class="mod">
+        <img src="assets/portfolio/fig-ifc-parse-engine.png" alt="IFC parse engine converting raw IFC into an enriched knowledge graph">
+        <div class="body">
+          <h3>IFC Parse &amp; Enrich Engine</h3>
+          <p>Converts raw IFC into a query-ready Neo4j graph, enriching topology beyond native
+            containment/fill with retrieval-oriented edges: NEXT_TO, CONNECTS_TO, ADJACENT_TO, ON_STOREY.</p>
+          <div class="stack">IfcOpenShell · Neo4j</div>
+        </div>
+      </div>
+      <div class="mod">
+        <img src="assets/portfolio/fig-symbolic-retrieval.png" alt="Symbolic retrieval planner combining attribute filter and topology rerank">
+        <div class="body">
+          <h3>Symbolic Planner + Graph-RAG</h3>
+          <p>Nine priority strategies; the recall-preserving <code>p0∪p1</code> union planner combines
+            attribute filtering with spatial-topology ranking. Templates are deterministic — same input,
+            same query, same result.</p>
+          <div class="stack">Cypher · priority cascade</div>
+        </div>
+      </div>
+      <div class="mod">
+        <img src="assets/portfolio/fig-data-pipeline.png" alt="Synthetic data pipeline: IFC mining, Blender synthesis, LLM-as-judge filtering">
+        <div class="body">
+          <h3>Synthetic Data Pipeline</h3>
+          <p>Skeleton-first generation fixes ground truth before adding stochastic visual evidence: IFC
+            mining → Blender renders with hard negatives → Gemini text → LLM-as-judge filter → 990 cases,
+            no real labels.</p>
+          <div class="stack">Blender · Gemini · LLM-as-judge</div>
+        </div>
+      </div>
+      <div class="mod">
+        <img src="assets/portfolio/fig-visual-heuristics.png" alt="Deterministic visual heuristics: OpenCV counting and ResNet size classification">
+        <div class="body">
+          <h3>Deterministic Visual Specialists</h3>
+          <p>OpenCV handles counting and ordinal slot position; ResNet classifies element size bands —
+            the sub-tasks VLMs do unreliably. These inject discriminative cues into the reranker.</p>
+          <div class="stack">OpenCV · ResNet</div>
+        </div>
+      </div>
+      <div class="mod">
+        <img src="assets/vlm_finetune.png" alt="Fine-tuned VLM measured per-field, with a calibratable detector confidence">
+        <div class="body">
+          <h3>Fine-tuned VLM Extractor</h3>
+          <p>Qwen2.5-VL + LoRA (G-series) emits a typed contract
+            <code>{storey, ifc_class, spatial_relations[]}</code>. Fine-tuning saturates coarse fields
+            (storey/class → 100%) and learns relation typing (direction 0% → 82%), but discriminating
+            slot/size stay at 0% — the evidence for delegating them to specialists.</p>
+          <div class="stack">Qwen2.5-VL · LoRA · Constraints JSON</div>
+        </div>
+      </div>
+      <div class="mod">
+        <img src="assets/calibrate_rerank.png" alt="Calibrated confidence routing and selective-prediction curve">
+        <div class="body">
+          <h3>Calibrated Routing &amp; Control</h3>
+          <p>Every field carries a <code>{value, confidence, source}</code> record. An orchestration layer
+            routes on calibrated confidence (AUROC 0.80) — applying constraints softly and
+            <strong>deferring to a human</strong> instead of guessing. Studied as static → learned router →
+            LLM-agent ablation on accuracy, latency, and repeatability.</p>
+          <div class="stack">temperature scaling · answer/defer gate</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Engineering decisions, measured against alternatives</h3>
+    <p class="lead">Each contract has an experiment behind it: what to let the VLM do, what to push into
+      deterministic geometry, when to trust an extracted address, and how much graph context is
+      recoverable from a flat image.</p>
+    <table>
+      <thead><tr><th>Engineering question</th><th>Decision</th><th>Comparison / evidence</th></tr></thead>
+      <tbody>
+        <tr><td>Should the VLM directly name the BIM element?</td>
+          <td>No. The VLM emits typed JSON; deterministic queries name only existing IFC GUIDs.</td>
+          <td>Fine-tuned VLM reaches 100% GT-in-pool but only 6.7% Top-1 — sibling selection needs explicit spatial structure.</td></tr>
+        <tr><td>Can generic retrieval solve the task?</td>
+          <td>No. Retrieval is ontology-constrained, then re-ranked by a spatial address over the IFC graph.</td>
+          <td>Lexical/dense baselines stay at 1.7% Top-1; the address ceiling reaches 78.5% Top-1 / 98.1% Top-10 (n=60).</td></tr>
+        <tr><td>Should noisy address fields hard-filter candidates?</td>
+          <td>No. The address is a soft prior with calibrated answer/defer routing, preserving recall.</td>
+          <td>Realized end-to-end reaches 58.9% Top-1 (67.6% with oracle coarse fields); selective prediction lifts the answered subset to 73.4%.</td></tr>
+        <tr><td>How deep should graph context go?</td>
+          <td>Compile one-hop context into the element record; do not chase deep relation chains from an image.</td>
+          <td>Realizable discrimination saturates at one hop: the confusable set shrinks from 13 to about 8, with little further realized gain.</td></tr>
+        <tr><td>Learned perception vs deterministic specialists?</td>
+          <td>VLM for coarse semantics; OpenCV/ResNet specialists for count, ordinal slot, and size.</td>
+          <td>The VLM reaches 100% on storey/class but 0% on slot/size; the realized slot specialist reaches 58.9% Top-1 end-to-end (n=35 fillers).</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Innovation: spatial address -->
+<section id="spatial">
+  <div class="wrap">
+    <h2><span class="num">Innovation</span>Reading <em>space</em> from a flat image</h2>
+    <p class="lead">
+      The thesis proved the architecture sound — with perfect perception the symbolic engine keeps the
+      correct element 100% of the time and compresses the shortlist toward one, so the bottleneck is
+      <em>perception</em>, not graph logic. The core advance deepens the deterministic specialists into a
+      principled <strong>spatial-interpretation layer</strong>: instead of ad-hoc cues, the system recovers
+      a <em>spatial address</em> — a relational key read from plain 2D images, computable from the BIM
+      model and recoverable from the evidence. Three questions, answered with measurements:
+    </p>
+    <div class="cards">
+      <div class="card"><span class="tag">① Representation</span>
+        <h3>What is the minimal address?</h3>
+        <p>It is <strong>type-conditional</strong>: a coarse prefix (storey + class) is necessary but
+          saturated; the discriminator is class-specific — a <strong>position-slot</strong>
+          <code>(i of M)</code> for an opening, a <strong>connectivity fingerprint</strong> for a wall.</p>
+        <div class="res">ceiling: right-first 4.9% → 78.5% (n=60)</div></div>
+      <div class="card"><span class="tag">② Mechanism</span>
+        <h3>How to use a noisy address?</h3>
+        <p>Hard filtering deletes the answer, so the address is a <strong>soft prior</strong> in a
+          recall-fixed pool. One real detector closes most of the gap; its confidence passes a
+          <strong>calibration gate</strong>, and its payoff is knowing when to abstain.</p>
+        <div class="res">realized slot: 6.6% → 58.9% end-to-end · defer → 73.4% (n=35)</div></div>
+      <div class="card"><span class="tag">③ Architecture</span>
+        <h3>How deep should context go?</h3>
+        <p>A <strong>depth law</strong>: deeper relations are more unique but their recovery from an image
+          collapses with distance, so discrimination <strong>saturates at one hop</strong> — compile the
+          relation into the element rather than chase deep chains.</p>
+        <div class="res">confusable set 13 → 8 at one hop</div></div>
+    </div>
+    <figure>
+      <img src="assets/pipeline_shots.png"
+           alt="The spatial-interpretation pipeline traced through one real case with real screenshots, stages (a)-(e)">
+      <figcaption><strong>Spatial interpretation, traced through one real case</strong> (AP_SK_107, real
+        artefacts). (a) evidence → (b) per-field extraction, each a <code>{value, confidence, source}</code>
+        record (VLM → storey/class; OpenCV → the position-slot; ResNet → size) → (c) the depth-1
+        spatial-address record → (d) calibrated routing → (e) the knowledge-graph shortlist collapses to a
+        GUID. The highlighted lane is the confidence-routing path.</figcaption>
+    </figure>
+  </div>
+</section>
 
 <!-- Results -->
-<section id="results"><div class="wrap">
-  <h2><span class="num">Results</span>The address makes the architecture realizable</h2>
+<section id="results">
+  <div class="wrap">
+    <h2><span class="num">Results</span>The address makes the architecture realizable</h2>
+    <div class="callout">
+      <strong>Headline:</strong> under perfect extraction the symbolic layer retains the correct element in
+      <strong>100% of cases</strong> and compresses the candidate pool from a median of
+      <strong>46 → 1</strong>. The architecture is provably sound — the remaining operational ceiling is
+      bound by neural extraction quality, not by graph logic.
+    </div>
 
-  <h3 class="in">Oracle ceiling — the address compresses the shortlist toward one</h3>
-  <div class="grid2" style="align-items:center">
-    <figure style="margin-top:6px">
-      <img src="assets/portfolio/fig-oracle-ceiling.png" alt="Diagnostic spatial-address ceiling and fingerprint ladder.">
-      <figcaption>With the right address, the retrievable shortlist collapses toward 1 — isolating perception as
-        the bottleneck.</figcaption>
+    <div class="grid2">
+      <figure style="margin-top:0">
+        <img src="assets/portfolio/fig-oracle-ceiling.png" alt="Oracle experiment showing the symbolic ceiling and fingerprint ladder">
+        <figcaption>Oracle ceiling: enriched topology + the address drive the retrievable pool toward 1,
+          isolating extraction as the bottleneck.</figcaption>
+      </figure>
+      <div>
+        <h3 style="margin:0 0 4px">Oracle fingerprint ladder</h3>
+        <p class="tcap" style="margin-top:0">Median live pool · AP held-out benchmark (n=60)</p>
+        <table>
+          <thead><tr><th>Fingerprint level</th><th class="n">Median pool</th></tr></thead>
+          <tbody>
+            <tr><td>L0 — no filter</td><td class="n">1233</td></tr>
+            <tr><td>L1 — storey + class</td><td class="n">46</td></tr>
+            <tr><td>L3 — + direction + subtype</td><td class="n">9</td></tr>
+            <tr class="best"><td>L4 — + exact position slot*</td><td class="n">1</td></tr>
+          </tbody>
+        </table>
+        <p class="tcap">*L4 extractable for the addressable filler subset. L3 fingerprints provide the
+          dominant compression.</p>
+      </div>
+    </div>
+
+    <h3>Downstream retrieval — the black box plateaus; the address does not</h3>
+    <p class="tcap" style="margin-top:0">AP held-out benchmark (n=60), <code>p0∪p1</code> planner.</p>
+    <table>
+      <thead><tr><th>Model / diagnostic</th><th class="n">GT-in-pool</th><th class="n">Top-1</th><th class="n">Top-10</th><th class="n">MRR@10</th></tr></thead>
+      <tbody>
+        <tr><td>Zero-shot Gemini</td><td class="n">95.0%</td><td class="n">1.7%</td><td class="n">18.3%</td><td class="n">0.056</td></tr>
+        <tr><td>Fine-tuned VLM (best end-to-end)</td><td class="n">100%</td><td class="n">6.7%</td><td class="n">30.0%</td><td class="n">0.110</td></tr>
+        <tr><td>+ realized position-slot specialist (end-to-end)</td><td class="n">100%</td><td class="n">58.9%</td><td class="n">67.1%</td><td class="n">—</td></tr>
+        <tr><td>+ realized slot, oracle coarse (upper bound)</td><td class="n">100%</td><td class="n">67.6%</td><td class="n">80.9%</td><td class="n">—</td></tr>
+        <tr class="best"><td>+ type-conditional spatial-address ceiling</td><td class="n">100%</td><td class="n">78.5%</td><td class="n">98.1%</td><td class="n">0.854</td></tr>
+      </tbody>
+    </table>
+    <p class="tcap">The ceiling row is a diagnostic upper bound, not a deployed end-to-end system. The
+      realized row is the actual spatial-address path currently built — a deterministic position-slot
+      specialist for the 35 window/door filler cases; realized wall/other extractors are future work.</p>
+
+    <h3>The calibration is real — and pays off as deferral</h3>
+    <div class="grid2">
+      <figure><img src="assets/calibration_diag.png" alt="ECE calibration gate">
+        <figcaption><strong>The calibration gate passes.</strong> The detector's confidence tracks
+          correctness (AUROC 0.80) and is only moderately mis-calibrated (ECE 0.206) — so routing on it is
+          legitimate, not assumed.</figcaption></figure>
+      <figure><img src="assets/depth_saturation.png" alt="Realizable confusable-set size by relational depth">
+        <figcaption><strong>The depth law, measured.</strong> The model reads deep relation types reliably,
+          yet realized discrimination saturates at one hop because those types are homogeneous — the limit
+          is informational, not extraction reliability.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- Workflow Impact -->
+<section id="impact">
+  <div class="wrap">
+    <h2><span class="num">Workflow Impact</span>From manual search to verification</h2>
+    <div class="ba">
+      <div>
+        <h3>Before — manual coordination</h3>
+        <ul>
+          <li>Monthly site walk to inspect</li>
+          <li>Hand-written report; find element by sight</li>
+          <li>Manually type the IFC GUID</li>
+          <li>1–3 day lag; knowledge lost on handover</li>
+        </ul>
+      </div>
+      <div class="after">
+        <h3>With AEC Interpreter</h3>
+        <ul>
+          <li>Photo + field note in</li>
+          <li>~1s → ranked candidate pool</li>
+          <li>Worker taps the correct element</li>
+          <li>BCF package linked to the BIM cloud (CORENET&nbsp;X ready)</li>
+        </ul>
+      </div>
+    </div>
+    <figure>
+      <img src="assets/portfolio/fig-workflow-impact.png" alt="Human-in-the-loop triage and downstream BCF / CORENET compliance">
+      <figcaption>Human-in-the-loop triage: the coordinator's role shifts from searching a database to
+        verifying model-linked evidence. Accept/reject becomes a fine-tuning signal.</figcaption>
     </figure>
-    <table>
-      <thead><tr><th>Fingerprint level</th><th class="n">Median pool</th></tr></thead>
-      <tbody>
-        <tr><td>L0 — no filter</td><td class="n">1257</td></tr>
-        <tr><td>L1 — storey + class</td><td class="n">46</td></tr>
-        <tr><td>L3 — + direction + subtype</td><td class="n">9</td></tr>
-        <tr class="best"><td>L4 — + exact position slot</td><td class="n">1</td></tr>
-      </tbody>
-    </table>
   </div>
+</section>
 
-  <h3 class="in">Downstream — the black box plateaus; the address does not</h3>
-  <table>
-    <thead><tr><th>Model / diagnostic</th><th>Eval set</th><th class="n">GT-in-pool</th><th class="n">Top-1</th><th class="n">Top-10</th><th class="n">MRR@10</th></tr></thead>
-    <tbody>
-      <tr><td>Zero-shot Gemini</td><td>AP held-out n=60</td><td class="n">95.0%</td><td class="n">1.7%</td><td class="n">18.3%</td><td class="n">0.056</td></tr>
-      <tr><td>Fine-tuned VLM (best end-to-end)</td><td>AP held-out n=60</td><td class="n">100%</td><td class="n">6.7%</td><td class="n">30.0%</td><td class="n">0.110</td></tr>
-      <tr><td>+ realized position-slot specialist</td><td>filler subset n=35</td><td class="n">100%</td><td class="n">67.6%</td><td class="n">80.9%</td><td class="n">—</td></tr>
-      <tr class="best"><td>+ type-conditional spatial-address ceiling</td><td>AP held-out n=60</td><td class="n">100%</td><td class="n">78.5%</td><td class="n">98.1%</td><td class="n">0.854</td></tr>
-    </tbody>
-  </table>
-  <p class="muted" style="font-size:.86rem">The ceiling row is a diagnostic upper bound, not a deployed
-    end-to-end system. The realized row is the actual spatial-address path currently built: a deterministic
-    position-slot specialist for the 35 window/door filler cases. Full end-to-end + all address fields requires
-    realized wall/other extractors, which are intentionally reported as future work.</p>
-
-  <h3 class="in">External baselines — generic retrieval cannot break sibling ambiguity</h3>
-  <div class="grid2" style="align-items:center">
-    <figure style="margin-top:6px"><img src="assets/external_baseline.png" alt="Lexical, dense, fine-tuned VLM, and spatial address retrieval baselines.">
-      <figcaption>Generic retrieval can find the right floor and class, but it cannot
-        identify the sibling without a spatial address.</figcaption></figure>
-    <table>
-      <thead><tr><th>Method</th><th class="n">Top-1</th><th class="n">Top-10</th><th class="n">MRR</th></tr></thead>
-      <tbody>
-        <tr><td>Lexical token overlap</td><td class="n">1.7%</td><td class="n">15.6%</td><td class="n">0.058</td></tr>
-        <tr><td>Dense text retrieval</td><td class="n">1.7%</td><td class="n">25.0%</td><td class="n">0.108</td></tr>
-        <tr><td>Fine-tuned VLM</td><td class="n">6.7%</td><td class="n">30.0%</td><td class="n">0.110</td></tr>
-        <tr><td>+ realized position-slot specialist</td><td class="n">67.6%</td><td class="n">80.9%</td><td class="n">—</td></tr>
-        <tr class="best"><td>+ spatial-address ceiling</td><td class="n">78.5%</td><td class="n">98.1%</td><td class="n">0.854</td></tr>
-      </tbody>
-    </table>
+<!-- Demo (video kept) -->
+<section id="demo">
+  <div class="wrap">
+    <h2><span class="num">Demo</span>One case, end-to-end</h2>
+    <p class="lead">
+      A browser demo takes an uploaded construction photo plus a natural-language description and
+      highlights the matched IFC elements in a 3D viewer — no AEC software required. The interactive
+      version lets you pick a representative held-out case and inspect both the knowledge-graph spatial
+      address that drives retrieval and the grounded element highlighted in 3D.
+    </p>
+    <video class="demo-video" controls preload="metadata" poster="assets/portfolio/fig-demo-hub.png">
+      <source src="assets/video/MSCD_demo_web.mp4" type="video/mp4">
+      Your browser does not support the video tag —
+      <a href="assets/video/MSCD_demo_web.mp4">download the demo video</a>.
+    </video>
+    <figcaption>Full thesis walkthrough — on-site evidence grounded to digital BIM truth, end-to-end.</figcaption>
+    <div class="btns" style="justify-content:flex-start;margin:22px 0 0">
+      <a class="btn" href="demo.html">▶ &nbsp;Launch the interactive 3D demo</a>
+      <span class="muted" style="font-size:.84rem;align-self:center">serve <code>site/</code> over HTTP:
+        <code>cd site &amp;&amp; python3 -m http.server</code> → <code>http://localhost:8000/demo.html</code></span>
+    </div>
   </div>
-
-  <h3 class="in">Triage impact — search becomes verification</h3>
-  <figure><img src="assets/triage_effort.png" alt="Triage effort proxy: median candidate inspections drop from 38 to 0.5 with spatial address.">
-    <figcaption>The spatial address changes the coordinator's task from scanning a long candidate list to
-      verifying a near-front-ranked model element.</figcaption></figure>
-  <table>
-    <thead><tr><th>Arm</th><th class="n">Median inspections</th><th class="n">Mean inspections</th><th class="n">Approx. time / element</th><th class="n">Success@1</th></tr></thead>
-    <tbody>
-      <tr><td>Manual scan, no ranking</td><td class="n">38.0</td><td class="n">53.6</td><td class="n">~570 s</td><td class="n">1.8%</td></tr>
-      <tr><td>Coarse storey + class</td><td class="n">23.0</td><td class="n">24.7</td><td class="n">~345 s</td><td class="n">4.9%</td></tr>
-      <tr><td>+ realized slot specialist</td><td class="n">~1–2</td><td class="n">—</td><td class="n">~15–30 s</td><td class="n">67.6%</td></tr>
-      <tr class="best"><td>+ spatial-address ceiling</td><td class="n">0.5</td><td class="n">1.3</td><td class="n">~8 s</td><td class="n">78.5%</td></tr>
-    </tbody>
-  </table>
-  <p class="muted" style="font-size:.86rem">This is a ranking-derived effort proxy, not a user study:
-    it estimates how many candidates a coordinator must inspect before reaching the correct element.</p>
-
-  <h3 class="in">The calibration is real — and pays off as deferral</h3>
-  <div class="grid2">
-    <figure><img src="assets/calibration_diag.png" alt="ECE calibration gate.">
-      <figcaption><b>The calibration gate passes.</b> The detector's confidence tracks correctness (AUROC 0.80)
-        and is only moderately mis-calibrated (ECE 0.206) — so routing on it is legitimate, not assumed.</figcaption></figure>
-    <figure><img src="assets/calibrate_rerank.png" alt="Soft-rerank and selective-prediction curve.">
-      <figcaption><b>Selective prediction is the win.</b> Blind reweighting equals hard matching (a no-op,
-        reported honestly); the value is <em>deferral</em> — answering only the confident 80% lifts right-first
-        to 80.6%.</figcaption></figure>
-  </div>
-  <figure><img src="assets/depth_saturation.png" alt="Realizable confusable-set size by relational depth.">
-    <figcaption><b>The depth law, measured.</b> Realizable discrimination saturates at one graph hop — deeper
-      relational context is informative but not recoverable from an image.</figcaption></figure>
-</div></section>
-
-<!-- Worked examples -->
-<section id="examples"><div class="wrap">
-  <h2><span class="num">Examples</span>The evidence path, simplified</h2>
-  <p>The demo is intentionally inspectable. A case moves from raw site evidence to field extraction,
-    then to a spatial-address knowledge graph, then to candidate ranking and a 3D BIM highlight. The key is not
-    one monolithic answer screen; it is seeing which evidence field and which graph relation caused the final
-    GUID decision. The full benchmark uses 60 held-out AP cases; the live static viewer shows 6 representative
-    held-out cases so the interface stays fast.</p>
-  <div class="grid3">
-    <div class="imgcard"><img src="assets/dataset/AP_SK_102_site.png" alt="Raw site photo for AP_SK_102.">
-      <div class="cap"><b>Raw evidence.</b> A site photo and note start the grounding task.</div></div>
-    <div class="imgcard"><img src="assets/vlm_profile.png" alt="VLM extraction profile.">
-      <div class="cap"><b>Field extraction.</b> The VLM handles coarse semantics; visual specialists handle
-        sibling-level address fields.</div></div>
-    <div class="imgcard"><img src="assets/pipeline.png" alt="Spatial address pipeline.">
-      <div class="cap"><b>Spatial address.</b> The extracted slot or fingerprint becomes an auditable graph
-        record, not free text.</div></div>
-    <div class="imgcard"><img src="assets/calibrate_rerank.png" alt="Selective prediction curve.">
-      <div class="cap"><b>Confidence routing.</b> Low-confidence address fields route to defer instead of a
-        confident wrong GUID.</div></div>
-    <div class="imgcard"><img src="assets/case_AP_SK_102.png" alt="ANSWER case dashboard.">
-      <div class="cap"><b>Answer case.</b> Predicted "slot 2 of 17" is correct and above threshold.</div></div>
-    <div class="imgcard"><img src="assets/portfolio/fig-demo-hub.png" alt="Grounded BIM element highlighted in 3D.">
-      <div class="cap"><b>3D verification.</b> The selected IFC element is highlighted in the BIM viewer for
-        coordinator review.</div></div>
-  </div>
-
-  <h3 class="in">Answer vs defer</h3>
-  <p>Each detailed card traces one case top-to-bottom: <b>raw input → expected address → detector reading →
-    predicted address + decision</b>. The predicted address is drawn as a graph, mirroring the ground-truth
-    graph above it.</p>
-  <div class="grid2">
-    <div class="imgcard"><img src="assets/case_AP_SK_102.png" alt="ANSWER case.">
-      <div class="cap"><span class="badge ans">ANSWER</span> &nbsp;Predicted "slot 2 of 17" — ✓ correct;
-        confidence above threshold, so the system commits to the GUID.</div></div>
-    <div class="imgcard"><img src="assets/case_AP_SK_092.png" alt="DEFER case.">
-      <div class="cap"><span class="badge def">DEFER</span> &nbsp;Predicted "1 of 10" but truth is "8 of 10"
-        (<em>wrong</em>); confidence 0.05 is below threshold, so the system <b>abstains</b> and returns candidates
-        rather than a confident mistake — the triage value proposition.</div></div>
-  </div>
-</div></section>
-
-<!-- Impact -->
-<section id="impact"><div class="wrap">
-  <h2><span class="num">Impact</span>From manual search to verification</h2>
-  <div class="ba">
-    <div class="col before"><h3>Before — manual coordination</h3>
-      <ul><li>Monthly site walk to inspect</li><li>Hand-written report; find element by sight</li>
-        <li>Manually type the IFC GUID</li><li>1–3 day lag; knowledge lost on handover</li></ul></div>
-    <div class="col after"><h3>With AEC Interpreter</h3>
-      <ul><li>Photo + field note in</li><li>~1s → ranked candidate pool</li>
-        <li>Worker taps the correct element</li><li><span class="term" title="BIM Collaboration Format — standard issue-exchange package">BCF</span> package linked to the BIM cloud (CORENET&nbsp;X ready)</li></ul></div>
-  </div>
-  <figure><img src="assets/portfolio/fig-workflow-impact.png" alt="Human-in-the-loop triage and BCF/CORENET compliance.">
-    <figcaption>The coordinator's role shifts from <em>searching</em> a database to <em>verifying</em>
-      model-linked evidence. Accept/reject becomes a fine-tuning signal.</figcaption></figure>
-</div></section>
-
-<!-- Demo -->
-<section id="demo"><div class="wrap">
-  <h2><span class="num">Demo</span>Representative held-out cases — graph reasoning + 3D verification</h2>
-  <p>The interactive demo lets you pick one of 6 representative held-out cases and inspect both sides of the
-    grounding result: the <b>knowledge-graph spatial address</b> that drives retrieval and the grounded element
-    <b>highlighted in the BIM model in 3D</b>. The benchmark table above reports all 60 held-out AP cases; the
-    demo subset is a fast, visual explanation of the same evidence flow.</p>
-  <div class="btns" style="justify-content:flex-start;margin:18px 0">
-    <a class="btn" href="demo.html">▶ &nbsp;Launch the interactive 3D demo</a>
-    <span class="muted" style="font-size:.84rem;align-self:center">(serve <code>site/</code> over HTTP — see below)</span>
-  </div>
-  <figure><img src="assets/portfolio/fig-demo-hub.png" alt="Web demo: photo + note to highlighted IFC elements in a 3D viewer.">
-    <figcaption>The grounded element (orange) marked in the storey model, with look-alikes in blue and a compact
-      graph panel showing the typed address relations. <b>Run it:</b> <code>cd site &amp;&amp; python3 -m http.server</code>, then open
-      <code>http://localhost:8000/demo.html</code> (the 3D model loads over HTTP).</figcaption></figure>
-</div></section>
-
-<!-- References -->
-<section id="refs"><div class="wrap">
-  <h2><span class="num">References</span>References &amp; citation</h2>
-  <ul class="clean">
-    <li>Guo et&nbsp;al. <i>On Calibration of Modern Neural Networks.</i> ICML 2017. <a href="https://arxiv.org/abs/1706.04599">arXiv:1706.04599</a></li>
-    <li>Geifman &amp; El-Yaniv. <i>Selective Classification for Deep Neural Networks.</i> NeurIPS 2017. <a href="https://arxiv.org/abs/1705.08500">arXiv:1705.08500</a></li>
-    <li>Mao et&nbsp;al. <i>The Neuro-Symbolic Concept Learner.</i> ICLR 2019. <a href="https://arxiv.org/abs/1904.12584">arXiv:1904.12584</a></li>
-    <li>buildingSMART. <i>IFC 4.3 Specification.</i> <a href="https://ifc43-docs.standards.buildingsmart.org/">standards.buildingsmart.org</a></li>
-  </ul>
-  <pre class="bib">@mastersthesis{chia_aecinterpreter,
-  title  = {AEC Interpreter: Cross-Modal Grounding \& Ontology-Driven Retrieval},
-  author = {Chia, Hui Yen},
-  school = {Carnegie Mellon University},
-  type   = {M.Sc. Thesis, Computational Design}
-}</pre>
-  <p class="muted" style="font-size:.86rem">Every quantitative claim on this page traces to the project's results
-    ledger; all citations were programmatically verified. Figures are real artifacts from the thesis and the
-    offline evaluation harness.</p>
-</div></section>
-
-<footer><div class="wrap">
-  <div>AEC Interpreter — Chia Hui Yen, Carnegie Mellon University (MSCD).</div>
-  <div>Cross-modal grounding + ontology-driven retrieval → IFC element GUIDs.</div>
-</div></footer>
+</section>
 
 </body>
 </html>
