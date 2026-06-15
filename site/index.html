@@ -86,17 +86,18 @@
     <h2><span class="num">Contributions</span>What this work delivers</h2>
     <div class="cards">
       <div class="card">
-        <span class="tag">Reliability</span>
-        <h3>Zero hallucinated GUIDs</h3>
-        <p>The VLM never writes Cypher. A fine-tuned extractor emits a typed Constraints JSON that fills
-          deterministic query templates — the system can only return GUIDs that exist in the model.</p>
+        <span class="tag">Symbolic</span>
+        <h3>Hallucination-resistant retrieval</h3>
+        <p>The neural layer never writes a query. A typed Constraints JSON fills deterministic
+          <strong>Cypher</strong> templates over an IFC-native knowledge graph, so the system can only
+          return GUIDs that exist in the model — zero hallucinated IDs, fully repeatable.</p>
       </div>
       <div class="card">
-        <span class="tag">ML Engineering</span>
-        <h3>Pipeline under zero real labels</h3>
-        <p>An IFC Parse &amp; Enrich engine generates training data deterministically from raw IFC:
-          structure mining → Blender synthesis with hard negatives → LLM-as-judge filtering → 990
-          grounded cases.</p>
+        <span class="tag">Neural · ML Engineering</span>
+        <h3>Multimodal interpreter</h3>
+        <p>A fine-tuned Qwen2.5-VL (LoRA) reads photo + note + plan into a typed spatial contract,
+          trained with <strong>zero real labels</strong> — 990 cases generated deterministically from
+          raw IFC (structure mining → Blender hard negatives → LLM-as-judge).</p>
       </div>
       <div class="card">
         <span class="tag">Architecture</span>
