@@ -38,25 +38,57 @@ questions:
   \item \textbf{RQ1 --- Representation (\secref{sec:eval-oracle}).} \emph{What is the minimal sufficient
   spatial address?} We show it is \textbf{type-conditional}: a coarse ontological prefix (storey +
   class) that is necessary but saturated, completed by a class-specific topological body --- the
-  position-slot $(i, M)$ for fillers, a connectivity fingerprint for walls. At an oracle level it
+  position-slot $(i, M)$ for fillers, a connectivity fingerprint for walls
+  (Figure~\ref{fig:address} gives one worked address per class). At an oracle level it
   reorders the pool from Top-1 4.9\% to \textbf{78.5\%}, with the gain partitioned by element type
   (fillers 91\%, walls 64\%).
 
   \item \textbf{RQ2 --- Mechanism (\secref{sec:eval-realized}).} \emph{How is a noisily-recovered address
   used without losing recall, and how much of the ceiling is realizable?} Hard filtering destroys recall,
   so the address is a \textbf{soft prior in a recall-fixed pool}; one real extractor lifts the
-  addressable Top-1 from 6.6\% to \textbf{67.6\%}, its confidence passes an ECE gate (AUROC 0.80),
+  addressable Top-1 from 6.6\% to \textbf{58.9\%} end-to-end (a 67.6\% upper bound if the coarse fields
+  are supplied at oracle level), its confidence passes an ECE gate (AUROC 0.80),
   and --- since reweighting a finest-grained prior is a no-op --- its payoff is \textbf{selective
-  prediction}: deferring the least-confident ${\sim}20\%$ raises answered-set Top-1 to \textbf{80.6\%}
+  prediction}: deferring the least-confident ${\sim}20\%$ raises answered-set Top-1 to \textbf{73.4\%}
   \citep{guo2017calibration, geifman2017selective}.
 
   \item \textbf{RQ3 --- Architecture (\secref{sec:eval-depth}).} \emph{Where should the relational context
-  live --- extracted deep at inference, or compiled into the node?} A \textbf{depth law}: deeper
-  context is informationally more discriminative but its recovery collapses with depth (per-hop
-  reliability $0.40 \to 0.05 \to 0$), so the realizable confusable set saturates at one hop (median
-  $13 \to 8.2 \to 8.1$). The architecture therefore compiles depth into the node and extracts at
+  live --- extracted deep at inference, or compiled into the node?} A \textbf{depth law}: under an
+  oracle the confusable set is already a singleton at one hop ($|C|$ median $13 \to 1$), so deeper hops
+  add nothing in principle, and the realized gain saturates at one hop for an \emph{informational}
+  reason --- the model reads deep relation \emph{types} reliably ($96.7/93.9/69.6\%$ at hop $1/2/3$),
+  but those types are homogeneous (every window \texttt{FILLS} a wall, every wall \texttt{CONNECTS} a
+  wall) and so carry no discriminating power; the discriminating signal (neighbour identity) is
+  image-recoverable only as the filler position-slot (Figure~\ref{fig:depthintro}). The architecture
+  therefore compiles depth into the node and extracts at
   depth $\le 1$, placing learning at the neural$\to$symbolic interface \citep{mao2019nscl}.
 \end{itemize}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{address_sample.png}
+  \caption{What a \textbf{type-conditional spatial address} is, by class --- one worked sample each.
+  A coarse ontological prefix (storey $+$ IFC class) is shared but \emph{non-discriminating} (oracle
+  Top-1 4.9\% alone). The discriminating body is class-specific: a position-slot $(i,M)$ for fillers
+  (``the $i$-th of $M$ openings along the host wall'') and a connectivity fingerprint for walls.
+  Each reorders the \emph{same} retrieved pool to the per-class oracle Top-1 shown; the filler slot
+  is image-recoverable and realized (58.9\% end-to-end), the wall fingerprint is reported at oracle level only.}
+  \label{fig:address}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{depth_sample.png}
+  \caption{RQ3 made concrete. \emph{Left:} a depth-$n$ neighbourhood is every node within $n$ edges
+  of the target; each added hop (FILLS / NEXT\_TO, then CONNECTS\_TO, then ADJACENT\_TO) pulls in more
+  relational context. The model \emph{reads} these relation types reliably ($96.7/93.9/69.6\%$ at hop
+  $1/2/3$ on the held-out set), but the types are homogeneous (every window \texttt{FILLS} a wall) so
+  they do not discriminate. \emph{Right:} the oracle confusable set $|C|$ is already a singleton at one
+  hop, so deeper hops add nothing in principle; realized discrimination saturates at one hop for an
+  informational reason, not an extraction-reliability cascade. This is the depth law that keeps the
+  address shallow.}
+  \label{fig:depthintro}
+\end{figure}
 
 \subsection{Related work and positioning}
 \label{sec:related}
@@ -107,7 +139,7 @@ line \citep{mao2019nscl}.
   \item \textbf{A type-conditional spatial address} --- the ordinal position-slot
   for openings and a connectivity fingerprint for walls --- computable from the raw IFC model with no
   human labels, that reorders the retrieved pool from Top-1 4.9\% to 78.5\% at an oracle level. The
-  opening slot is image-recoverable and we realize it (67.6\% on the filler subset); the wall
+  opening slot is image-recoverable and we realize it (58.9\% end-to-end on the filler subset); the wall
   fingerprint contributes the oracle gain but is \emph{not} image-realizable and is reported at
   oracle level only (\secref{sec:eval-oracle}, \secref{sec:eval-realized}).
 
@@ -134,7 +166,7 @@ synthetic project (cold-start by design); the \emph{form} of the contribution --
 shallow, image-recoverable, calibrated-soft address --- is general, but the specific reliabilities are
 project-specific. To keep the claim anchored beyond our own ablations, we add standard lexical and
 dense retrieval baselines and a triage-effort proxy: generic retrievers plateau at Top-1 1.7\% /
-Top-10 15.6--25.0\%, the realized position-slot specialist closes the filler subset to 67.6\% Top-1,
+Top-10 15.6--25.0\%, the realized position-slot specialist closes the filler subset to 58.9\% Top-1 end-to-end,
 and the perfect-address ceiling reduces expected inspection effort from a median 38 candidates to 0.5.
 We do not claim to beat an end-to-end matcher in the large-data limit; we claim that in the cold-start
 regime we can actually measure, the structured address is what makes grounding realizable, auditable,

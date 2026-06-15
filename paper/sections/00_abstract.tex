@@ -17,6 +17,7 @@ symbolic executor consumes a per-field \texttt{\{value, confidence, source\}} co
 recall-safe reranking and selective prediction. Supplied at an oracle level, the address lifts pool
 Top-1 from 4.9\% to \textbf{78.5\%} at zero recall cost (an upper-bound ceiling, all 60 cases); the
 one realized extractor --- a deterministic position-slot detector --- lifts the addressable filler
-subset ($n=35$) from a 6.6\% floor to \textbf{67.6\%}; its confidence passes an ECE calibration gate
-(AUROC 0.80); and deferring the least-confident fifth raises answered-set Top-1 to \textbf{80.6\%}. The result is an auditable spatial multimodal grounding layer for AEC: ontology is
+subset ($n=35$) from a 6.6\% floor to \textbf{58.9\%} end-to-end (coarse fields also extracted; a
+67.6\% upper bound if they are supplied at oracle level); its confidence passes an ECE calibration gate
+(AUROC 0.80); and deferring the least-confident fifth raises answered-set Top-1 to \textbf{73.4\%}. The result is an auditable spatial multimodal grounding layer for AEC: ontology is
 the guardrail, topology is the discriminator, and the system knows when to abstain.

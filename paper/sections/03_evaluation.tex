@@ -52,7 +52,8 @@ this section derives and explains each block.
     \midrule
     \multicolumn{5}{l}{\emph{Realized address, addressable fillers ($n=35$)}} \\
     \quad Modal-prior slot (floor)                & 100 & 6.6  & ---  & ---   \\
-    \quad OpenCV slot $+$ soft rerank             & 100 & \textbf{67.6}$_{[53.6,81.6]}$ & 80.9 & --- \\
+    \quad OpenCV slot, \emph{extracted} coarse (end-to-end) & 100 & \textbf{58.9}$_{[43.2,74.6]}$ & 67.1 & --- \\
+    \quad OpenCV slot, \emph{oracle} coarse (upper bound)   & 100 & 67.6$_{[53.6,81.6]}$ & 80.9 & --- \\
     \bottomrule
   \end{tabular}
   \caption{Consolidated held-out results. Every method ranks the \emph{same} retrieved pools with the
@@ -60,10 +61,11 @@ this section derives and explains each block.
   retrieval. Top-1/Top-10/MRR in \%. External text retrieval and a zero-shot Qwen2.5-VL-7B reranker
   (base model, no adapter) stay at single-digit Top-1 --- the VLM at chance --- while the oracle
   structured address reorders the identical pool to 78.5\%. The realized filler block shows how much
-  survives a real detector: one deterministic specialist lifts Top-1 from the 6.6\% floor to 67.6\%
-  (bootstrap 95\% CI in subscript); deferring the least-confident ${\sim}20\%$ further lifts the
-  answered subset to 80.6\% (\secref{sec:eval-realized}). Dashes mark quantities not measured for that
-  row.}
+  survives a real detector: one deterministic specialist lifts Top-1 from the 6.6\% floor to
+  \textbf{58.9\%} end-to-end (with the coarse fields \emph{also} extracted; 67.6\% if storey/class are
+  supplied at oracle level, the upper-bound row), bootstrap 95\% CI in subscript; deferring the
+  least-confident ${\sim}20\%$ further lifts the answered subset to 73.4\% (80.6\% in the oracle-coarse
+  variant) (\secref{sec:eval-realized}). Dashes mark quantities not measured for that row.}
   \label{tab:main}
 \end{table}
 
@@ -148,11 +150,14 @@ deterministically where it is not \citep{mao2019nscl}.
 How should a mature signal (storey+type) combine with an immature one (spatial topology)? The strategy
 ablation is unambiguous: the \textbf{union} of constraint sets is the only strategy that preserves
 full GT-in-Pool while still gaining the spatial constraints' compression and ranking benefit; hard
-intersection over-prunes under noisy extraction, and spatial-only is too brittle. The measurement says why: treating each extracted field as a hard
-filter multiplies per-field recalls --- with measured single-field reliabilities (storey
-$\approx 0.66$, class $\approx 0.50$), a hard conjunction over the attribute fields collapses joint
-recall toward $\prod r \approx 0.009$. The filter evicts the ground truth far more often than it
-removes a distractor. The resolution is to relocate determinism: \textbf{the executor is deterministic
+intersection over-prunes under noisy extraction, and spatial-only is too brittle. The measurement says
+why: treating each extracted field as a hard filter multiplies per-field recalls. On this model's
+held-out extraction the coarse fields are reliable (storey $100\%$ under leading-storey normalisation,
+$51.7\%$ under exact string match; \texttt{ifc\_class} $81.7\%$), but the discriminating fields are not
+(position-slot and size recovered at $0\%$ by the VLM, \secref{sec:eval-neural}), so a hard conjunction
+that \emph{includes} the immature fields drives joint recall toward the product of the weak terms ---
+each unreliable field the filter touches evicts the ground truth more often than it removes a
+distractor. The resolution is to relocate determinism: \textbf{the executor is deterministic
 given the structured record; the ranking is a calibrated soft prior inside a recall-fixed pool.} The
 address never removes a candidate; it re-weights one. Recall stays at 100\% by construction, and the
 unreliable signal is spent only on ordering. As a design principle this generalizes: when combining
@@ -168,8 +173,13 @@ only 6.6\%. We report four results.
 
 \paragraph{(1) One realizable extractor closes most of the gap.} The OpenCV position-slot detector
 recovers the opening count exactly in 83\% of cases (29/35) and the full slot in 74\% (joint
-$(i,M)$). Fed into the soft rerank, it lifts filler Top-1 from the 6.6\% floor to \textbf{67.6\%}
-(bootstrap 95\% CI $[53.6, 81.6]$, $n=35$) and Top-10 to 80.9\%, at zero recall cost. The residual
+$(i,M)$). Fed into the soft rerank with the coarse fields \emph{also} taken from the model's actual
+extraction (storey and \texttt{ifc\_class}, not oracle), it lifts filler Top-1 from the 6.6\% floor
+to \textbf{58.9\%} (bootstrap 95\% CI $[43.2, 74.6]$, $n=35$) and Top-10 to 67.1\%, at zero recall
+cost --- a genuinely end-to-end number. Supplying the coarse fields at oracle level instead (storey
+extracts at 100\% under leading-storey normalisation, \texttt{ifc\_class} at 97\% on fillers) raises
+this to \textbf{67.6\%} (CI $[53.6, 81.6]$) / Top-10 80.9\%, an upper bound on what a perfect coarse
+extractor would add. The residual
 error concentrates in the ordering index, not in the perception of the openings. The wide interval is
 a direct consequence of the small addressable set and is reported, not smoothed over. The detector's
 three pixel thresholds are not a knife-edge fit: sweeping each $\pm25\%$ leaves realized Top-1 in
@@ -197,13 +207,14 @@ calibration evidence is suggestive, not conclusive, and we treat the gate as a m
 point rather than a precise estimate. But
 the calibrated weight does \emph{not} pay off as a rerank weight: because the slot is the finest
 tiebreaker inside a storey$\times$class bucket, any strictly-positive weight induces the identical
-ordering --- hard match, raw weight, and calibrated weight all yield the same 67.6\%. We report this
+ordering --- hard match, raw weight, and calibrated weight all yield the same Top-1. We report this
 no-op rather than bury it.
 
 \paragraph{(4) The payoff is selective prediction.} The calibrated confidence pays off as a deferral
 threshold: sweeping it traces a coverage--accuracy curve (Figure~\ref{fig:rerank}), and deferring the
-least-confident ${\sim}20\%$ of cases lifts Top-1 on the answered subset from 67.6\% to
-\textbf{80.6\%} \citep{geifman2017selective}. A worked case (Figure~\ref{fig:demo}) shows the
+least-confident ${\sim}20\%$ of cases lifts answered-subset Top-1 from 58.9\% to \textbf{73.4\%}
+end-to-end (from 67.6\% to 80.6\% in the oracle-coarse variant) \citep{geifman2017selective}. A
+worked case (Figure~\ref{fig:demo}) shows the
 mechanism: the detector predicts slot 1 of 10 where the truth is 8 of 10 --- an error --- but its
 calibrated confidence (0.05) is below threshold, so the case routes to \emph{defer} and surfaces the
 candidates instead of a confident wrong GUID. For a triage tool with downstream consequence, this is
@@ -220,8 +231,9 @@ the correct behavior, and the coverage--accuracy curve, not a point estimate, is
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.85\textwidth]{calibrate_rerank.png}
-  \caption{Selective prediction. Sweeping the deferral threshold traces a coverage--accuracy curve;
-  deferring the least-confident ${\sim}20\%$ lifts answered-set Top-1 from 67.6\% to 80.6\%.}
+  \caption{Selective prediction (oracle-coarse variant shown). Sweeping the deferral threshold traces a
+  coverage--accuracy curve; deferring the least-confident ${\sim}20\%$ lifts answered-set Top-1 from
+  67.6\% to 80.6\% (the end-to-end variant with extracted coarse fields moves 58.9\%$\to$73.4\%).}
   \label{fig:rerank}
 \end{figure}
 
@@ -238,41 +250,55 @@ the correct behavior, and the coverage--accuracy curve, not a point estimate, is
 \label{sec:eval-depth}
 
 Where should relational context live --- extracted deep at inference, or compiled into the node? Under
-an oracle, deeper context keeps shrinking the confusable set (a Weisfeiler--Leman-style refinement
-toward singletons). But the relations must be recovered from an image, and per-hop extraction
-reliability falls as $0.40 \to 0.05 \to 0$, so the \emph{realizable} confusable set saturates
-immediately (Table~\ref{tab:depth}, Figure~\ref{fig:depth}): median 13 (attributes) $\to$
-\textbf{8.2} at one hop $\to$ 8.1 at two and three. This is the depth law --- deeper context is
-informative but not recoverable --- and its failure mode is the documented error compounding of
-multi-hop reasoning over knowledge graphs \citep{chakraborty2024multihop}. The training side
-corroborates it: supervising depth-3 chains yielded ${\approx}0$ realizable improvement and \emph{cost}
-capacity --- under a fixed LoRA rank, depth-$\ge 2$ chains degraded the coarse \texttt{ifc\_class}
-recovery, and the deep-chain extraction itself ran at ${\sim}5\%$ and hurt end-to-end performance by
-${\sim}13$ points. The prescription is subtractive: stop training deep
-chains, compile depth into the node, extract at depth $\le 1$.
+an oracle the confusable set is already a singleton at one hop (median $|C|$ $13 \to 1$;
+Table~\ref{tab:depth}, Figure~\ref{fig:depth}), so the graph carries enough discrimination at depth~1
+and deeper hops add nothing even in principle. The realizability question is therefore whether that
+one-hop discrimination can be read from an image, and the answer decomposes the depth law into two
+\emph{measured} facts. First, \textbf{recovery does not collapse with depth}: on the held-out set the
+deployed model extracts the depth-$k$ relation (predicate $+$ object type $+$ direction) correctly in
+$96.7\%$ / $93.9\%$ / $69.6\%$ of cases at $k = 1/2/3$ --- reading deep relation \emph{types} is not
+the bottleneck. Second, \textbf{what is readable is not discriminative}: those predicates are
+type-homogeneous --- all $389$ \texttt{FILLS} are window/door$\to$wall and every \texttt{CONNECTS\_TO}
+is wall$\leftrightarrow$wall --- so a correctly-extracted hop-2 ``\texttt{CONNECTS\_TO} a wall''
+matches every wall in the pool and shrinks $|C|$ by nothing. The discrimination the oracle exploits is
+the \emph{identity} of the specific neighbour, which is not image-recoverable; the one exception we
+realize is the filler position-slot ($74\%$ joint, \secref{sec:eval-realized}). The depth law is thus
+\emph{informational}, not a reliability cascade: deeper relational context is either non-discriminative
+(type-homogeneous) or non-recoverable (named-neighbour identity), which is the structural form of the
+error-compounding documented for multi-hop reasoning over knowledge graphs
+\citep{chakraborty2024multihop}. The prescription is unchanged --- compile depth into the node and
+extract at depth $\le 1$ --- and the training side corroborates it: under a fixed LoRA rank,
+supervising depth-$\ge 2$ chains cost coarse \texttt{ifc\_class} capacity for ${\approx}0$ realizable
+gain (prior thesis measurement).
 
 \begin{table}[ht]
   \centering
-  \begin{tabular}{lc}
+  \begin{tabular}{lcc}
     \toprule
-    relational depth & realizable median $|C|$ \\
+    relational depth & oracle median $|C|$ & G8 type-recovery \\
     \midrule
-    attributes only (depth 0) & 13 \\
-    \textbf{+ 1 hop} & \textbf{8.2} \\
-    + 2 hops & 8.1 \\
-    + 3 hops & 8.1 \\
+    attributes only (depth 0) & 13 & --- \\
+    \textbf{+ 1 hop} & \textbf{1} & 96.7\% \\
+    + 2 hops & 1 & 93.9\% \\
+    + 3 hops & 1 & 69.6\% \\
     \bottomrule
   \end{tabular}
-  \caption{Realizable median confusable-set size by relational depth (held-out set). All realizable
-  discrimination is captured at one hop.}
+  \caption{The depth law, from measured quantities (held-out set). The oracle confusable set collapses
+  to a singleton at one hop, so depth $\ge 2$ adds no discrimination even in principle. The deployed
+  model \emph{recovers} the depth-$k$ relation type reliably (right column: exact predicate $+$ object
+  type $+$ direction match), yet realized discrimination still saturates at one hop --- the recoverable
+  relation types are homogeneous (non-discriminative), and the discriminating signal (neighbour
+  identity / position-slot) is image-recoverable only for fillers.}
   \label{tab:depth}
 \end{table}
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.85\textwidth]{depth_saturation.png}
-  \caption{Information versus realizability. The oracle confusable set keeps shrinking with depth; the
-  reliability-weighted realizable set saturates at one hop --- the depth law.}
+  \caption{Information versus realizability. The oracle confusable set is a singleton by one hop, so
+  deeper hops add nothing in principle; the model reads deep relation \emph{types} reliably yet
+  realized discrimination saturates at one hop because those types are homogeneous --- the depth law is
+  informational, not an extraction-reliability cascade.}
   \label{fig:depth}
 \end{figure}
 

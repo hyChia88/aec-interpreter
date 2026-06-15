@@ -107,7 +107,7 @@ modal token new                                        # one-time Modal auth
 
 The live VLM runs on a deployed Modal A100 (`mscd-vlm-lora3-inference`, canonical G8
 adapter). First call cold-starts ~1–2 min. The live route is currently **pure-VLM** — the
-OpenCV slot specialist + soft-rerank (the 67.6% realized path) is the next enhancement, so
+OpenCV slot specialist + soft-rerank (the 58.9% end-to-end realized path) is the next enhancement, so
 live slot predictions can be wrong; the system surfaces its confidence and ANSWER/DEFER.
 
 ### 5. Regenerating reference data (optional — needs the IFC model)

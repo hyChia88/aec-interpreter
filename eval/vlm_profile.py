@@ -65,7 +65,7 @@ def make_figure(p, out_path):
         "real slot specialist\nfiller n=35",
         "address ceiling\nAP n=60",
     ]
-    vals = [6.7, 67.6, 78.5]
+    vals = [6.7, 58.9, 78.5]
     colors = ["#8f8f8f", "#ef7d00", "#9467bd"]
     y = list(range(len(names)))
     ax2.hlines(y, 0, vals, color=colors, lw=5, alpha=0.25)

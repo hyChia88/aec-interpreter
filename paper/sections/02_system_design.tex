@@ -5,7 +5,23 @@
 \label{sec:rationale}
 
 The architecture is best explained by the alternatives it rejects. Each key decision below names the
-rejected alternative, the evidence against it, and the trade-off accepted.
+rejected alternative, the evidence against it, and the trade-off accepted; Figure~\ref{fig:rationale}
+collects the four head-to-head measurements.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{design_rationale.png}
+  \caption{Four design decisions, each against the alternative it rejects, on a single measured
+  quantity (grey = rejected, colour = accepted). (1)~On the same recall-safe pool, the strongest
+  learned end-to-end configuration ranks the target at Top-1 6.7\% while the structured address
+  reaches 78.5\%. (2)~Deterministic query templates run at ${\sim}1$\,s with 100\% syntax
+  correctness and exact repeatability, versus a ${\sim}4.5$\,s ReAct text-to-Cypher agent that picks
+  different tools per run. (3)~The IFC-native graph is validated against ground truth (wall
+  \texttt{connection\_degree} 14/14), whereas a document-GraphRAG graph is LLM-extracted and
+  unverified. (4)~LoRA fine-tuning lifts spatial-direction accuracy from ${\sim}0\%$ to 82\% (coarse
+  fields 30--63\% $\to$ 100\%).}
+  \label{fig:rationale}
+\end{figure}
 
 \paragraph{Why neuro-symbolic over end-to-end neural matching?} The obvious design --- train a single
 cross-attention model to compare the site evidence against the candidates and rank them end-to-end
@@ -36,9 +52,9 @@ syntax errors and hallucinates node and relationship names; even dedicated syste
 LLM-supervised generation-verification loop to approach reliability
 \citep{tiwari2024autocypher, gusarov2025graphrag}. Our query patterns are enumerable (nine strategies)
 and domain-specific, so a fixed template with parameter slots gives 100\% syntax correctness. The
-agentic alternative was tested directly: a ReAct-style agent ran at ${\sim}4.5$\,s versus ${\sim}1$\,s
-for the constrained pipeline and chose different tool sequences for the same input --- unacceptable
-where the same photo must always produce the same result. Trade-off accepted: only predefined query
+agentic alternative was tested directly (timings from prior thesis work): a ReAct-style agent ran at
+${\sim}4.5$\,s versus ${\sim}1$\,s for the constrained pipeline and chose different tool sequences for
+the same input --- unacceptable where the same photo must always produce the same result. Trade-off accepted: only predefined query
 patterns are covered, not arbitrary questions.
 
 \paragraph{Why an IFC-native graph over document-level GraphRAG?} Document GraphRAG builds its graph
@@ -72,20 +88,31 @@ evidence, but the symbolic layer alone names GUIDs.}
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=\textwidth]{pipeline.png}
-  \caption{The method spine. A site photograph and a marked plan are decomposed into per-field
-  extractions, each carrying a \texttt{\{value, confidence, source\}} record; the depth-1
-  spatial-address record is routed through a calibration gate that either answers with a GUID or
-  defers. The highlighted lane is the confidence-routing path.}
+  \includegraphics[width=\textwidth]{pipeline_shots.png}
+  \caption{The method spine, on one held-out case (AP\_SK\_107), with the real artefacts as the
+  centrepiece. \emph{(a)}~A site photograph, a human-marked plan (target wall in red, anchor in
+  orange), and a short note enter. \emph{(b)}~The OpenCV slot detector's actual overlay reads the
+  openings (green) along the host wall (magenta) and locates the target (red $+$), emitting a
+  \texttt{\{value, confidence, source\}} record. \emph{(c)}~The depth-1 structured spatial-address
+  record is assembled. \emph{(d)}~A calibration gate routes confident cases to \textsc{answer} and
+  the rest to \textsc{defer}. \emph{(e)}~The address is matched against the IFC-graph pool to a
+  ranked GUID shortlist. The neural layer describes evidence; the symbolic layer alone names GUIDs.}
   \label{fig:pipeline}
 \end{figure}
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.9\textwidth]{system_decomposition.png}
-  \caption{Module decomposition. The neural side (fine-tuned VLM, deterministic visual specialists)
-  emits typed fields; the symbolic side (IFC graph, query compiler, reranker) executes them; the
-  confidence-routing layer sits at the interface.}
+  \includegraphics[width=\textwidth]{graph_reasoning.png}
+  \caption{Module decomposition told as graph reasoning on one real held-out case (AP\_SK\_092, a
+  window). The layout is the \emph{real} knowledge graph --- a force-directed layout on the actual
+  \texttt{FILLS} (window$\to$host-wall hub) and \texttt{NEXT\_TO} (consecutive openings) edges, held
+  fixed across all four panels so the same graph is progressively filtered. \textbf{(1)}~The symbolic
+  layer returns a recall-safe pool of 76 candidates (ground truth in-pool 100\%) where Top-1 is only
+  ${\sim}5\%$. \textbf{(2)}~46 of the 76 share the target's storey and IFC class, forming 6 host-wall
+  clusters --- ontology cannot separate them, so ranking, not retrieval, is the problem.
+  \textbf{(3)}~The target's host wall is a 10-opening \texttt{NEXT\_TO} chain; the position-slot (8 of
+  10) re-weights the siblings (a soft prior --- no candidate removed). \textbf{(4)}~The target lands
+  at rank 1 (oracle address Top-1 78.5\%). The target node (red) is tracked throughout.}
   \label{fig:decomp}
 \end{figure}
 
@@ -103,7 +130,22 @@ vector store is a requirement, not a preference: the discriminating signal is mu
 a deterministic schema, which embedding similarity cannot express. The reconstruction is validated
 against the dataset's own skeleton --- the recovered wall \texttt{connection\_degree} matches ground
 truth in 14 of 14 checked cases --- so the graph exists, correct and complete, on day one with no
-human annotation: the cold-start property the system claims.
+human annotation: the cold-start property the system claims. Figure~\ref{fig:ifcengine} traces this
+compilation: a flat STEP file whose only navigable structure is containment, the per-relation
+enrichment rules with their edge counts on the studied project, and the resulting dense,
+query-ready graph.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{ifc_parse_slide.png}
+  \caption{The IFC parse engine: from a raw IFC model (left) to an enriched, query-ready knowledge
+  graph (right). The engine extracts and normalises the registries (storeys, spaces) and then mines
+  structural topology --- \texttt{FILLS}, \texttt{CONNECTS\_TO}, \texttt{NEXT\_TO} --- shown by the
+  per-relation enrichment insets (target element red, anchor orange, host/wall dark). The local
+  containment-only graph cannot separate identical siblings; the enriched graph carries the relational
+  structure the spatial address queries.}
+  \label{fig:ifcengine}
+\end{figure}
 
 \subsection{Neural layer: a fine-tuned VLM as the perception engine}
 \label{sec:vlm}
@@ -115,8 +157,9 @@ and emits a structured contract --- \texttt{\{storey\_name, ifc\_class,
 spatial\_relations:[\{predicate, object\_type, direction\}]\}} --- and nothing else: \emph{it
 describes, it never queries} (Figure~\ref{fig:vlmimpl}). Fine-tuning on the synthetic corpus is what
 makes the spatial fields exist at all: spatial-direction accuracy reaches 82\% where zero-shot
-prompting scores ${\sim}0\%$, and the coarse fields (storey, \texttt{ifc\_class}) saturate at 100\%
-versus 30--63\% zero-shot. The G-series ablation also exposes a
+prompting scores ${\sim}0\%$ (this 82\% and the G-series ablation below are prior thesis measurements,
+not re-run on this repo's harness), and the coarse fields (storey, \texttt{ifc\_class}) saturate at
+100\% versus 30--63\% zero-shot. The G-series ablation also exposes a
 multi-task capacity trade-off under a fixed adapter rank: under-resourced adapters collapse on spatial
 extraction while the coarse fields stay saturated, so topology-specific supervision and added
 position-context capacity are needed to recover spatial fingerprints --- and, as the per-field profile
@@ -125,10 +168,17 @@ which is why they are delegated to the specialists below.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.9\textwidth]{vlm_implementation.png}
-  \caption{Fine-tuned VLM implementation and impact. A LoRA-tuned Qwen2.5-VL reads photo, note, and
-  plan and emits the typed constraints contract; fine-tuning lifts spatial-direction accuracy from
-  ${\sim}0\%$ (zero-shot) to 82\%.}
+  \includegraphics[width=\textwidth]{vlm_finetune.png}
+  \caption{The fine-tuned VLM perception engine, measured. \emph{(A)}~Per-field accuracy, ordered
+  coarse$\to$discriminating, zero-shot prompt-only versus LoRA fine-tuned: fine-tuning saturates the
+  coarse prefix (storey, \texttt{ifc\_class} from 30/63\% to 100\%) and learns relation typing
+  (direction ${\sim}0\%\to82\%$), but the \emph{discriminating} address fields (position-slot, size
+  band) stay at 0\% even fine-tuned --- the evidence that motivates delegating them to deterministic
+  specialists. \emph{(B)}~The realized detector's confidence is calibratable (reliability diagram;
+  AUROC 0.80, ECE $0.206\!\to\!0.172$ after temperature scaling), which is what makes
+  confidence-routing legitimate. (No training-step loss curve is shown: per-field gain, held-out
+  generalisation, and calibration are the meaningful evidence that a structured-extraction adapter has
+  learned.)}
   \label{fig:vlmimpl}
 \end{figure}
 
