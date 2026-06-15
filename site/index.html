@@ -261,6 +261,16 @@
         <div class="res">confusable set 13 → 8 at one hop</div></div>
     </div>
     <figure>
+      <img src="assets/address_sample.png"
+           alt="A type-conditional spatial address: shared storey+class prefix, plus a class-specific body — position-slot for openings, connectivity fingerprint for walls.">
+      <figcaption><strong>What a type-conditional spatial address is</strong>, by class. A coarse
+        ontological prefix (storey + IFC class) is shared but <em>non-discriminating</em> (oracle Top-1
+        4.9% alone). The discriminating body is class-specific: a <strong>position-slot</strong>
+        <code>(i of M)</code> for an opening — image-recoverable, realized 58.9% end-to-end — and a
+        <strong>connectivity fingerprint</strong> for a wall — oracle-discriminative but not
+        image-recoverable. Each reorders the same retrieved pool to the per-class oracle Top-1 shown.</figcaption>
+    </figure>
+    <figure>
       <img src="assets/pipeline_shots.png"
            alt="The spatial-interpretation pipeline traced through one real case with real screenshots, stages (a)-(e)">
       <figcaption><strong>Spatial interpretation, traced through one real case</strong> (AP_SK_107, real
@@ -333,6 +343,20 @@
           yet realized discrimination saturates at one hop because those types are homogeneous — the limit
           is informational, not extraction reliability.</figcaption></figure>
     </div>
+
+    <h3>Worked cases — answer vs defer</h3>
+    <p class="lead">Two real held-out cases through the same gate: when the detector is correct and
+      confident it commits; when it is wrong but unsure it abstains and returns candidates — the
+      behaviour that makes a triage tool trustworthy.</p>
+    <div class="grid2">
+      <figure><img src="assets/answer_case.png" alt="ANSWER case AP_SK_102: predicted slot 2 of 17 correct, calibrated confidence 0.57 above threshold, commit GUID.">
+        <figcaption><strong>ANSWER (AP_SK_102).</strong> Predicted slot 2 of 17 — correct; calibrated
+          confidence 0.57 ≥ τ 0.40, so the system commits the GUID.</figcaption></figure>
+      <figure><img src="assets/defer_case.png" alt="DEFER case AP_SK_092: predicted slot 1 but truth slot 8, calibrated confidence 0.05 below threshold, abstain.">
+        <figcaption><strong>DEFER (AP_SK_092).</strong> Predicted slot 1 where truth is 8 — wrong; but
+          calibrated confidence 0.05 &lt; τ 0.40, so the system abstains and returns the candidate pool
+          rather than a confident mistake.</figcaption></figure>
+    </div>
   </div>
 </section>
 
@@ -360,6 +384,25 @@
         </ul>
       </div>
     </div>
+
+    <h3>Triage effort — search becomes verification</h3>
+    <div class="grid2" style="align-items:center">
+      <figure style="margin-top:6px">
+        <img src="assets/triage_effort.png" alt="Triage effort proxy: median candidate inspections drop from 38 to 0.5 with the spatial address.">
+        <figcaption>The spatial address changes the coordinator's task from scanning a long candidate
+          list to verifying a near-front-ranked element.</figcaption>
+      </figure>
+      <table>
+        <thead><tr><th>Arm</th><th class="n">Median inspections</th><th class="n">≈ time / element</th><th class="n">Success@1</th></tr></thead>
+        <tbody>
+          <tr><td>Manual scan, no ranking</td><td class="n">38.0</td><td class="n">~570 s</td><td class="n">1.8%</td></tr>
+          <tr><td>Coarse storey + class</td><td class="n">23.0</td><td class="n">~345 s</td><td class="n">4.9%</td></tr>
+          <tr class="best"><td>+ spatial-address ceiling</td><td class="n">0.5</td><td class="n">~8 s</td><td class="n">78.5%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tcap">A ranking-derived effort proxy (15 s/inspection assumption), not a user study.</p>
+
     <figure>
       <img src="assets/portfolio/fig-workflow-impact.png" alt="Human-in-the-loop triage and downstream BCF / CORENET compliance">
       <figcaption>Human-in-the-loop triage: the coordinator's role shifts from searching a database to

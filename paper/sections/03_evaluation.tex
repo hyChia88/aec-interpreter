@@ -239,10 +239,16 @@ the correct behavior, and the coverage--accuracy curve, not a point estimate, is
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=\textwidth]{case_AP_SK_092.png}
-  \caption{A worked DEFER case. The detector predicts slot 1 of 10 where the truth is 8 of 10, but
-  its calibrated confidence (0.05) is below threshold: the case routes to defer and surfaces the
-  candidate pool rather than emitting a confident wrong GUID.}
+  \includegraphics[width=\textwidth]{answer_case.png}\\[6pt]
+  \includegraphics[width=\textwidth]{defer_case.png}
+  \caption{Selective prediction, two real worked cases through the same gate (read left to right:
+  inputs $\to$ predicted vs.\ true slot on the host wall's \texttt{NEXT\_TO} chain $\to$ calibration
+  gate $\to$ decision). \emph{Top --- \textsc{answer} (AP\_SK\_102):} the detector predicts slot~2 of
+  17, which is correct, and its calibrated confidence (0.57) is above $\tau=0.40$, so the system
+  commits the GUID. \emph{Bottom --- \textsc{defer} (AP\_SK\_092):} the detector predicts slot~1 where
+  the truth is slot~8 --- an error --- but its calibrated confidence (0.05) is below $\tau$, so the
+  system abstains and surfaces the candidate pool instead of a confident wrong GUID. Same gate,
+  opposite outcomes: the payoff of calibration is knowing which case is which.}
   \label{fig:demo}
 \end{figure}
 
