@@ -111,11 +111,11 @@
   .kgNode b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#5c6470;margin-bottom:4px}
   .kgNode span{display:block;font-size:12px;line-height:1.35;color:#1a1d24}
   .kgNode.off span{color:var(--muted)}
-  .kgPreds{display:grid;grid-template-columns:repeat(4,minmax(190px,1fr));gap:7px;margin:0 0 12px;min-width:900px}
-  .kgPred{border:1px solid var(--line);border-radius:8px;background:#fff;padding:7px 9px}
+  .kgPreds{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+  .kgPred{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;background:#fff;padding:3px 9px;font-size:11px;color:#9aa0a6;cursor:default}
   .kgPred.on{border-color:var(--hot);background:#fff7ed}
-  .kgPred code{font-size:11px;font-weight:800;color:#4338ca}
-  .kgPred span{display:block;font-size:11.5px;color:var(--muted);line-height:1.35;margin-top:2px}
+  .kgPred code{font-size:11px;font-weight:800;color:#a8aeb5}
+  .kgPred.on code{color:#4338ca}
   .kgJson{min-width:900px;border:1px solid var(--line);border-radius:8px;background:#101820;color:#d6e4f0;
     padding:10px 12px;margin:0 0 12px;font:11.5px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap}
   .kgJson b{color:#fff;font-family:inherit}
@@ -540,8 +540,8 @@ function renderKGfromResult(r){
   const topoN = topoStage.n || rankedN || '—';
   const relLaneH = Math.max(1, rels.length) * 68;
   const svgH = Math.max(460, 330 + relLaneH);
-  const topGuid = (r.top1_guid || '').slice(0, 12);
-  const poolPreview = (r.shortlist || []).slice(0, 6);
+  const topGuid = (r.top1_guid || '');
+  const poolPreview = (r.shortlist || []).slice(0, 5);
   const relNodes = rels.length ? rels.map((t,i)=>{
     const y = 148 + i*68;
     const pred = t.predicate || 'RELATES_TO';
@@ -552,22 +552,22 @@ function renderKGfromResult(r){
       <text x="605" y="${y+20}" text-anchor="middle" class="pred">${escapeXML(pred)}</text>
       <text x="605" y="${y+38}" text-anchor="middle" class="sub">${escapeXML(obj)}</text>
       ${detail ? `<text x="605" y="${y+65}" text-anchor="middle" class="tiny">${escapeXML(detail).slice(0,42)}</text>` : ''}
-      <path d="M430 ${y+26} L516 ${y+26}" class="edgeHot"></path>
+      <path d="M468 146 C468 ${y+26} 488 ${y+26} 516 ${y+26}" class="edgeHot"></path>
       <path d="M694 ${y+26} C724 ${y+26} 724 114 754 114" class="edgeHot"></path>
     </g>`;
   }).join('') : `<g>
       <rect x="516" y="164" width="178" height="52" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-dasharray="5 4"></rect>
       <text x="605" y="186" text-anchor="middle" class="sub">no spatial predicate</text>
       <text x="605" y="204" text-anchor="middle" class="tiny">attribute-only fallback</text>
-      <path d="M430 190 L516 190" class="edge"></path>
+      <path d="M468 146 C468 190 488 190 516 190" class="edge"></path>
       <path d="M694 190 C724 190 724 114 754 114" class="edge"></path>
     </g>`;
   const poolRows = poolPreview.map((p,i)=>{
     const y = 170 + i*28;
     const isTop = p.guid === r.top1_guid;
     return `<g>
-      <rect x="764" y="${y}" width="176" height="22" rx="5" fill="${isTop ? '#fff4e8' : '#fff'}" stroke="${isTop ? '#ef7d00' : '#e6e8ec'}"></rect>
-      <text x="774" y="${y+15}" class="tiny">${isTop ? '★ ' : ''}${escapeXML((p.guid || '').slice(0,18))}</text>
+      <rect x="754" y="${y}" width="284" height="22" rx="5" fill="${isTop ? '#fff4e8' : '#fff'}" stroke="${isTop ? '#ef7d00' : '#e6e8ec'}"></rect>
+      <text x="764" y="${y+15}" class="tiny">${isTop ? '★ ' : (i+1)+'. '}${escapeXML(p.guid || '')}</text>
     </g>`;
   }).join('');
   const slot = r.opencv?.slot;
@@ -605,9 +605,9 @@ function renderKGfromResult(r){
     ['PARALLEL_TO', 'wall axes near parallel'],
   ];
   const predicateHtml = `<div class="kgPreds">${predicateCatalog.map(([name,desc]) =>
-    `<div class="kgPred ${activePreds.has(name) ? 'on' : ''}">
-      <code>${esc(name)}</code><span>${esc(desc)}</span>
-    </div>`).join('')}</div>`;
+    `<span class="kgPred ${activePreds.has(name) ? 'on' : ''}" title="${esc(desc)}">
+      <code>${esc(name)}</code>
+    </span>`).join('')}</div>`;
   const stageCard = (title, body, cls='on') =>
     `<div class="kgNode ${cls}"><b>${esc(title)}</b><span>${body}</span></div>`;
   const pipelineHtml = `<div class="kgPipe">
@@ -700,7 +700,7 @@ function renderKGfromResult(r){
     <path d="M950 114 L982 114" class="edgeHot"></path>
 
     <text x="852" y="${Math.min(svgH - 36, 360)}" text-anchor="middle" class="tiny">
-      ${topGuid ? `top-1 ${escapeXML(topGuid)}…` : 'no committed top-1'}
+      ${topGuid ? `top-1 ${escapeXML(topGuid)}` : 'no committed top-1'}
     </text>
   </svg>`;
   document.getElementById('kg').innerHTML = svg;
