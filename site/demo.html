@@ -592,7 +592,7 @@ function renderKGfromResult(r){
     confidence: c.overall_confidence ?? r.confidence ?? null,
   };
   const vlmOut = hasObjectFields(r.vlm_output) ? r.vlm_output : vlmFallback;
-  const vlmJsonHtml = `<div class="kgJson"><b>Complete VLM extracted output</b>\n${esc(compactJson(vlmOut))}</div>`;
+  const vlmJsonHtml = `<div class="kgJson"><b>Complete extracted spatial address</b>\n${esc(compactJson(vlmOut))}</div>`;
   const activePreds = new Set(rels.map(t => String(t.predicate || '').toUpperCase()));
   const predicateCatalog = [
     ['FILLS', 'door/window fills an opening in a host wall'],

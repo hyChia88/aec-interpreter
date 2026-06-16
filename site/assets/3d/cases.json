@@ -82,11 +82,7 @@
       "ifc_class": "IfcDoor",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 2 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcDoor",
@@ -97,7 +93,8 @@
           "object_material": "Brick, Engineering",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Storage Wall"
         },
         {
           "subject_type": "IfcDoor",
@@ -109,8 +106,70 @@
           "confidence": 1.0,
           "connection_degree": null,
           "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "direction": "right",
+          "confidence": 1.0
         }
-      ]
+      ],
+      "target_width_mm": 762.0,
+      "target_height_mm": 2032.0,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "-1",
+      "ifc_class": "IfcDoor",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "2nd of 2 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Brick, Engineering",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Storage Wall"
+        },
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": null,
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "direction": "right",
+          "confidence": 1.0
+        }
+      ],
+      "target_width_mm": 762.0,
+      "target_height_mm": 2032.0,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -196,11 +255,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 9 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -211,7 +266,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -223,8 +279,72 @@
           "confidence": 1.0,
           "connection_degree": null,
           "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "right",
+          "confidence": 1.0,
+          "object_subtype": "stairwell window"
         }
-      ]
+      ],
+      "target_width_mm": 894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bedroom window",
+      "position_context": "2nd of 9 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "right",
+          "confidence": 1.0,
+          "object_subtype": "stairwell window"
+        }
+      ],
+      "target_width_mm": 894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -310,11 +430,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "small bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "11th of 17 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -325,7 +441,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -349,7 +466,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "2",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "small bedroom window",
+      "position_context": "11th of 17 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "wide bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -435,11 +613,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "small bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "3rd of 9 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -450,7 +624,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -474,7 +649,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "2",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "small bedroom window",
+      "position_context": "3rd of 9 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "wide bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -560,11 +796,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "wide bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "8th of 10 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -575,7 +807,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -587,8 +820,72 @@
           "confidence": 1.0,
           "connection_degree": null,
           "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "right",
+          "confidence": 1.0,
+          "object_subtype": "bathroom window"
         }
-      ]
+      ],
+      "target_width_mm": 1894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "2",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "wide bedroom window",
+      "position_context": "8th of 10 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "right",
+          "confidence": 1.0,
+          "object_subtype": "bathroom window"
+        }
+      ],
+      "target_width_mm": 1894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -674,11 +971,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bathroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "3rd of 3 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -689,7 +982,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -713,7 +1007,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "3",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bathroom window",
+      "position_context": "3rd of 3 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "wide bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -799,11 +1154,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "small bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 9 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -814,7 +1165,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -838,7 +1190,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "3",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "small bedroom window",
+      "position_context": "2nd of 9 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "wide bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -924,11 +1337,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "wide bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "7th of 17 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -939,7 +1348,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -951,8 +1361,72 @@
           "confidence": 1.0,
           "connection_degree": null,
           "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "right",
+          "confidence": 1.0,
+          "object_subtype": "bathroom window"
         }
-      ]
+      ],
+      "target_width_mm": 1894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "4",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "wide bedroom window",
+      "position_context": "7th of 17 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "right",
+          "confidence": 1.0,
+          "object_subtype": "bathroom window"
+        }
+      ],
+      "target_width_mm": 1894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -1038,11 +1512,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "small bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 9 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -1053,7 +1523,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -1066,7 +1537,57 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": 894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "5",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "small bedroom window",
+      "position_context": "2nd of 9 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": 894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -1152,11 +1673,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 17 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -1178,7 +1695,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -1191,7 +1709,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bedroom window",
+      "position_context": "2nd of 17 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "wide bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -1277,11 +1856,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 17 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -1303,7 +1878,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -1316,7 +1892,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "2",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bedroom window",
+      "position_context": "2nd of 17 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bathroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -1402,11 +2039,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 17 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -1428,7 +2061,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -1441,7 +2075,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "3",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bedroom window",
+      "position_context": "2nd of 17 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bathroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -1527,11 +2222,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "wide bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "13th of 17 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -1553,7 +2244,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -1566,7 +2258,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "3",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "wide bedroom window",
+      "position_context": "13th of 17 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -1652,11 +2405,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "7th of 9 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -1678,7 +2427,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -1691,7 +2441,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "5",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bedroom window",
+      "position_context": "7th of 9 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bathroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -1766,11 +2577,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "floor-to-ceiling window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "1st of 3 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -1792,7 +2599,8 @@
           "object_material": "Brick, Engineering",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
         },
         {
           "subject_type": "IfcWindow",
@@ -1805,7 +2613,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "floor-to-ceiling window",
+      "position_context": "1st of 3 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": "fire-rated door",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Brick, Engineering",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "floor-to-ceiling window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -1880,11 +2749,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "wide bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 3 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -1906,7 +2771,8 @@
           "object_material": "Brick, Engineering",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
         },
         {
           "subject_type": "IfcWindow",
@@ -1918,8 +2784,83 @@
           "confidence": 1.0,
           "connection_degree": null,
           "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "confidence": 1.0,
+          "direction": "left",
+          "object_subtype": "fire-rated door"
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "wide bedroom window",
+      "position_context": "2nd of 3 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": "fire-rated door",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Brick, Engineering",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "floor-to-ceiling window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "confidence": 1.0,
+          "direction": "left",
+          "object_subtype": "fire-rated door"
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -1995,11 +2936,7 @@
       "ifc_class": "IfcDoor",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "close wall at 469mm",
       "spatial_relations": [
         {
           "subject_type": "IfcDoor",
@@ -2012,7 +2949,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": 762.0,
+      "target_height_mm": 2032.0,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "-1",
+      "ifc_class": "IfcDoor",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "close wall at 469mm",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Interior Wall A",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": 762.0,
+      "target_height_mm": 2032.0,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -2088,10 +3063,6 @@
       "space_name": null,
       "target_name_keyword": "ground floor stairwell window",
       "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -2113,9 +3084,72 @@
           "object_material": "Brick, Engineering",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
+        },
+        {
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcDoor",
+          "confidence": 1.0,
+          "object_material": "Titanium"
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "ground floor stairwell window",
+      "position_context": null,
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": "fire-rated door",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Brick, Engineering",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
+        },
+        {
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcDoor",
+          "confidence": 1.0,
+          "object_material": "Titanium"
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -2201,11 +3235,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 4 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -2227,7 +3257,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -2240,7 +3271,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "4",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bedroom window",
+      "position_context": "2nd of 4 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bathroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -2326,11 +3418,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "wide bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "9th of 9 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -2352,7 +3440,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -2365,7 +3454,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "3",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "wide bedroom window",
+      "position_context": "9th of 9 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -2451,11 +3601,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 4 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -2477,7 +3623,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -2490,7 +3637,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bedroom window",
+      "position_context": "2nd of 4 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -2576,11 +3784,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "9th of 10 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -2602,7 +3806,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -2615,7 +3820,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "5",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bedroom window",
+      "position_context": "9th of 10 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bathroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -2701,11 +3967,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "7th of 9 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -2727,7 +3989,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -2740,7 +4003,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "3",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bedroom window",
+      "position_context": "7th of 9 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bathroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -2826,11 +4150,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "wide bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "9th of 17 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -2852,7 +4172,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -2865,7 +4186,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "4",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "wide bedroom window",
+      "position_context": "9th of 17 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bathroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -2951,11 +4333,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "4th of 17 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -2977,7 +4355,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -2990,7 +4369,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "3",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bedroom window",
+      "position_context": "4th of 17 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bathroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -3076,11 +4516,7 @@
       "ifc_class": "IfcDoor",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 3 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcDoor",
@@ -3091,7 +4527,8 @@
           "object_material": "Interior Wall A",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Storage Wall"
         },
         {
           "subject_type": "IfcDoor",
@@ -3115,7 +4552,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "-1",
+      "ifc_class": "IfcDoor",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "2nd of 3 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Interior Wall A",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Storage Wall"
+        },
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": null,
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": null,
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -3190,11 +4688,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "small bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "4th of 4 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -3216,7 +4710,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
         },
         {
           "subject_type": "IfcWindow",
@@ -3229,7 +4724,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "small bedroom window",
+      "position_context": "4th of 4 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "wide bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "wide bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -3315,11 +4871,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "5th of 10 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -3341,7 +4893,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -3354,7 +4907,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "5",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bedroom window",
+      "position_context": "5th of 10 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "stairwell window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -3434,12 +5048,8 @@
       "storey_name": "1",
       "ifc_class": "IfcDoor",
       "space_name": null,
-      "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "target_name_keyword": "fire-rated door",
+      "position_context": "1st of 6 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcDoor",
@@ -3461,7 +5071,8 @@
           "object_material": "Brick, Engineering",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
         },
         {
           "subject_type": "IfcDoor",
@@ -3474,7 +5085,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcDoor",
+      "space_name": null,
+      "target_name_keyword": "fire-rated door",
+      "position_context": "1st of 6 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Brick, Engineering",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
+        },
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -3525,11 +5197,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall junction node with 6 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -3542,7 +5210,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "-1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall junction node with 6 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -3593,11 +5299,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall junction node with 6 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -3610,7 +5312,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "-1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall junction node with 6 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -3690,11 +5430,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall junction node with 6 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -3707,7 +5443,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "-1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall junction node with 6 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -3787,11 +5561,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall junction node with 6 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -3804,7 +5574,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "-1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall junction node with 6 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -3884,11 +5692,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall junction node with 6 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -3901,7 +5705,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall junction node with 6 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -3967,11 +5809,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall junction node with 6 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -3984,7 +5822,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall junction node with 6 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -4064,11 +5940,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall junction node with 6 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -4081,7 +5953,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall junction node with 6 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -4126,11 +6036,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall junction node with 8 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -4143,7 +6049,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "6",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall junction node with 8 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -4188,11 +6132,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall corner with 4 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -4205,7 +6145,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "6",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall corner with 4 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -4285,11 +6263,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall corner with 4 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -4302,7 +6276,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall corner with 4 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -4382,11 +6394,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall corner with 4 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -4399,7 +6407,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall corner with 4 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -4479,11 +6525,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall corner with 4 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -4496,7 +6538,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall corner with 4 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -4576,11 +6656,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall junction node with 8 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -4593,7 +6669,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall junction node with 8 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -4673,11 +6787,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "wall corner with 4 connections",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -4690,7 +6800,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "wall corner with 4 connections",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "CONNECTS_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -4729,11 +6877,7 @@
       "ifc_class": "IfcDoor",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "1st of 1 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcDoor",
@@ -4744,9 +6888,49 @@
           "object_material": "Leather, weathered",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Interior between App"
         }
-      ]
+      ],
+      "target_width_mm": 762.0,
+      "target_height_mm": 2032.0,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcDoor",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "1st of 1 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Interior between App"
+        }
+      ],
+      "target_width_mm": 762.0,
+      "target_height_mm": 2032.0,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -4832,11 +7016,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "wide bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "8th of 9 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -4847,7 +7027,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -4859,8 +7040,72 @@
           "confidence": 1.0,
           "connection_degree": null,
           "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "right",
+          "confidence": 1.0,
+          "object_subtype": "bedroom window"
         }
-      ]
+      ],
+      "target_width_mm": 1894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "wide bedroom window",
+      "position_context": "8th of 9 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "right",
+          "confidence": 1.0,
+          "object_subtype": "bedroom window"
+        }
+      ],
+      "target_width_mm": 1894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -4946,11 +7191,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "small bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 9 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -4961,7 +7202,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -4973,8 +7215,72 @@
           "confidence": 1.0,
           "connection_degree": null,
           "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "right",
+          "confidence": 1.0,
+          "object_subtype": "floor-to-ceiling window"
         }
-      ]
+      ],
+      "target_width_mm": 894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "small bedroom window",
+      "position_context": "2nd of 9 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "floor-to-ceiling window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "right",
+          "confidence": 1.0,
+          "object_subtype": "floor-to-ceiling window"
+        }
+      ],
+      "target_width_mm": 894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -5049,11 +7355,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "2nd of 9 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -5064,7 +7366,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
         },
         {
           "subject_type": "IfcWindow",
@@ -5076,8 +7379,86 @@
           "confidence": 1.0,
           "connection_degree": null,
           "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "direction": "left",
+          "confidence": 1.0,
+          "object_subtype": "fire-rated door"
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "right",
+          "confidence": 1.0,
+          "object_subtype": "ground floor stairwell window"
         }
-      ]
+      ],
+      "target_width_mm": 894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "bedroom window",
+      "position_context": "2nd of 9 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWall",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "small bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "direction": "left",
+          "confidence": 1.0,
+          "object_subtype": "fire-rated door"
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "right",
+          "confidence": 1.0,
+          "object_subtype": "ground floor stairwell window"
+        }
+      ],
+      "target_width_mm": 894.0,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -5163,11 +7544,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "small bedroom window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "5th of 10 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -5189,7 +7566,8 @@
           "object_material": "Plaster",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
         },
         {
           "subject_type": "IfcWindow",
@@ -5202,7 +7580,68 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "small bedroom window",
+      "position_context": "5th of 10 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bedroom window",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Plaster",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior"
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "bedroom window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -5283,11 +7722,7 @@
       "ifc_class": "IfcDoor",
       "space_name": null,
       "target_name_keyword": "fire-rated door",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "14th of 14 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcDoor",
@@ -5309,9 +7744,60 @@
           "object_material": "Brick, Engineering",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcDoor",
+      "space_name": null,
+      "target_name_keyword": "fire-rated door",
+      "position_context": "14th of 14 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": "floor-to-ceiling window",
+          "direction": "left",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Brick, Engineering",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -5386,11 +7872,7 @@
       "ifc_class": "IfcWindow",
       "space_name": null,
       "target_name_keyword": "floor-to-ceiling window",
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "14th of 14 openings on the same wall",
       "spatial_relations": [
         {
           "subject_type": "IfcWindow",
@@ -5412,9 +7894,74 @@
           "object_material": "Brick, Engineering",
           "confidence": 1.0,
           "connection_degree": null,
-          "distance_mm": null
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "left",
+          "confidence": 1.0,
+          "object_subtype": "ground floor stairwell window"
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWindow",
+      "space_name": null,
+      "target_name_keyword": "floor-to-ceiling window",
+      "position_context": "14th of 14 openings on the same wall",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "NEXT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": "fire-rated door",
+          "direction": "right",
+          "object_material": null,
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null
+        },
+        {
+          "subject_type": "IfcWindow",
+          "predicate": "FILLS",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Brick, Engineering",
+          "confidence": 1.0,
+          "connection_degree": null,
+          "distance_mm": null,
+          "host_name": "Basic Wall:MockUp Exterior Ground Floor"
+        },
+        {
+          "predicate": "NEXT_TO",
+          "object_type": "IfcWindow",
+          "direction": "left",
+          "confidence": 1.0,
+          "object_subtype": "ground floor stairwell window"
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": "opencv",
+      "overall_confidence": 0.85
     }
   },
   {
@@ -5494,11 +8041,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "nearest door at 206mm",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -5511,7 +8054,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "nearest door at 206mm",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Door - Frame",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -5591,11 +8172,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "close door at 394mm",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -5608,7 +8185,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "-1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "close door at 394mm",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Door - Frame",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -5688,11 +8303,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "close door at 409mm",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -5705,7 +8316,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "-1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "close door at 409mm",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Door - Frame",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -5785,11 +8434,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "nearest door at 246mm",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -5802,7 +8447,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "-1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "nearest door at 246mm",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Door - Frame",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -5882,11 +8565,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "close door at 409mm",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -5899,7 +8578,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "-1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "close door at 409mm",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Door - Frame",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -5957,11 +8674,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "nearest door at 209mm",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -5974,7 +8687,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "nearest door at 209mm",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Door - Frame",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -6027,11 +8778,7 @@
       "ifc_class": "IfcDoor",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "nearest wall at 204mm",
       "spatial_relations": [
         {
           "subject_type": "IfcDoor",
@@ -6044,7 +8791,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": 76.0,
+      "target_height_mm": 2134.0,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcDoor",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "nearest wall at 204mm",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": 76.0,
+      "target_height_mm": 2134.0,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -6097,11 +8882,7 @@
       "ifc_class": "IfcDoor",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "close wall at 348mm",
       "spatial_relations": [
         {
           "subject_type": "IfcDoor",
@@ -6114,7 +8895,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": 762.0,
+      "target_height_mm": 2032.0,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcDoor",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "close wall at 348mm",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcDoor",
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcWallStandardCase",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Leather, weathered",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": 762.0,
+      "target_height_mm": 2032.0,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -6172,11 +8991,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "nearest door at 209mm",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -6189,7 +9004,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "nearest door at 209mm",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcDoor",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "Door - Frame",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   },
   {
@@ -6236,11 +9089,7 @@
       "ifc_class": "IfcWallStandardCase",
       "space_name": null,
       "target_name_keyword": null,
-      "position_context": null,
-      "position_context_confidence": null,
-      "position_context_source": null,
-      "overall_confidence": 0.85,
-      "source": "lora_precomputed",
+      "position_context": "adjacent window at 1498mm",
       "spatial_relations": [
         {
           "subject_type": "IfcWallStandardCase",
@@ -6253,7 +9102,45 @@
           "connection_degree": null,
           "distance_mm": null
         }
-      ]
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
+    },
+    "vlm_output": {
+      "storey_name": "1",
+      "ifc_class": "IfcWallStandardCase",
+      "space_name": null,
+      "target_name_keyword": null,
+      "position_context": "adjacent window at 1498mm",
+      "spatial_relations": [
+        {
+          "subject_type": "IfcWallStandardCase",
+          "predicate": "ADJACENT_TO",
+          "object_type": "IfcWindow",
+          "object_subtype": null,
+          "direction": null,
+          "object_material": "White RAL 9010",
+          "confidence": 0.75,
+          "connection_degree": null,
+          "distance_mm": null
+        }
+      ],
+      "target_width_mm": null,
+      "target_height_mm": null,
+      "near_keywords": [],
+      "relations": [],
+      "neighbor_type": null,
+      "confidence": 0.85,
+      "source": "lora_precomputed",
+      "position_context_source": null,
+      "overall_confidence": 0.85
     }
   }
 ]

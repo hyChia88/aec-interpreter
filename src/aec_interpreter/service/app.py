@@ -138,18 +138,26 @@ async def api_ground(req: GroundRequest):
     rr = rerank_live(gt, pool_guids, constraints.storey_name, constraints.ifc_class, st["rerank_ctx"])
     ranked = rr["ranked"]
     rank = (ranked.index(gt) + 1) if gt in ranked else None
+    slot_text = (
+        f"{rr['slot'][0] + 1} of {rr['slot'][1]} openings on the same wall"
+        if rr.get("slot") else constraints.position_context
+    )
+    parsed_vlm = dict(vlm.get("parsed") or {})
+    if slot_text:
+        parsed_vlm.setdefault("position_context", slot_text)
+        parsed_vlm.setdefault("position_context_source", "opencv")
 
     return {
         "case_id": req.case_id,
         "live": True,
         "valid_json": vlm.get("valid_json"),
-        "vlm_output": vlm.get("parsed") or {},
+        "vlm_output": parsed_vlm,
         "constraints": {
             "storey_name": constraints.storey_name,
             "ifc_class": constraints.ifc_class,
-            "position_context": constraints.position_context,
-            "position_context_confidence": constraints.position_context_confidence,
-            "position_context_source": constraints.position_context_source,
+            "position_context": slot_text,
+            "position_context_confidence": rr["conf_cal"] if rr.get("slot") else constraints.position_context_confidence,
+            "position_context_source": "opencv" if rr.get("slot") else constraints.position_context_source,
             "overall_confidence": round(float(constraints.confidence or 0.0), 2),
             "spatial_relations": [
                 {

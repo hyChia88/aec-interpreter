@@ -123,6 +123,8 @@ def _vlm_constraints(c: dict) -> dict:
         "position_context": con.get("position_context"),
         "position_context_confidence": con.get("position_context_confidence"),
         "position_context_source": con.get("position_context_source"),
+        "target_width_mm": con.get("target_width_mm"),
+        "target_height_mm": con.get("target_height_mm"),
         "overall_confidence": round(float(con.get("confidence") or 0.0), 2),
         "source": con.get("source"),
         "spatial_relations": con.get("spatial_relations") or [],
