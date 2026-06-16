@@ -26,8 +26,8 @@
   .tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
   .app{display:grid;grid-template-columns:430px 1fr;height:calc(100vh - 58px);min-height:620px}
   .panel{border-right:1px solid var(--line);overflow-y:auto;padding:20px}
-  .viewer{position:relative;background:#eef1f4;display:grid;grid-template-rows:minmax(340px,1fr) auto}
-  .canvasWrap{position:relative;min-height:340px}
+  .viewer{position:relative;background:#eef1f4;display:grid;grid-template-rows:minmax(240px,1fr) 14px var(--drawer-h,34vh);min-height:0}
+  .canvasWrap{position:relative;min-height:240px;min-width:0}
   #c{width:100%;height:100%;display:block}
   .hint{position:absolute;left:14px;bottom:12px;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12.5px;color:var(--muted)}
   #loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:15px;background:rgba(238,241,244,.7)}
@@ -70,7 +70,12 @@
   .livebtn:hover{filter:brightness(1.05)}.livebtn:disabled{opacity:.6;cursor:wait}
   .livenote{font-size:12px;color:var(--muted);margin:10px 0 0}
   /* details drawer under the canvas */
-  .drawer{border-top:1px solid var(--line);background:#fff;max-height:46vh;overflow-y:auto}
+  .splitter{position:relative;background:#f8fafc;border-top:1px solid var(--line);border-bottom:1px solid var(--line);cursor:row-resize;touch-action:none}
+  .splitter::before{content:"";position:absolute;left:50%;top:50%;width:64px;height:4px;border-radius:999px;background:#cbd5e1;transform:translate(-50%,-50%)}
+  .splitter:hover::before,.splitter.dragging::before{background:var(--accent)}
+  .splitToggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--muted);font-size:14px;line-height:1;cursor:pointer;font-family:inherit}
+  .splitToggle:hover{border-color:var(--accent);color:var(--accent)}
+  .drawer{background:#fff;overflow-y:auto;min-height:0}
   details{border-bottom:1px solid var(--line)}
   details>summary{cursor:pointer;list-style:none;padding:11px 16px;font-size:12px;font-weight:800;
     letter-spacing:.07em;text-transform:uppercase;color:var(--accent);display:flex;justify-content:space-between;align-items:center}
@@ -95,7 +100,7 @@
   .relbox{font-size:12.5px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:6px 0;background:#fbfcfd}
   .relbox b{font-family:ui-monospace,monospace}
   #kg{border:1px solid var(--line);border-radius:10px;background:#fbfcfd;min-height:170px;overflow:hidden}
-  @media(max-width:860px){.app{grid-template-columns:1fr;height:auto}.viewer{height:auto}.canvasWrap{height:60vh}.drawer{max-height:none}}
+  @media(max-width:860px){.app{grid-template-columns:1fr;height:auto}.viewer{height:100vh;grid-template-rows:minmax(260px,1fr) 14px var(--drawer-h,34vh)}.canvasWrap{min-height:260px}}
 </style>
 </head>
 <body>
@@ -168,6 +173,9 @@
       <div id="loading">enter a query…</div>
       <div class="hint">drag to orbit · scroll to zoom · right-drag to pan</div>
     </div>
+    <div class="splitter" id="drawerSplitter" title="Drag to resize interpretation details. Double-click to reset.">
+      <button class="splitToggle" id="drawerToggle" type="button" title="Collapse or expand interpretation details" aria-label="Collapse or expand interpretation details">▾</button>
+    </div>
 
     <!-- shared expandable details drawer (driven by whichever tab ran last) -->
     <div class="drawer" id="drawer">
@@ -220,6 +228,75 @@ function resize(){ const r = canvas.getBoundingClientRect();
   renderer.setSize(r.width, r.height, false); camera.aspect = r.width/r.height; camera.updateProjectionMatrix(); }
 new ResizeObserver(resize).observe(canvas.parentElement);
 (function loop(){ requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); })();
+
+// Right-side viewer/details splitter. Drag the handle to allocate more space to
+// interpretation details without scrolling the whole page.
+const viewerEl = document.querySelector('.viewer');
+const splitterEl = document.getElementById('drawerSplitter');
+const toggleEl = document.getElementById('drawerToggle');
+let drawerH = Number(localStorage.getItem('aecDrawerH') || 0);
+let drawerExpandedH = drawerH || 320;
+let drawerCollapsed = false;
+
+function clampDrawerHeight(h){
+  const total = viewerEl.getBoundingClientRect().height || window.innerHeight;
+  const minDrawer = Math.min(180, Math.max(120, total * 0.22));
+  const maxDrawer = Math.max(minDrawer, total - 260);
+  return Math.max(minDrawer, Math.min(maxDrawer, h));
+}
+function setDrawerHeight(h, persist=true){
+  drawerH = clampDrawerHeight(h);
+  drawerExpandedH = drawerH;
+  viewerEl.style.setProperty('--drawer-h', `${Math.round(drawerH)}px`);
+  drawerCollapsed = false;
+  toggleEl.textContent = '▾';
+  toggleEl.setAttribute('aria-expanded', 'true');
+  if(persist) localStorage.setItem('aecDrawerH', String(Math.round(drawerH)));
+  resize();
+}
+function collapseDrawer(){
+  drawerExpandedH = drawerH || drawerExpandedH || 320;
+  viewerEl.style.setProperty('--drawer-h', '44px');
+  drawerCollapsed = true;
+  toggleEl.textContent = '▴';
+  toggleEl.setAttribute('aria-expanded', 'false');
+  resize();
+}
+function expandDrawer(){
+  setDrawerHeight(drawerExpandedH || 320);
+}
+if(drawerH) setDrawerHeight(drawerH, false);
+else setDrawerHeight(Math.max(260, viewerEl.getBoundingClientRect().height * 0.34), false);
+
+let dragState = null;
+splitterEl.addEventListener('pointerdown', e=>{
+  if(e.target === toggleEl) return;
+  const rect = viewerEl.getBoundingClientRect();
+  dragState = {top: rect.top, bottom: rect.bottom};
+  splitterEl.setPointerCapture(e.pointerId);
+  splitterEl.classList.add('dragging');
+  e.preventDefault();
+});
+splitterEl.addEventListener('pointermove', e=>{
+  if(!dragState) return;
+  setDrawerHeight(dragState.bottom - e.clientY);
+});
+function endSplitterDrag(e){
+  if(!dragState) return;
+  dragState = null;
+  splitterEl.classList.remove('dragging');
+  try{ splitterEl.releasePointerCapture(e.pointerId); }catch(_){}
+}
+splitterEl.addEventListener('pointerup', endSplitterDrag);
+splitterEl.addEventListener('pointercancel', endSplitterDrag);
+splitterEl.addEventListener('dblclick', ()=>setDrawerHeight(viewerEl.getBoundingClientRect().height * 0.34));
+toggleEl.onclick = e=>{
+  e.stopPropagation();
+  drawerCollapsed ? expandDrawer() : collapseDrawer();
+};
+new ResizeObserver(()=>{
+  if(!drawerCollapsed) setDrawerHeight(drawerH || viewerEl.getBoundingClientRect().height * 0.34, false);
+}).observe(viewerEl);
 
 const loader = new GLTFLoader();
 const cache = {};                 // glb file -> THREE.Group (with up-axis fixed)

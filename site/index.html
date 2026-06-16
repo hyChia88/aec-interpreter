@@ -22,7 +22,8 @@
     <div class="btns">
       <a class="btn" href="https://github.com/hyChia88/aec-interpreter.git" target="_blank" rel="noopener">💻 Git Repo</a>
       <a class="btn ghost" href="assets/pdfs/paper.pdf" target="_blank" rel="noopener">📄 Paper (PDF)</a>
-      <a class="btn ghost" href="#demo">▶ Video Demo</a>
+      <a class="btn ghost" href="#video">🎬 Video Walkthrough</a>
+      <a class="btn ghost" href="demo.html">🔎 &nbsp;Interactive Demo</a>
     </div>
   </div>
 </header>
@@ -303,24 +304,26 @@
       </div>
     </div>
 
-    <!--  TODO: 确认这个section的数据是否真实，manual scan应该没有数据（虽然可以比
-     较final pool 1000+ itens，然是可以比较coarse address 76+ items. etc. 用final pool candidates 来比较  -->
-    <h3>Triage effort — search becomes verification</h3>
+    <h3>Triage effort proxy — pool review becomes verification</h3>
     <div class="grid2" style="align-items:center">
-      <figure style="margin-top:6px">
-        <img src="assets/triage_effort.png" alt="Triage effort proxy: median candidate inspections drop from 38 to 0.5 with the spatial address.">
-        <figcaption>The spatial address changes the coordinator's task from scanning a long candidate list to verifying a near-front-ranked element.</figcaption>
-      </figure>
       <table>
-        <thead><tr><th>Arm</th><th class="n">Median inspections</th><th class="n">≈ time / element</th><th class="n">Success@1</th></tr></thead>
+        <thead><tr><th>Review scope</th><th class="n">Median candidates / inspections</th><th class="n">≈ time / element</th><th class="n">Top-1</th></tr></thead>
         <tbody>
-          <tr><td>Manual scan, no ranking</td><td class="n">38.0</td><td class="n">~570 s</td><td class="n">1.8%</td></tr>
-          <tr><td>Coarse storey + class</td><td class="n">23.0</td><td class="n">~345 s</td><td class="n">4.9%</td></tr>
+          <tr><td>Unranked final pool</td><td class="n">76 candidates / 38 expected inspections</td><td class="n">~570 s</td><td class="n">1.8%</td></tr>
+          <tr><td>Coarse storey + class address</td><td class="n">46 candidates / 23 expected inspections</td><td class="n">~345 s</td><td class="n">4.9%</td></tr>
           <tr class="best"><td>+ spatial-address ceiling</td><td class="n">0.5</td><td class="n">~8 s</td><td class="n">78.5%</td></tr>
         </tbody>
       </table>
+      <div class="callout">
+        <h3>What is measured?</h3>
+        <p>This is not a user study or observed field-labor time. It is a ranking-derived proxy over
+          the same held-out final candidate pools: how many model candidates a coordinator would
+          expect to inspect before reaching the correct element.</p>
+        <p>The fair baseline is the system's own unranked final pool, not a building-wide manual
+          search. The spatial address turns a long review list into a near-front verification task.</p>
+      </div>
     </div>
-    <p class="tcap">A ranking-derived effort proxy (15 s/inspection assumption), not a user study.</p>
+    <p class="tcap">Pool-derived effort proxy on the held-out final candidate pools. Time uses a 15 s/inspection assumption and should be read as scale, not measured labor.</p>
 
     <figure>
       <img src="assets/portfolio/fig-workflow-impact.png" alt="Human-in-the-loop triage and downstream BCF / CORENET compliance">
@@ -329,7 +332,7 @@
   </div>
 </section>
 
-<!-- Demo (video kept) -->
+<!-- Demo -->
 <section id="demo">
   <div class="wrap">
     <h2><span class="num">Demo</span>One case, end-to-end</h2>

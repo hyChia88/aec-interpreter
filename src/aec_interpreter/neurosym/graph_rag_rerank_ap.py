@@ -29,11 +29,11 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import yaml
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-REPO_ROOT = PROJECT_ROOT.parent
+SRC_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = SRC_ROOT.parent
+REPO_ROOT = PROJECT_ROOT
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
@@ -54,8 +54,8 @@ DEFAULT_TRACE_JSONL = (
     / "g7_position_context"
     / "traces_20260407_195114_v2_lora_p0_union_p1.jsonl"
 )
-DEFAULT_CASES_JSONL = PROJECT_ROOT / "evaluation" / "cases" / "cases_ap_heldout_e2e.jsonl"
-DEFAULT_CONFIG = PROJECT_ROOT / "config.yaml"
+DEFAULT_CASES_JSONL = PROJECT_ROOT / "data" / "test_sets" / "cases_ap_heldout_e2e.jsonl"
+DEFAULT_CONFIG = PROJECT_ROOT / "config" / "config.yaml"
 DEFAULT_MODEL = "gemini-2.5-flash"
 DEFAULT_TOP_K = 10
 PROMPTS_PATH = "prompts/graphrag_rerank.yaml"

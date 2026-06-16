@@ -318,15 +318,16 @@ not by retrieval logic. Every failure has a traceable stage, which is the operat
 differentiator over black-box matching: the roadmap is ``improve the named weak fields,'' not
 ``redesign the planner.'' Latency favors the constrained pipeline (${\sim}1$\,s vs.\ ${\sim}4.5$\,s
 for the ReAct agent, with exact repeatability). The workflow-facing cost metric makes the ceiling
-concrete (Figure~\ref{fig:triage}): the expected number of candidates a coordinator must inspect falls
-from a median 38 under manual scan to 0.5 under a perfect address --- with 15 seconds per inspection an
-explicit proxy assumption, not a user-study result.
+concrete (Figure~\ref{fig:triage}): over the same final candidate pools, the expected number of
+candidates a coordinator must inspect falls from a median 38 under an unranked-pool review to
+0.5 under a perfect address --- with 15 seconds per inspection an explicit proxy assumption, not
+a user-study or observed field-labor result.
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.8\textwidth]{triage_effort.png}
   \caption{Triage-effort proxy on the same held-out pools. Expected inspections per case fall from a
-  median 38 (manual scan) to 0.5 (perfect address); the realized specialist sits between, with
+  median 38 (unranked final pool) to 0.5 (perfect address); the realized specialist sits between, with
   success@1 78.5\% under the oracle address.}
   \label{fig:triage}
 \end{figure}

@@ -74,8 +74,14 @@ Remote layout (matches the `AEC_*` env in `modal_app.py`):
 ```
 
 ### 4. VLM app
-The extraction model is the already-deployed `mscd-vlm-lora3-inference` (`G8ModelPredictor`).
-Confirm it's live in the same workspace: `modal app list`. No redeploy needed.
+The extraction model is `mscd-vlm-lora3-inference` (`G8ModelPredictor`), defined in
+`deploy/vlm_modal_app.py`. It loads the G8 adapter from the Modal Volume
+`mscd-checkpoints` at `/checkpoints/mscd-lora-v6-g8-posctx-dim/best`.
+Confirm it is live in the same workspace:
+```bash
+modal app list
+modal deploy deploy/vlm_modal_app.py   # run if the VLM app is missing or stale
+```
 
 ---
 

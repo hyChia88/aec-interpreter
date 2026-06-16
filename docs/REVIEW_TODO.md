@@ -24,12 +24,12 @@ AI-Scientist review of repo + paper + site. Items numbered as in the review. Sta
 - **Verdict:** do not build from scratch. Instead add a **zero-shot VLM reranker** as the off-the-shelf upper-bound of the end-to-end family (ties to #5).
 
 ## Running the zero-shot VLM reranker (#5)
-Files: `master_thesis/mscd_demo/training/inference.py::BaseVLMReranker` (serve) · `eval/vlm_reranker_baseline.py` (eval).
+Files: `deploy/vlm_modal_app.py::BaseVLMReranker` (serve) · `eval/vlm_reranker_baseline.py` (eval).
 ```bash
 # 0) validate harness locally, no GPU (lexical stand-in):
 .venv/bin/python eval/vlm_reranker_baseline.py --stub --limit 5
 # 1) deploy the base-model reranker alongside G8 (one Modal app):
-modal deploy master_thesis/mscd_demo/training/inference.py
+modal deploy deploy/vlm_modal_app.py
 # 2) run the real baseline (A100; ~60 warm calls):
 .venv/bin/python eval/vlm_reranker_baseline.py            # → output/vlm_reranker_baseline.json
 # 3) paste the printed ledger row into external_baseline.py and re-make the figure.

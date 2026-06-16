@@ -4,6 +4,16 @@ output/
 data/datasets/
 data/ifc_models/
 data/references/
+data_curation/
+*.safetensors
+*.pt
+*.pth
+*.bin
+*.gguf
+*.onnx
+*.ckpt
+adapter_model.*
+checkpoint-*/
 # keep small benchmark test sets in git:
 !data/test_sets/
 

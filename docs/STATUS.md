@@ -214,8 +214,8 @@ thesis-stage portfolio (full problem→system→modules→impact narrative + glo
 ### ✅ Submission-gap closes + demo backend + VLM re-eval (2026-06-12)
 - **External baseline** (`eval/external_baseline.py`): dense/lexical retrieval plateau (Top-1 1.7,
   Top-10 16–25) — below G8; address 78.5 breaks the ceiling. Beats an external standard, not own ablations.
-- **Triage effort** (`eval/triage_effort.py`): manual scan 38 inspections → 0.5 with the address
-  (76×; ~570s→~8s/element); search → verification.
+- **Triage effort** (`eval/triage_effort.py`): unranked final-pool review 38 expected inspections
+  → 0.5 with the address (~570s→~8s/element under a 15s/inspection proxy); search → verification.
 - **Demo backend waterfall** (`build_3d_demo.py`+`demo.html`): per-case pool collapse 76→46→1 panel +
   blue look-alike dots vs orange target in 3D (window meshes don't shade → world-space markers).
 - **VLM re-eval** (`eval/vlm_profile.py`): G8 extracts coarse 100% but discriminating slot/size 0%,

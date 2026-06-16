@@ -7,7 +7,8 @@ practical payoff, not only retrieval metrics. We use a transparent, fully data-d
   model) to reach the correct one = the GT's expected rank under each method's ordering of the
   SAME retrieved pool (h strictly-above + (t tied + 1)/2, i.e. uniform random tie-break).
 
-  - manual            : no ranking — scan the pool in arbitrary order → (|pool|+1)/2
+  - unranked final pool: no ranking — inspect the retrieved pool in arbitrary order
+                         → (|pool|+1)/2
   - coarse storey+class: rank by the ontological prefix only (what a class/floor filter gives)
   - + spatial address  : rank by the type-conditional address (oracle)
 
@@ -46,7 +47,7 @@ def main():
     pos = load_position_index(DEFAULT_POS)
     wallfp = load_wall_fingerprint(DEFAULT_WALL)
 
-    arms = {"manual scan": {"storey": 0.0},                       # uniform → all tied
+    arms = {"unranked final pool": {"storey": 0.0},                # uniform → all tied
             "coarse (storey+class)": {"storey": 1.0, "ifc_class": 1.0},
             "+ spatial address": {"storey": 1.0, "ifc_class": 1.0, "spatial_address": 1.0}}
     eff = {a: [] for a in arms}
@@ -71,7 +72,7 @@ def main():
                    "median_seconds": st.median(eff[a]) * SEC_PER_INSPECT,
                    **{f"success@{k}": 100 * succ[a][k] / n for k in (1, 5, 10)}}
 
-    base = rows["manual scan"]["median_inspections"]
+    base = rows["unranked final pool"]["median_inspections"]
     addr = rows["+ spatial address"]["median_inspections"]
 
     OUT.mkdir(exist_ok=True)
@@ -81,7 +82,7 @@ def main():
     for a, m in rows.items():
         print(f"{a:<24}{m['median_inspections']:>9.1f}{m['mean_inspections']:>7.1f}{m['median_seconds']:>7.0f}"
               f"{m['success@1']:>8.1f}{m['success@5']:>7.1f}{m['success@10']:>7.1f}")
-    print(f"\nmanual → address: median inspections {base:.0f} → {addr:.1f}  "
+    print(f"\nunranked final pool → address: median inspections {base:.0f} → {addr:.1f}  "
           f"({base/addr:.0f}× less effort); ~{base*SEC_PER_INSPECT:.0f}s → ~{addr*SEC_PER_INSPECT:.0f}s per element "
           f"(at {SEC_PER_INSPECT}s/inspection).")
 
@@ -98,8 +99,8 @@ def _figure(rows):
                 ha="center", fontsize=11, fontweight="bold")
     ax.set_xticks(range(len(names))); ax.set_xticklabels(names, fontsize=10)
     ax.set_ylabel("median inspections to find the element")
-    ax.set_title("Triage effort — the coordinator's job shifts from search to verification\n"
-                 f"manual scan {med[0]:.0f} → spatial address {med[-1]:.0f} candidate inspections per element", fontsize=11)
+    ax.set_title("Triage effort — pool review shifts from search to verification\n"
+                 f"unranked pool {med[0]:.0f} → spatial address {med[-1]:.0f} candidate inspections per element", fontsize=11)
     fig.tight_layout(); fig.savefig(OUT / "triage_effort.png", dpi=130)
     print("figure →", OUT / "triage_effort.png")
 

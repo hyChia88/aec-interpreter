@@ -35,7 +35,7 @@ def get_base_dir() -> Path:
     return here.parent.parent.parent.parent
 
 
-def load_config(config_file: str = "config.yaml") -> Dict[str, Any]:
+def load_config(config_file: str = "config/config.yaml") -> Dict[str, Any]:
     """Load centralized configuration from YAML file."""
     base_dir = get_base_dir()
     config_path = base_dir / config_file
@@ -43,10 +43,10 @@ def load_config(config_file: str = "config.yaml") -> Dict[str, Any]:
     if not config_path.exists():
         print(f"Warning: Config file '{config_path}' not found. Using defaults.")
         return {
-            "ifc": {"model_path": "data/ifc/AdvancedProject/IFC/AdvancedProject.ifc"},
+            "ifc": {"model_path": "data/ifc_models/AdvancedProject.ifc"},
             "ground_truth": {
-                "file": "data/ground_truth/gt_1/gt_1.json",
-                "image_dir": "data/ground_truth/gt_1/imgs"
+                "cases": "data/test_sets/cases_ap_heldout_e2e.jsonl",
+                "element_index": "data/references/element_index.jsonl",
             },
             "llm": {"model": "gemini-2.5-flash", "temperature": 0, "max_retries": 2},
             "agent": {"delay_between_tests": 7, "system_prompt_file": "prompts/system_prompt.yaml"},

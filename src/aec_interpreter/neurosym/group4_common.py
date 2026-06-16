@@ -10,26 +10,27 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-REPO_ROOT = PROJECT_ROOT.parent
+SRC_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = SRC_ROOT.parent
+REPO_ROOT = PROJECT_ROOT
 EXPERIMENT_ROOT = PROJECT_ROOT / "output" / "lora6_v2_ap_20260331"
 GROUP4_ROOT = EXPERIMENT_ROOT / "group4_post-hoc_analysis"
 DEFAULT_DATE_TAG = "20260404"
 
-CASES_PATH = PROJECT_ROOT / "evaluation" / "cases" / "cases_ap_heldout_e2e.jsonl"
+CASES_PATH = PROJECT_ROOT / "data" / "test_sets" / "cases_ap_heldout_e2e.jsonl"
 GT_EVAL_PATH = (
     REPO_ROOT
-    / "data_curation"
+    / "data"
     / "datasets"
     / "synth_v0.5_ap"
     / "train"
     / "lora6_v2_ap_eval_canonical_m.jsonl"
 )
-ELEMENT_INDEX_PATH = REPO_ROOT / "data_curation" / "references" / "element_index.jsonl"
+ELEMENT_INDEX_PATH = REPO_ROOT / "data" / "references" / "element_index.jsonl"
 WALL_REGION_INDEX_PATH = (
-    REPO_ROOT / "data_curation" / "references" / "wall_region_index_ap_20260331_c.jsonl"
+    REPO_ROOT / "data" / "references" / "wall_region_index_ap_20260331_c.jsonl"
 )
-AP_IFC_PATH = REPO_ROOT / "data_curation" / "ifc_models" / "AdvancedProject.ifc"
+AP_IFC_PATH = REPO_ROOT / "data" / "ifc_models" / "AdvancedProject.ifc"
 METRICS_DIR = EXPERIMENT_ROOT / "metrics"
 ORACLE_PHASE3_DIR = EXPERIMENT_ROOT / "oracle_phase3_fixed"
 
