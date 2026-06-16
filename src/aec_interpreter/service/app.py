@@ -24,6 +24,7 @@ calibrated soft-rerank (the 67.6% realized path) is not yet merged into the live
 """
 from __future__ import annotations
 
+import os
 import sys
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -33,7 +34,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "eval"))
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -73,6 +75,19 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="AEC Interpreter — live grounding", lifespan=lifespan)
+
+# When the page is hosted on GitHub Pages (static) and the backend on Modal, the browser
+# POSTs cross-origin — allow the Pages origin. ALLOWED_ORIGINS is a comma-separated env
+# override; default covers the Pages site + local dev. Same-origin (local uvicorn) is
+# unaffected. Multipart upload (/api/ground_freeform) needs the preflight allowed too.
+_default_origins = "https://hychia88.github.io,http://localhost:8000,http://127.0.0.1:8000"
+_origins = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", _default_origins).split(",") if o.strip()]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_origins,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
+)
 
 
 class GroundRequest(BaseModel):
@@ -153,6 +168,36 @@ async def api_ground(req: GroundRequest):
         "confusable_guids": scaffold.get("confusable_guids", []),
         "gt_slot": scaffold.get("gt_slot"),
     }
+
+
+@app.post("/api/ground_freeform")
+async def api_ground_freeform(
+    image: UploadFile = File(...),
+    floorplan: Optional[UploadFile] = File(None),
+    text: str = Form(""),
+    metadata: str = Form(""),
+):
+    """Run the REAL pipeline on a FREE-INPUT photo + note (no case id, no ground truth).
+
+    Coarse path: Modal VLM -> Constraints -> live Neo4j retrieval (confidence-weighted,
+    relation-aware) -> ranked pool + fingerprint level + ANSWER/DEFER. The OpenCV ordinal
+    slot-rerank is NOT run here (it needs the target's plan location); identical-sibling
+    cases therefore DEFER and return the shortlist. See eval/live_freeform.py.
+    """
+    import live_freeform as lf
+
+    st = _load_state()
+    image_bytes = [await image.read()]
+    if floorplan is not None:
+        image_bytes.append(await floorplan.read())
+    return await lf.run_freeform(
+        image_bytes_list=image_bytes,
+        chat_text=text or "",
+        metadata_text=metadata or "[IFC Model] AP",
+        engine=st["engine"],
+        backend=st["backend"],
+        floorplan_present=floorplan is not None,
+    )
 
 
 # ── static site (served same-origin so the browser can POST without CORS) ──────

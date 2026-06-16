@@ -40,14 +40,17 @@ def _make_llm_client():
 
 
 def main():
-    # Load .env from project root (mscd_demo/)
-    load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
+    # Load .env from the repo root so NEO4J_* (and GOOGLE_API_KEY) need not be on the CLI.
+    load_dotenv(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--ifc", required=True, help="Path to IFC file")
-    parser.add_argument("--uri", default="bolt://localhost:7687")
-    parser.add_argument("--user", default="neo4j")
-    parser.add_argument("--password", default="password")
+    # Defaults fall back to env (NEO4J_URI/USER/PASSWORD) → keeps the Aura password off the
+    # command line; put it in the gitignored repo-root .env instead. Explicit flags still win.
+    parser.add_argument("--uri", default=os.getenv("NEO4J_URI", "bolt://localhost:7687"))
+    # Accept Aura's NEO4J_USERNAME too (value is "neo4j", not the DBID).
+    parser.add_argument("--user", default=os.getenv("NEO4J_USER") or os.getenv("NEO4J_USERNAME") or "neo4j")
+    parser.add_argument("--password", default=os.getenv("NEO4J_PASSWORD", "password"))
     parser.add_argument("--no-clear", action="store_true",
                         help="Additive mode: don't clear existing graph (for multi-model loading)")
     args = parser.parse_args()

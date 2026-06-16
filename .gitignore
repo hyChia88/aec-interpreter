@@ -32,3 +32,10 @@ node_modules/
 # ── run scratch ─────────────────────────────────────────────────────────────
 logs/
 *.log
+
+# ── deploy: Modal volume staging (large; holds the IFC + synthetic dataset images,
+#    rebuilt locally via deploy/stage_assets.py — never commit) ─────────────────
+deploy/_volume_stage/
+# defense-in-depth: never commit the BIM model or any env file anywhere in the tree
+*.ifc
+.env.*

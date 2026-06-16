@@ -16,6 +16,7 @@ no storey-contained walls) are out until the F2 multi-storey re-render (see STAT
 from __future__ import annotations
 import glob
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -30,7 +31,9 @@ from rerank_prize import load_index, load_cases, DEFAULT_INDEX, DEFAULT_TRACES
 from reconstruct_position_index import load_position_index
 from spatial_address_ceiling import DEFAULT_POS
 
-DATASET = Path("/home/hychi/projects/cmu/master_thesis/data_curation/datasets/synth_v0.5_ap")
+DATASET = Path(os.getenv(
+    "AEC_SYNTH_DATASET",
+    "/home/hychi/projects/cmu/master_thesis/data_curation/datasets/synth_v0.5_ap"))
 FULL = DATASET / "floorplans_full"
 
 # tuning (pixels at the plans' ~1500px canvas)

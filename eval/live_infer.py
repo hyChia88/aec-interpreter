@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -33,8 +34,10 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from live_runner import CASES, FROZEN, build_engine_backend, run_case_live, _load_jsonl
 
-# Image set (gitignored, lives in the frozen data_curation tree). Override with --data-root.
-DEFAULT_DATA_ROOT = Path("/home/hychi/projects/cmu/master_thesis/data_curation")
+# Image set (gitignored, lives in the frozen data_curation tree). Override with --data-root
+# or AEC_DATA_ROOT (the latter lets the Modal deploy point at the uploaded Volume).
+DEFAULT_DATA_ROOT = Path(os.getenv(
+    "AEC_DATA_ROOT", "/home/hychi/projects/cmu/master_thesis/data_curation"))
 MODAL_APP = "mscd-vlm-lora3-inference"
 MODAL_PREDICTOR = "G8ModelPredictor"   # canonical G8 adapter (volume /checkpoints/...g8.../best)
 
@@ -106,12 +109,23 @@ def parsed_to_constraints(parsed: dict):
             confidence=r.get("confidence", 0.0),
         ))
     conf = max((r.confidence for r in rels), default=0.85)
+    # Propagate position_context confidence so the planner's hard/soft gate
+    # (constraints_to_query._build_params: should_hard_filter @ conf>=0.8) can fire.
+    # Accept either an explicit field or a nested {value, confidence, source} triple.
+    pc_conf = parsed.get("position_context_confidence")
+    if pc_conf is None and isinstance(parsed.get("position_context"), dict):
+        pc_conf = parsed["position_context"].get("confidence")
+    pc_val = parsed.get("position_context")
+    if isinstance(pc_val, dict):
+        pc_val = pc_val.get("value")
     return Constraints(
         storey_name=parsed.get("storey_name"),
         ifc_class=parsed.get("ifc_class"),
         space_name=parsed.get("space_name"),
         target_name_keyword=parsed.get("target_name_keyword"),
-        position_context=parsed.get("position_context"),
+        position_context=pc_val,
+        position_context_confidence=pc_conf,
+        position_context_source=parsed.get("position_context_source") or ("modal_g8_live" if pc_val else None),
         spatial_relations=rels,
         confidence=conf,
         source="modal_g8_live",

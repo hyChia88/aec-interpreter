@@ -1,14 +1,18 @@
 name: Deploy demo to GitHub Pages
 
-# Publishes site/ (the static 3D-grounding demo: viewer + cases.json + GLBs + site
-# photos) to GitHub Pages. The hosted page is fully static — it shows the *cached*
-# realized neuro-symbolic result for all 60 held-out cases (no Modal/Neo4j backend).
-# The live "Run inference" button only appears in the local uvicorn build.
+# Publishes site/ (the 3D-grounding demo: viewer + cases.json + GLBs + site photos) to
+# GitHub Pages via the official Pages-artifact deploy (no gh-pages branch needed). URL:
+#   https://hychia88.github.io/aec-interpreter/demo.html
+#
+# LIVE backend: the page is static, but demo.html POSTs to the Modal web app
+# (deploy/modal_app.py) when its MODAL_URL const is set and the host is *.github.io — so
+# both the Free-input and Held-out "Run live inference" paths work online. With MODAL_URL
+# left as the REPLACE-ME placeholder, the /health probe fails and the page degrades to the
+# cached realized result for the 60 held-out cases. See deploy/README.md for the backend.
 #
 # ONE-TIME SETUP (repo owner, in the GitHub UI):
 #   Settings -> Pages -> Build and deployment -> Source = "GitHub Actions".
-# After that this runs on every push that touches site/. URL:
-#   https://<user>.github.io/aec-interpreter/
+# After that this runs on every push that touches site/.
 
 on:
   push:

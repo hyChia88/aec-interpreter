@@ -16,11 +16,13 @@ Usage (from mscd_demo/):
 
 import argparse
 import json
+import os
 import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+from dotenv import load_dotenv
 from py2neo import Graph
 
 
@@ -233,6 +235,9 @@ def verify(g: Graph):
 # ---------------------------------------------------------------------------
 
 def main():
+    # Load .env from the repo root so NEO4J_* need not be on the CLI.
+    load_dotenv(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
+
     parser = argparse.ArgumentParser(
         description="Enrich Neo4j with ADJACENT_TO edges and CONTINUOUS properties"
     )
@@ -249,9 +254,12 @@ def main():
     parser.add_argument("--ifc",
                         default="data/ifc_models/AdvancedProject.ifc",
                         help="IFC file path (for CONNECTS_TO edges from IfcRelConnectsPathElements)")
-    parser.add_argument("--uri",      default="bolt://localhost:7687")
-    parser.add_argument("--user",     default="neo4j")
-    parser.add_argument("--password", default="password")
+    # Defaults fall back to env (NEO4J_URI/USER/PASSWORD); put the Aura password in the
+    # gitignored repo-root .env to keep it off the command line. Explicit flags still win.
+    parser.add_argument("--uri",      default=os.getenv("NEO4J_URI", "bolt://localhost:7687"))
+    # Accept Aura's NEO4J_USERNAME too (value is "neo4j", not the DBID).
+    parser.add_argument("--user",     default=os.getenv("NEO4J_USER") or os.getenv("NEO4J_USERNAME") or "neo4j")
+    parser.add_argument("--password", default=os.getenv("NEO4J_PASSWORD", "password"))
     args = parser.parse_args()
 
     index_path = Path(args.index)

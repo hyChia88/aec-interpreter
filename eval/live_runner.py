@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, Optional
@@ -30,7 +31,13 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 CASES = REPO_ROOT / "data" / "test_sets" / "cases_ap_heldout_e2e.jsonl"
 FROZEN = REPO_ROOT / "eval" / "fixtures" / "traces" / "g8_posctx_dim.jsonl"
-IFC = REPO_ROOT / "data" / "ifc_models" / "AdvancedProject.ifc"
+# Asset + Neo4j location are env-overridable so the SAME code runs locally (Docker Neo4j +
+# in-repo IFC) and on Modal (Neo4j Aura + IFC on a Volume). Unset env == local defaults.
+IFC = Path(os.getenv("AEC_IFC_PATH", str(REPO_ROOT / "data" / "ifc_models" / "AdvancedProject.ifc")))
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+# Accept Aura's NEO4J_USERNAME as well as NEO4J_USER (the login user is "neo4j", NOT the DBID).
+NEO4J_USER = os.getenv("NEO4J_USER") or os.getenv("NEO4J_USERNAME") or "neo4j"
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "password")
 
 
 def _load_jsonl(p: Path) -> list[dict]:
@@ -74,11 +81,22 @@ def build_engine_backend(p0_strategy: str = "p0_union_p1"):
     Shared by the precomputed `--live` reproduction (live_runner) and the live VLM
     inference CLI (live_infer). Returns (engine, backend).
     """
+    import py2neo
+    # py2neo 2021.x captures $NEO4J_URI / $NEO4J_AUTH into module globals at import and
+    # re-applies them on EVERY Graph() construction — and its env-var path rejects the
+    # `neo4j+s://` routing scheme Aura needs (ValueError: Unknown protocol 'neo4j'), which
+    # would crash the Modal service the moment the secret injects NEO4J_URI. Neutralize the
+    # env-var path so only our explicit positional URI is used (the positional arg handles
+    # neo4j+s:// fine). Order-independent: works whether or not py2neo was already imported.
+    py2neo.NEO4J_URI = None
+    py2neo.NEO4J_AUTH = None
+    os.environ.pop("NEO4J_URI", None)
+    os.environ.pop("NEO4J_AUTH", None)
     from py2neo import Graph
     from aec_interpreter.ifc_engine import IFCEngine
     from aec_interpreter.neurosym.retrieval_backend import RetrievalBackend
 
-    graph = Graph("bolt://localhost:7687", auth=("neo4j", "password"))
+    graph = Graph(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
     print(f"[live] Neo4j connected — {graph.run('MATCH (e:IFCElement) RETURN count(e)').evaluate()} elements")
     print("[live] parsing IFC (populates engine.spatial_index for pool sizing)…", flush=True)
     engine = IFCEngine(str(IFC), neo4j_conn=graph)
