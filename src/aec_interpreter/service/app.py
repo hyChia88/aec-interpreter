@@ -143,11 +143,25 @@ async def api_ground(req: GroundRequest):
         "case_id": req.case_id,
         "live": True,
         "valid_json": vlm.get("valid_json"),
+        "vlm_output": vlm.get("parsed") or {},
         "constraints": {
             "storey_name": constraints.storey_name,
             "ifc_class": constraints.ifc_class,
             "position_context": constraints.position_context,
-            "n_relations": len(constraints.spatial_relations),
+            "position_context_confidence": constraints.position_context_confidence,
+            "position_context_source": constraints.position_context_source,
+            "overall_confidence": round(float(constraints.confidence or 0.0), 2),
+            "spatial_relations": [
+                {
+                    "predicate": rel.predicate,
+                    "object_type": rel.object_type,
+                    "object_subtype": rel.object_subtype,
+                    "direction": rel.direction,
+                    "object_material": rel.object_material,
+                    "confidence": round(float(rel.confidence or 0.0), 2),
+                }
+                for rel in constraints.spatial_relations
+            ],
         },
         # realized address: OpenCV slot + temperature-calibrated confidence
         "slot": rr["slot"],

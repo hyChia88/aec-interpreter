@@ -99,8 +99,26 @@
   .pool .s{color:var(--muted);flex:0 0 auto}
   .relbox{font-size:12.5px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:6px 0;background:#fbfcfd}
   .relbox b{font-family:ui-monospace,monospace}
-  #kg{border:1px solid var(--line);border-radius:10px;background:#fbfcfd;min-height:220px;aspect-ratio:3/1;overflow:visible}
-  #kg svg{display:block;width:100%;height:auto;min-height:220px}
+  #kg{border:1px solid var(--line);border-radius:10px;background:#fbfcfd;min-height:320px;overflow:auto}
+  #kg svg{display:block;width:100%;min-width:900px;height:auto;min-height:320px}
+  .kgStage{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+  .kgStage span{font-size:11.5px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;background:#fff;color:var(--muted)}
+  .kgStage .on{border-color:var(--hot);background:#fff4e8;color:#9a4f00;font-weight:700}
+  .kgPipe{display:grid;grid-template-columns:repeat(6,minmax(126px,1fr));gap:8px;margin:0 0 12px;min-width:900px}
+  .kgNode{border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 9px;min-height:76px}
+  .kgNode.on{border-color:var(--accent);background:#eef6ff}.kgNode.hot{border-color:var(--hot);background:#fff7ed}
+  .kgNode.off{border-style:dashed;color:var(--muted);background:#fbfcfd}
+  .kgNode b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#5c6470;margin-bottom:4px}
+  .kgNode span{display:block;font-size:12px;line-height:1.35;color:#1a1d24}
+  .kgNode.off span{color:var(--muted)}
+  .kgPreds{display:grid;grid-template-columns:repeat(4,minmax(190px,1fr));gap:7px;margin:0 0 12px;min-width:900px}
+  .kgPred{border:1px solid var(--line);border-radius:8px;background:#fff;padding:7px 9px}
+  .kgPred.on{border-color:var(--hot);background:#fff7ed}
+  .kgPred code{font-size:11px;font-weight:800;color:#4338ca}
+  .kgPred span{display:block;font-size:11.5px;color:var(--muted);line-height:1.35;margin-top:2px}
+  .kgJson{min-width:900px;border:1px solid var(--line);border-radius:8px;background:#101820;color:#d6e4f0;
+    padding:10px 12px;margin:0 0 12px;font:11.5px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap}
+  .kgJson b{color:#fff;font-family:inherit}
   @media(max-width:860px){.app{grid-template-columns:1fr;height:auto}.viewer{height:100vh;grid-template-rows:minmax(260px,1fr) 14px var(--drawer-h,34vh)}.canvasWrap{min-height:260px}}
 </style>
 </head>
@@ -416,6 +434,16 @@ function bar(label, val, color){
     <span class="wf-n">${(val!=null)?val.toFixed(2):'—'}</span></div>`;
 }
 
+function compactJson(obj){
+  return JSON.stringify(obj || {}, null, 2)
+    .replace(/\n\s{6,}/g, ' ')
+    .slice(0, 1800);
+}
+
+function hasObjectFields(obj){
+  return obj && typeof obj === 'object' && !Array.isArray(obj) && Object.keys(obj).length > 0;
+}
+
 function renderConstraints(r){
   const c = r.constraints || {};
   const rels = c.spatial_relations || [];
@@ -502,56 +530,182 @@ function renderPool(r){
 function renderKGfromResult(r){
   const c = r.constraints || {};
   const rels = (c.spatial_relations || []);
-  const isDoor = (c.ifc_class||'').toLowerCase().includes('door');
-  const targetFill = isDoor ? '#dcfce7' : '#dbeafe';
-  const targetStroke = isDoor ? '#16a34a' : '#2563eb';
   const decisionColor = r.decision==='ANSWER' ? '#2ca02c' : '#d62728';
-  // relation chips on the right (up to 3)
-  const relNodes = rels.slice(0,3).map((t,i)=>{
-    const y = 30 + i*60;
-    return `<rect x="470" y="${y}" width="150" height="46" rx="10" fill="#eef2ff" stroke="#818cf8"></rect>
-      <text x="545" y="${y+20}" text-anchor="middle" class="sub">${escapeXML(t.predicate)}</text>
-      <text x="545" y="${y+37}" text-anchor="middle" class="sub">${escapeXML(t.object_type||'?')}${t.direction?(' · '+escapeXML(t.direction)):''}</text>
-      <path d="M404 96 C435 ${y+23} 440 ${y+23} 470 ${y+23}" class="edge2"></path>`;
+  const wf = r.waterfall || [];
+  const wholeN = wf[0]?.n || r.initial_pool_size || 1257;
+  const rankedN = r.pool_size || r.shortlist?.length || r.candidate_guids?.length || 0;
+  const attrStage = wf.find(s => /storey|type|attribute|retrieved/i.test(s.stage || '')) || wf[1] || {};
+  const attrN = attrStage.n || rankedN || '—';
+  const topoStage = wf.find(s => /spatial|topology|relation|ranked/i.test(s.stage || '')) || wf[wf.length - 1] || {};
+  const topoN = topoStage.n || rankedN || '—';
+  const relLaneH = Math.max(1, rels.length) * 68;
+  const svgH = Math.max(460, 330 + relLaneH);
+  const topGuid = (r.top1_guid || '').slice(0, 12);
+  const poolPreview = (r.shortlist || []).slice(0, 6);
+  const relNodes = rels.length ? rels.map((t,i)=>{
+    const y = 148 + i*68;
+    const pred = t.predicate || 'RELATES_TO';
+    const obj = t.object_type || '?';
+    const detail = [t.direction, t.object_subtype, t.object_material].filter(Boolean).join(' · ');
+    return `<g>
+      <rect x="516" y="${y}" width="178" height="52" rx="10" fill="#eef2ff" stroke="#818cf8"></rect>
+      <text x="605" y="${y+20}" text-anchor="middle" class="pred">${escapeXML(pred)}</text>
+      <text x="605" y="${y+38}" text-anchor="middle" class="sub">${escapeXML(obj)}</text>
+      ${detail ? `<text x="605" y="${y+65}" text-anchor="middle" class="tiny">${escapeXML(detail).slice(0,42)}</text>` : ''}
+      <path d="M430 ${y+26} L516 ${y+26}" class="edgeHot"></path>
+      <path d="M694 ${y+26} C724 ${y+26} 724 114 754 114" class="edgeHot"></path>
+    </g>`;
+  }).join('') : `<g>
+      <rect x="516" y="164" width="178" height="52" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-dasharray="5 4"></rect>
+      <text x="605" y="186" text-anchor="middle" class="sub">no spatial predicate</text>
+      <text x="605" y="204" text-anchor="middle" class="tiny">attribute-only fallback</text>
+      <path d="M430 190 L516 190" class="edge"></path>
+      <path d="M694 190 C724 190 724 114 754 114" class="edge"></path>
+    </g>`;
+  const poolRows = poolPreview.map((p,i)=>{
+    const y = 170 + i*28;
+    const isTop = p.guid === r.top1_guid;
+    return `<g>
+      <rect x="764" y="${y}" width="176" height="22" rx="5" fill="${isTop ? '#fff4e8' : '#fff'}" stroke="${isTop ? '#ef7d00' : '#e6e8ec'}"></rect>
+      <text x="774" y="${y+15}" class="tiny">${isTop ? '★ ' : ''}${escapeXML((p.guid || '').slice(0,18))}</text>
+    </g>`;
   }).join('');
+  const slot = r.opencv?.slot;
+  const slotText = slot ? `slot ${slot[0]} of ${slot[1]}` : (c.position_context || 'not run');
+  const slotConf = r.opencv?.calibrated_confidence ?? r.opencv?.confidence;
+  const sizeSignal = r.resnet?.size_band || r.resnet?.size_cluster;
+  const sizeText = sizeSignal
+    ? `${sizeSignal}${r.resnet?.confidence != null ? ` · ${Number(r.resnet.confidence).toFixed(2)}` : ''}`
+    : 'no size signal';
+  const graphRag = r.graph_rag || {};
+  const graphRagWinner = graphRag.winner_guid || graphRag.top1_guid || graphRag.ordered_guids?.[0];
+  const graphRagText = graphRagWinner
+    ? `${String(graphRagWinner).slice(0,12)}…`
+    : (graphRag.failed ? `failed: ${graphRag.reason || 'unknown'}` : 'not returned');
+  const vlmFallback = {
+    storey_name: c.storey_name,
+    ifc_class: c.ifc_class,
+    space_name: c.space_name || null,
+    target_name_keyword: c.target_name_keyword || null,
+    position_context: c.position_context || null,
+    spatial_relations: rels,
+    confidence: c.overall_confidence ?? r.confidence ?? null,
+  };
+  const vlmOut = hasObjectFields(r.vlm_output) ? r.vlm_output : vlmFallback;
+  const vlmJsonHtml = `<div class="kgJson"><b>Complete VLM extracted output</b>\n${esc(compactJson(vlmOut))}</div>`;
+  const activePreds = new Set(rels.map(t => String(t.predicate || '').toUpperCase()));
+  const predicateCatalog = [
+    ['FILLS', 'door/window fills an opening in a host wall'],
+    ['NEXT_TO', 'consecutive filler on the same host wall'],
+    ['CONTINUOUS', 'element spans multiple storeys'],
+    ['ADJACENT_TO', 'same-storey centroid proximity'],
+    ['CONNECTS_TO', 'wall-to-wall path connection'],
+    ['ON_TOP_OF', 'vertical stack with XY overlap'],
+    ['PERPENDICULAR_TO', 'wall axes near 90 degrees'],
+    ['PARALLEL_TO', 'wall axes near parallel'],
+  ];
+  const predicateHtml = `<div class="kgPreds">${predicateCatalog.map(([name,desc]) =>
+    `<div class="kgPred ${activePreds.has(name) ? 'on' : ''}">
+      <code>${esc(name)}</code><span>${esc(desc)}</span>
+    </div>`).join('')}</div>`;
+  const stageCard = (title, body, cls='on') =>
+    `<div class="kgNode ${cls}"><b>${esc(title)}</b><span>${body}</span></div>`;
+  const pipelineHtml = `<div class="kgPipe">
+    ${stageCard('1 VLM address',
+      `${esc(c.ifc_class || '?')} · ${esc(c.storey_name || '?')}<br>${rels.length} relation${rels.length===1?'':'s'}`, rels.length ? 'on' : 'off')}
+    ${stageCard('2 OpenCV slot',
+      `${esc(slotText)}${slotConf != null ? `<br>conf ${esc(Number(slotConf).toFixed(2))}` : ''}`, slot ? 'hot' : 'off')}
+    ${stageCard('3 ResNet size',
+      esc(sizeText), sizeSignal ? 'on' : 'off')}
+    ${stageCard('4 Neo4j graph',
+      `${esc(String(wholeN))} → ${esc(String(attrN))} → ${esc(String(topoN))}`, rankedN ? 'hot' : 'off')}
+    ${stageCard('5 Graph-RAG',
+      esc(graphRagText), graphRagWinner ? 'on' : 'off')}
+    ${stageCard('6 Decision',
+      `${esc(r.decision || '—')}<br>τ=${esc(String(r.tau ?? 0.40))}`, r.decision === 'ANSWER' ? 'hot' : 'off')}
+  </div>`;
+  const stages = [
+    ['VLM spatial address', rels.length > 0],
+    ['OpenCV slot', Boolean(slot)],
+    ['ResNet size', Boolean(sizeSignal)],
+    ['Neo4j graph traversal', rankedN !== 0],
+    ['Graph-RAG rerank', Boolean(graphRagWinner)],
+    [r.decision || 'decision', true],
+  ].map(([label,on])=>`<span class="${on?'on':''}">${esc(label)}</span>`).join('');
   const svg = `
-  <svg viewBox="-16 -12 700 270" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Knowledge graph spatial address">
+  ${pipelineHtml}
+  ${vlmJsonHtml}
+  <div class="kgStage">${stages}</div>
+  ${predicateHtml}
+  <svg viewBox="0 0 1060 ${svgH}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Knowledge graph spatial reasoning">
     <defs>
       <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
         <path d="M0,0 L8,3.5 L0,7 Z" fill="#64748b"></path></marker>
+      <marker id="arrowHot" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto">
+        <path d="M0,0 L8,3.5 L0,7 Z" fill="#ef7d00"></path></marker>
       <style>
         .lbl{font:600 13px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;fill:#1a1c20}
         .sub{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5b6470}
+        .tiny{font:10px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#64748b}
+        .pred{font:800 11px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#4338ca}
         .edge{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}
-        .edge2{stroke:#ef7d00;stroke-width:2.5;fill:none;marker-end:url(#arrow)}
+        .edgeHot{stroke:#ef7d00;stroke-width:2.5;fill:none;marker-end:url(#arrowHot)}
         .etype{font:700 10px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#475569}
       </style>
     </defs>
-    <rect x="22" y="80" width="124" height="56" rx="12" fill="#f1f5f9" stroke="#94a3b8"></rect>
-    <text x="84" y="103" text-anchor="middle" class="lbl">Storey</text>
-    <text x="84" y="122" text-anchor="middle" class="sub">${escapeXML(c.storey_name||'—')}</text>
 
-    <rect x="222" y="80" width="120" height="56" rx="12" fill="#fff7ed" stroke="#ef7d00"></rect>
-    <text x="282" y="103" text-anchor="middle" class="lbl">Host wall</text>
-    <text x="282" y="122" text-anchor="middle" class="sub">wall axis</text>
+    <rect x="24" y="76" width="140" height="76" rx="14" fill="#f1f5f9" stroke="#94a3b8"></rect>
+    <text x="94" y="104" text-anchor="middle" class="lbl">Whole BIM graph</text>
+    <text x="94" y="126" text-anchor="middle" class="sub">${escapeXML(String(wholeN))} elements</text>
 
-    <rect x="300" y="40" width="104" height="64" rx="12" fill="${targetFill}" stroke="${targetStroke}"></rect>
-    <text x="352" y="65" text-anchor="middle" class="lbl">Target</text>
-    <text x="352" y="84" text-anchor="middle" class="sub">${escapeXML(c.ifc_class||'?')}</text>
+    <rect x="234" y="44" width="160" height="62" rx="12" fill="#eef6ff" stroke="#4a90e2"></rect>
+    <text x="314" y="69" text-anchor="middle" class="lbl">Storey filter</text>
+    <text x="314" y="88" text-anchor="middle" class="sub">${escapeXML(c.storey_name||'—')}</text>
 
-    <path d="M146 108 L222 108" class="edge"></path>
-    <text x="184" y="98" text-anchor="middle" class="etype">ON_STOREY</text>
-    <path d="M300 96 C312 96 320 78 320 72 L342 72" class="edge2"></path>
-    <text x="316" y="64" text-anchor="middle" class="etype">FILLS</text>
+    <rect x="234" y="130" width="160" height="62" rx="12" fill="#eef6ff" stroke="#4a90e2"></rect>
+    <text x="314" y="155" text-anchor="middle" class="lbl">Type filter</text>
+    <text x="314" y="174" text-anchor="middle" class="sub">${escapeXML(c.ifc_class||'—')}</text>
+
+    <rect x="754" y="82" width="196" height="64" rx="12" fill="#fff7ed" stroke="#ef7d00"></rect>
+    <text x="852" y="107" text-anchor="middle" class="lbl">Ranked candidate pool</text>
+    <text x="852" y="128" text-anchor="middle" class="sub">${escapeXML(String(topoN))} after graph constraints</text>
+    ${poolRows}
+
+    <rect x="420" y="82" width="96" height="64" rx="12" fill="#dcfce7" stroke="#16a34a"></rect>
+    <text x="468" y="107" text-anchor="middle" class="lbl">Target</text>
+    <text x="468" y="128" text-anchor="middle" class="sub">${escapeXML(c.ifc_class||'?')}</text>
+
+    <path d="M164 114 C194 114 198 75 234 75" class="edge"></path>
+    <text x="202" y="68" text-anchor="middle" class="etype">ON_STOREY</text>
+    <path d="M164 114 C194 114 198 161 234 161" class="edge"></path>
+    <text x="202" y="170" text-anchor="middle" class="etype">HAS_TYPE</text>
+    <path d="M394 75 C420 75 424 96 420 104" class="edge"></path>
+    <path d="M394 161 C420 161 424 132 420 124" class="edge"></path>
+    <text x="484" y="70" text-anchor="middle" class="etype">${escapeXML(String(attrN))} attribute matches</text>
+    <text x="605" y="132" text-anchor="middle" class="etype">ACTIVE VLM GRAPH PREDICATES</text>
+
     ${relNodes}
 
-    <rect x="586" y="158" width="64" height="64" rx="32" fill="${decisionColor}" opacity="0.95"></rect>
-    <text x="618" y="188" text-anchor="middle" style="font:800 12px -apple-system,sans-serif;fill:#fff">${escapeXML(r.decision||'—')}</text>
-    <text x="618" y="205" text-anchor="middle" style="font:700 10px ui-monospace,monospace;fill:#fff">τ=${escapeXML(String(r.tau ?? 0.40))}</text>
+    <rect x="418" y="${svgH - 144}" width="190" height="64" rx="12" fill="${slot ? '#fff7ed' : '#f8fafc'}" stroke="${slot ? '#ef7d00' : '#cbd5e1'}" ${slot ? '' : 'stroke-dasharray="5 4"'}></rect>
+    <text x="513" y="${svgH - 119}" text-anchor="middle" class="lbl">OpenCV ordinal slot</text>
+    <text x="513" y="${svgH - 100}" text-anchor="middle" class="sub">${escapeXML(slotText)}</text>
+    ${slotConf != null ? `<text x="513" y="${svgH - 84}" text-anchor="middle" class="tiny">conf ${escapeXML(Number(slotConf).toFixed(2))}</text>` : ''}
+    <path d="M468 146 C468 ${svgH - 174} 513 ${svgH - 174} 513 ${svgH - 144}" class="${slot ? 'edgeHot' : 'edge'}"></path>
+    <text x="432" y="${svgH - 170}" text-anchor="middle" class="etype">SLOT_RERANK</text>
+    <path d="M608 ${svgH - 112} C716 ${svgH - 112} 736 214 764 214" class="${slot ? 'edgeHot' : 'edge'}"></path>
+
+    <rect x="982" y="82" width="56" height="64" rx="28" fill="${decisionColor}" opacity="0.95"></rect>
+    <text x="1010" y="110" text-anchor="middle" style="font:800 11px -apple-system,sans-serif;fill:#fff">${escapeXML(r.decision||'—')}</text>
+    <text x="1010" y="127" text-anchor="middle" style="font:700 10px ui-monospace,monospace;fill:#fff">τ=${escapeXML(String(r.tau ?? 0.40))}</text>
+    <path d="M950 114 L982 114" class="edgeHot"></path>
+
+    <text x="852" y="${Math.min(svgH - 36, 360)}" text-anchor="middle" class="tiny">
+      ${topGuid ? `top-1 ${escapeXML(topGuid)}…` : 'no committed top-1'}
+    </text>
   </svg>`;
   document.getElementById('kg').innerHTML = svg;
   document.getElementById('kgSub').textContent =
-    'The 3D highlight is selected by this typed relation pattern over the BIM graph, not by image similarity alone.';
+    'Full reasoning flow: VLM emits a typed spatial address, OpenCV/ResNet add specialist evidence when available, Neo4j traverses the IFC graph, Graph-RAG reranks when returned, then the answer/defer gate decides.';
 }
 
 function renderAll(r){
@@ -688,13 +842,27 @@ function loadCases(){
 function caseToResult(c){
   const slot = c.pred_slot || c.gt_slot;
   const posctx = slot ? `slot ${slot[0]} of ${slot[1]}` : null;
+  const vc = c.constraints || {};
   return {
-    constraints: { storey_name: c.storey, ifc_class: c.ifc_class, position_context: posctx,
-      position_context_confidence: c.conf_cal, overall_confidence: c.conf_cal, spatial_relations: [] },
+    constraints: {
+      storey_name: vc.storey_name || c.storey,
+      ifc_class: vc.ifc_class || c.ifc_class,
+      space_name: vc.space_name,
+      target_name_keyword: vc.target_name_keyword,
+      position_context: vc.position_context || posctx,
+      position_context_confidence: vc.position_context_confidence ?? c.conf_cal,
+      position_context_source: vc.position_context_source || vc.source,
+      overall_confidence: vc.overall_confidence ?? c.conf_cal,
+      spatial_relations: vc.spatial_relations || [],
+    },
+    vlm_output: vc,
     fingerprint_level: slot ? 'exact_slot' : 'attribute_only',
     strategy: 'storey+type', decision: c.decision, tau: c.tau, confidence: c.conf_cal,
     decision_reason: c.correct ? 'address matches ground truth' : 'address mismatch — routed to defer',
     slot_rerank_run: true,
+    opencv: {slot: c.pred_slot, gt_slot: c.gt_slot, confidence: c.conf_raw, calibrated_confidence: c.conf_cal},
+    resnet: {size_band: vc.size_band, confidence: vc.size_band_confidence, source: vc.size_band_source},
+    graph_rag: c.graph_rag || c.rerank || null,
     waterfall: c.waterfall || [],
     shortlist: (c.confusable_guids||[]).slice(0,10).map(g=>({guid:g, type:c.ifc_class})),
     candidate_guids: c.confusable_guids || [], top1_guid: c.target_guid, glb: c.glb,
@@ -752,6 +920,34 @@ async function runLiveCase(i){
         <div class="row"><span class="k">decision (τ=${d.tau})</span><span class="v">${dec}</span></div>
         <div class="row"><span class="k">result</span><span class="v">${hit} · pool ${d.pool_size}</span></div>
       </div>`;
+    renderAll({
+      constraints: k,
+      vlm_output: d.vlm_output || k,
+      fingerprint_level: d.slot ? 'exact_slot' : ((k.spatial_relations || []).length ? 'relation_fingerprint' : 'attribute_only'),
+      strategy: 'live VLM + Neo4j + slot rerank',
+      decision: d.decision,
+      decision_reason: d.correct ? 'live spatial address ranks the target first' : 'live spatial address did not rank the target first',
+      tau: d.tau,
+      confidence: d.confidence,
+      slot_rerank_run: true,
+      opencv: {slot: d.slot, gt_slot: d.gt_slot, confidence: d.conf_raw, calibrated_confidence: d.confidence},
+      resnet: {
+        size_band: k.size_band,
+        confidence: k.size_band_confidence,
+        source: k.size_band_source,
+      },
+      graph_rag: d.graph_rag || d.rerank || null,
+      waterfall: [
+        {stage: 'live retrieval pool', n: d.pool_size || 0},
+        {stage: '+ VLM spatial address', n: d.n_slot_matches || d.pool_size || 0},
+        {stage: '+ slot rerank', n: d.shortlist?.length || 0},
+      ],
+      shortlist: (d.shortlist || []).map(g => ({guid: g, type: k.ifc_class})),
+      candidate_guids: d.shortlist || [],
+      top1_guid: d.top1_guid,
+      glb: d.glb || c.glb,
+      pool_size: d.pool_size,
+    });
     if (d.top1_guid) show(c.glb, d.top1_guid, c.confusable_guids);
   }catch(e){
     out.innerHTML = `<p class="bad" style="margin-top:10px">Live call failed: ${esc(e.message)}.</p>`; console.error(e);

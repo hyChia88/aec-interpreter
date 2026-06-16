@@ -194,6 +194,7 @@ async def run_freeform(
         "mode": "freeform",
         "live": True,
         "valid_json": vlm.get("valid_json"),
+        "vlm_output": vlm.get("parsed") or {},
         "constraints": _constraints_payload(constraints),
         "fingerprint_level": fp_level,
         "strategy": strategy,

@@ -112,6 +112,23 @@ def copy_site_images(case_ids) -> int:
     return n
 
 
+def _vlm_constraints(c: dict) -> dict:
+    """Extract the frozen VLM spatial address stored in the trace internals."""
+    con = (c.get("internals") or {}).get("constraints") or {}
+    return {
+        "storey_name": con.get("storey_name"),
+        "ifc_class": con.get("ifc_class"),
+        "space_name": con.get("space_name"),
+        "target_name_keyword": con.get("target_name_keyword"),
+        "position_context": con.get("position_context"),
+        "position_context_confidence": con.get("position_context_confidence"),
+        "position_context_source": con.get("position_context_source"),
+        "overall_confidence": round(float(con.get("confidence") or 0.0), 2),
+        "source": con.get("source"),
+        "spatial_relations": con.get("spatial_relations") or [],
+    }
+
+
 def _entry(sid, c, gt, idx, pos, wallfp, gslot, pred, T):
     """One manifest entry for a held-out case (filler -> realized slot; else DEFER).
 
@@ -132,6 +149,7 @@ def _entry(sid, c, gt, idx, pos, wallfp, gslot, pred, T):
         gi, gM = gslot[gt]["wall_position_index"], gslot[gt]["wall_child_total"]
         match = pi == gi and pM == gM
     pool = pool_candidates(c)
+    constraints = _vlm_constraints(c)
     gf = cand_feats(gt, pool[gt], idx, pos)
     gaddr = spatial_address(gt, pos, wallfp)
     confusable = [g for g in pool
@@ -145,6 +163,7 @@ def _entry(sid, c, gt, idx, pos, wallfp, gslot, pred, T):
         "glb": f"{slug(st)}.glb",
         "target_guid": gt,
         "ifc_class": e.get("ifc_class", "").replace("IfcWindow", "Window").replace("IfcDoor", "Door"),
+        "constraints": constraints,
         "query": c["scenario"].get("query_text", ""),
         "site_img": img_rel(sid),
         "gt_slot": [gi, gM] if gi is not None else None,
@@ -256,6 +275,7 @@ def main():
         match = pi == gi and pM == gM
         # ── candidate-pool waterfall (what's happening at the backend) ──
         pool = pool_candidates(c)
+        constraints = _vlm_constraints(c)
         gf = cand_feats(gt, pool[gt], idx, pos)
         gaddr = spatial_address(gt, pos, wallfp)
         confusable = [g for g in pool
@@ -268,6 +288,7 @@ def main():
             "glb": f"{slug(st)}.glb",
             "target_guid": gt,
             "ifc_class": e.get("ifc_class", "").replace("IfcWindow", "Window").replace("IfcDoor", "Door"),
+            "constraints": constraints,
             "query": c["scenario"].get("query_text", ""),
             "site_img": img_rel(sid),
             "gt_slot": [gi, gM],
