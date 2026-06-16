@@ -39,6 +39,7 @@ image = (
     .apt_install("libgomp1")
     .pip_install(
         "pydantic>=2.0", "pyyaml>=6.0", "python-dotenv>=1.0", "numpy>=1.24,<2.0",
+        "jsonschema>=4.0.0",
         "pillow>=10.0.0",
         "ifcopenshell>=0.7", "py2neo>=2021.2",
         "transformers>=4.30.0", "torch>=2.0.0", "opencv-python-headless>=4.8.0",

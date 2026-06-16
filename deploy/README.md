@@ -64,7 +64,8 @@ modal secret create aec-neo4j-aura \
 ```bash
 .venv/bin/python deploy/stage_assets.py  # stages ~183 MB into deploy/_volume_stage/
 modal volume create aec-assets           # MUST exist before `put` (create_if_missing only fires at deploy)
-modal volume put aec-assets deploy/_volume_stage /
+modal volume put aec-assets deploy/_volume_stage/ifc /
+modal volume put aec-assets deploy/_volume_stage/data_curation /
 ```
 Remote layout (matches the `AEC_*` env in `modal_app.py`):
 ```
@@ -108,4 +109,8 @@ curl https://<ws>--aec-demo-fastapi-app.modal.run/health
   + Actions are $0.
 - **Trim the image**: deps in `modal_app.py` are a curated runtime subset. If `modal deploy`
   surfaces a missing import, add it to the `.pip_install(...)` list.
-- **Re-upload assets** after changing them: `modal volume put aec-assets deploy/_volume_stage / --force`.
+- **Re-upload assets** after changing them:
+  ```bash
+  modal volume put aec-assets deploy/_volume_stage/ifc / --force
+  modal volume put aec-assets deploy/_volume_stage/data_curation / --force
+  ```
