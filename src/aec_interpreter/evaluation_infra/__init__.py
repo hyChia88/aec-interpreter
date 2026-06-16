@@ -28,16 +28,33 @@ from .metrics import (
     compute_summary,
 )
 from .runner import run_one_scenario
-from .visualizations import (
-    plot_accuracy_by_condition,
-    plot_search_space_reduction,
-    plot_constraints_parse_rate,
-    plot_image_parse_timing,
-    plot_vision_impact,
-    plot_per_case_heatmap,
-    plot_condition_wise_comparison,
-    generate_all_plots,
-)
+
+_VISUALIZATION_EXPORTS = {
+    "plot_accuracy_by_condition",
+    "plot_search_space_reduction",
+    "plot_constraints_parse_rate",
+    "plot_image_parse_timing",
+    "plot_vision_impact",
+    "plot_per_case_heatmap",
+    "plot_condition_wise_comparison",
+    "generate_all_plots",
+}
+
+
+def __getattr__(name: str):
+    """Load plotting helpers only when requested.
+
+    The live service imports evaluation contracts during request handling. Keeping
+    matplotlib behind this lazy boundary avoids requiring plotting dependencies in
+    the Modal runtime image.
+    """
+    if name in _VISUALIZATION_EXPORTS:
+        from . import visualizations
+
+        value = getattr(visualizations, name)
+        globals()[name] = value
+        return value
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 __all__ = [
     # Contracts
