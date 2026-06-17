@@ -31,7 +31,7 @@
 
 <section id="video">
   <div class="wrap">
-    <h2><span class="num">Demo</span>Full Paper Walkthrough</h2>
+    <h2><span class="num">Video</span>Full Paper Walkthrough</h2>
     <video class="demo-video" controls preload="metadata" poster="assets/portfolio/fig-demo-hub.png">
       <source src="assets/video/MSCD_demo_web.mp4" type="video/mp4">
       Your browser does not support the video tag —
@@ -44,7 +44,7 @@
 <!-- Problem -->
 <section id="problem">
   <div class="wrap">
-    <h2><span class="num">The Problem</span>The physical–digital traceability gap</h2>
+    <h2><span class="num">Problem</span>The physical–digital traceability gap</h2>
     <p>AEC projects standardise on OpenBIM/IFC, yet day-to-day site coordination still runs on manual interpretive labour. Subcontractors log unstructured on-site evidence — photos, chat messages, annotated floorplan patches — into forms; construction managers re-key it into the system. The front-line worker sees a local condition but not the BIM GUID; the coordinator sees the model but not the site context; the developer in the office receives it late and degraded, and plans against it anyway.</p>
     <p>Bridging that gap by hand leaks in two ways: <strong>semantic drift</strong> as detail is re-described and re-typed, and <strong>context decay</strong> as notes go stale and people roll off the project. It is worst in high-rise work, where dozens of windows and walls are <em>visually identical</em> — a photo of "a window" could be any of them, so even a faithful description never pins down <em>which one</em>.</p>
     <p>In a BIM-native workflow every issue should resolve to a GUID linked back to the model, so downstream teams — issue tracking, compliance, planning — inherit it cleanly. Ungrounded records break that chain: not <strong>query-able</strong>, not <strong>traceable</strong>, and the decisions built on them arrive late and drift from site reality.</p>
@@ -57,9 +57,9 @@
   </div>
 
   <div class="wrap">
-    <h2><span class="num">Approach</span>Our solution</h2>
+    <h2><span class="num">Approach</span>Neuro-symbolic Architecture Interpreter</h2>
     <div class="abstract">
-      <p>Coordinating AEC projects means constantly translating messy site evidence into the structured BIM record — error-prone, manual work. This paper asks: <em>how can AI act as an interpreter middleware to reliably align unstructured site evidence with digital project data?</em> The answer is a <strong>hierarchical neuro-symbolic architecture</strong>: a fine-tuned vision-language model extracts typed spatial constraints, and a deterministic symbolic layer runs a priority-ordered traversal over an enriched IFC knowledge graph, with a Graph-RAG reranker producing the final ranked candidates. The load-bearing idea is a <strong>type-conditional spatial address</strong> — a relational key computable from the BIM model with no labels and recoverable from a flat image. Supplied perfectly it lifts pool right-first from 4.9% to <strong>78.5%</strong>; one realized deterministic detector lifts the addressable subset to <strong>58.9% end-to-end</strong>, and a calibrated answer/defer gate raises the answered subset to <strong>73.4%</strong> — the system knows when to abstain.</p>
+      <p>Coordinating AEC projects means constantly translating messy site evidence into the structured BIM record — error-prone, manual work. This paper asks: <em>how can AI act as an interpreter middleware to reliably align unstructured site evidence with digital project data?</em> The answer is a <strong>hierarchical neuro-symbolic architecture</strong> with two complementary layers. The <strong>neural layer</strong> is a fine-tuned, domain-specific vision-language model that reads a photo, field note, and plan patch and extracts the <em>typed spatial relationships</em> between elements — the flexible, probabilistic front end. The <strong>symbolic layer</strong> is a <strong>knowledge graph mined from the enriched IFC model</strong>: those typed constraints drive a deterministic, priority-ordered traversal that can only return GUIDs that exist in the graph — the hallucination-resistant back end. A deterministic, calibrated soft-rerank produces the final ranked candidates (an optional Graph-RAG/LLM reorder helps only on coarse pools). The load-bearing idea is a <strong>type-conditional spatial address</strong> — a relational key computable from the BIM model with no labels and recoverable from a flat image. Supplied perfectly it lifts pool right-first from 4.9% to <strong>78.5%</strong>; one realized deterministic detector lifts the addressable subset to <strong>58.9% end-to-end</strong>, and a calibrated answer/defer gate raises the answered subset to <strong>73.4%</strong> — the system knows when to abstain.</p>
     </div>
   </div>
 </section>
@@ -72,7 +72,7 @@
       <div class="card">
         <span class="tag">Neural · ML Engineering</span>
         <h3>Multimodal interpreter</h3>
-        <p>A fine-tuned Qwen2.5-VL (LoRA) reads photo + note + plan into a typed spatial contract, trained with <strong>zero real labels</strong> — 990 cases generated deterministically from raw IFC (structure mining → Blender hard negatives → LLM-as-judge).</p>
+        <p>A fine-tuned Qwen2.5-VL (LoRA) reads photo + note + plan into a typed spatial contract, trained with zero real labels — generated deterministically from raw IFC (structure mining → Blender hard-negative renders → Gemini scenario text → LLM-as-judge filter), then augmented to <strong>990 training cases</strong>.</p>
       </div>
       <div class="card">
         <span class="tag">Symbolic</span>
@@ -92,12 +92,12 @@
 <section id="system">
   <div class="wrap">
     <h2><span class="num">Architecture</span>The neuro-symbolic interpreter</h2>
-    <p class="lead">Architecture in five stages: <strong>multimodal input → neural extraction (VLM + LoRA) → Constraints JSON → symbolic retrieval (priority Cypher cascade over a Neo4j IFC graph) → Graph-RAG reranking → ranked GUIDs.</strong> </p>
+    <p class="lead">Architecture in five stages: <strong>multimodal input → neural extraction (VLM + LoRA) → Constraints JSON → symbolic retrieval (priority Cypher cascade over a Neo4j IFC graph) → calibrated soft-rerank (optional Graph-RAG/LLM reorder) → ranked GUIDs.</strong> </p>
     <p> The neural side translates evidence into a typed spatial address; the symbolic side names only GUIDs that exist in the model. Design rationale: reliability over flexibility (deterministic templates instead of Text-to-Cypher), and an IFC-native graph built from the schema itself rather than noisy document-level extraction.</p>
     <figure>
       <img src="assets/graph_reasoning.png"
            alt="Module decomposition as graph reasoning on a real case: pool narrows from 76 to 46 same-class siblings, the position-slot resolves to rank 1">
-      <figcaption><strong>Module decomposition as graph reasoning</strong> (real case AP_SK_092). The layout is the <em>real</em> knowledge graph — a force-directed layout on the actual <code>FILLS</code> (window→host-wall hub) and <code>NEXT_TO</code> (consecutive openings) edges, held fixed across all four panels. The recall-safe pool of 76 candidates narrows to 46 same-storey+class windows in 6 host-wall clusters; the target's wall is a 10-opening chain and the position-slot (8 of 10) re-weights the siblings (none removed); the target lands at rank 1.</figcaption>
+      <figcaption><strong>Module decomposition as graph reasoning</strong> (sample case: AP_SK_092). The layout is the <em>real</em> knowledge graph — a force-directed layout on the actual <code>FILLS</code> (window→host-wall hub) and <code>NEXT_TO</code> (consecutive openings) edges, held fixed across all four panels. The recall-safe pool of 76 candidates narrows to 46 same-storey+class windows in 6 host-wall clusters; the target's wall is a 10-opening chain and the position-slot (8 of 10) re-weights the siblings (none removed); the target lands at rank 1.</figcaption>
     </figure>
   </div>
 </section>
@@ -119,7 +119,7 @@
         <img src="assets/portfolio/fig-symbolic-retrieval.png" alt="Symbolic retrieval planner combining attribute filter and topology rerank">
         <div class="body">
           <h3>Symbolic Planner + Graph-RAG</h3>
-          <p>Nine priority strategies; the recall-preserving <code>p0∪p1</code> union planner combines attribute filtering with spatial-topology ranking. Templates are deterministic — same input, same query, same result.</p>
+          <p>Nine priority strategies; the recall-preserving <code>p0∪p1</code> union planner combines attribute filtering with spatial-topology ranking. Templates are deterministic — same input, same query, same result. The final rerank is a deterministic calibrated soft-rerank; the Graph-RAG (LLM) reorder is optional and helps only on coarse pools.</p>
           <div class="stack">Cypher · priority cascade</div>
         </div>
       </div>
@@ -127,7 +127,7 @@
         <img src="assets/portfolio/fig-data-pipeline.png" alt="Synthetic data pipeline: IFC mining, Blender synthesis, LLM-as-judge filtering">
         <div class="body">
           <h3>Synthetic Data Pipeline</h3>
-          <p>Skeleton-first generation fixes ground truth before adding stochastic visual evidence: IFC mining → Blender renders with hard negatives → Gemini text → LLM-as-judge filter → 990 cases, no real labels.</p>
+          <p>Skeleton-first generation fixes ground truth before adding stochastic visual evidence: IFC mining → Blender hard-negative renders → Gemini scenario text → LLM-as-judge filter, then augmentation → 990 training cases, no real labels.</p>
           <div class="stack">Blender · Gemini · LLM-as-judge</div>
         </div>
       </div>
@@ -143,7 +143,7 @@
         <img src="assets/vlm_finetune.png" alt="Fine-tuned VLM measured per-field, with a calibratable detector confidence">
         <div class="body">
           <h3>Fine-tuned VLM Extractor</h3>
-          <p>Qwen2.5-VL + LoRA (G-series) emits a typed contract <code>{storey, ifc_class, spatial_relations[]}</code>. Fine-tuning saturates coarse fields (storey/class → 100%) and learns relation typing (direction 0% → 82%), but discriminating slot/size stay at 0% — the evidence for delegating them to specialists.</p>
+          <p>Qwen2.5-VL as backbone with LoRA finetuned with domain specific data emits a typed contract <code>{storey, ifc_class, spatial_relations[]}</code>, saturates coarse fields (storey/class → 100%) and learns relation typing (e.g. direction 0% → 82%), but discriminating slot/size stay at 0% — the evidence for delegating them to specialists.</p>
           <div class="stack">Qwen2.5-VL · LoRA · Constraints JSON</div>
         </div>
       </div>
@@ -151,7 +151,7 @@
         <img src="assets/calibrate_rerank.png" alt="Calibrated confidence routing and selective-prediction curve">
         <div class="body">
           <h3>Calibrated Routing &amp; Control</h3>
-          <p>Every field carries a <code>{value, confidence, source}</code> record. An orchestration layer routes on calibrated confidence (AUROC 0.80) — applying constraints softly and <strong>deferring to a human</strong> instead of guessing. Studied as static → learned router → LLM-agent ablation on accuracy, latency, and repeatability.</p>
+          <p>The address fields carry a <code>{value, confidence, source}</code> record (position + size live today; generalizing to every field is in progress). The gate routes on this confidence — which <em>discriminates</em> correct from wrong (AUROC 0.80) and is temperature-calibrated (ECE 0.21) — applying constraints softly and <strong>deferring to a human</strong> instead of guessing. Whether a learned router or LLM-agent beats this static threshold at equal budget is an open ablation (accuracy / latency / repeatability).</p>
           <div class="stack">temperature scaling · answer/defer gate</div>
         </div>
       </div>
@@ -195,17 +195,24 @@
       <div class="card"><span class="tag">② Mechanism</span>
         <h3>How to use a noisy address?</h3>
         <p>Hard filtering deletes the answer, so the address is a <strong>soft prior</strong> in a recall-fixed pool. One real detector closes most of the gap; its confidence passes a <strong>calibration gate</strong>, and its payoff is knowing when to abstain.</p>
-        <div class="res">realized slot: 6.6% → 58.9% end-to-end · defer → 73.4% (n=35)</div></div>
+        <div class="res">realized slot: 6.7% → 58.9% end-to-end · defer → 73.4% (n=35)</div></div>
       <div class="card"><span class="tag">③ Architecture</span>
         <h3>How deep should context go?</h3>
         <p>A <strong>depth law</strong>: deeper relations are more unique but their recovery from an image collapses with distance, so discrimination <strong>saturates at one hop</strong> — compile the relation into the element rather than chase deep chains.</p>
         <div class="res">confusable set 13 → 8 at one hop</div></div>
     </div>
-    <figure>
-      <img src="assets/address_sample.png"
-           alt="A type-conditional spatial address: shared storey+class prefix, plus a class-specific body — position-slot for openings, connectivity fingerprint for walls.">
-      <figcaption><strong>What a type-conditional spatial address is</strong>, by class. A coarse ontological prefix (storey + IFC class) is shared but <em>non-discriminating</em> (oracle Top-1 4.9% alone). The discriminating body is class-specific: a <strong>position-slot</strong> <code>(i of M)</code> for an opening — image-recoverable, realized 58.9% end-to-end — and a <strong>connectivity fingerprint</strong> for a wall — oracle-discriminative but not image-recoverable. Each reorders the same retrieved pool to the per-class oracle Top-1 shown.</figcaption>
-    </figure>
+    <h3>One image, one GUID — the address narrowing the pool at each stage</h3>
+    <p class="tcap" style="margin-top:0">Median candidate pool on the AP held-out targets (n=60). Each stage adds one slice of the spatial address; the same real case is traced below.</p>
+    <table>
+      <thead><tr><th>Stage</th><th>What it does</th><th class="n">Median pool</th></tr></thead>
+      <tbody>
+        <tr><td>VLM typed output</td><td>The fine-tuned VLM emits <code>{storey, ifc_class, spatial_relations[]}</code> — each field a <code>{value, confidence, source}</code> record, no GUID</td><td class="n">1233</td></tr>
+        <tr><td>Coarse attribute-only retrieval</td><td>storey + IFC class filter the graph to same-type elements</td><td class="n">46</td></tr>
+        <tr><td>Topology-aware retrieval</td><td><code>FILLS</code> / <code>NEXT_TO</code> / <code>CONNECTS_TO</code> edges narrow to same-host-wall siblings</td><td class="n">~9</td></tr>
+        <tr class="best"><td>Spatial address (KG traversal)</td><td>the type-conditional address — position-slot <code>(i of M)</code> for an opening — reorders the siblings to the target</td><td class="n">1</td></tr>
+      </tbody>
+    </table>
+    <p class="tcap">A <strong>calibration gate</strong> (AUROC 0.80) then routes ANSWER (commit the GUID) vs DEFER (return the pool), and a <strong>Graph-RAG reranker</strong> produces the final ranked candidates — traced on one real case below.</p>
     <figure>
       <img src="assets/pipeline_shots.png"
            alt="The spatial-interpretation pipeline traced through one real case with real screenshots, stages (a)-(e)">
@@ -217,13 +224,8 @@
 <!-- Results -->
 <section id="results">
   <div class="wrap">
-    <h2><span class="num">Results</span>The address makes the architecture realizable</h2>
-    <div class="callout">
-      <strong>Headline:</strong> under perfect extraction the symbolic layer retains the correct element in
-      <strong>100% of cases</strong> and compresses the candidate pool from a median of
-      <strong>46 → 1</strong>. The architecture is provably sound — the remaining operational ceiling is
-      bound by neural extraction quality, not by graph logic.
-    </div>
+    <h2><span class="num">Results</span>Architecture Oracle Experiment</h2>
+    <p class="lead">The Oracle test measures the symbolic engine under <em>perfect</em> extraction — no VLM hallucination noise — to isolate how far the graph-query strategy can go. With the full spatial address it drives the median pool from 1233 candidates down to 1: the exact position-slot is a decisive discriminator once supplied, which is exactly why perception, not graph logic, is the bottleneck.</p>
 
     <div class="grid2">
       <figure style="margin-top:0">
@@ -270,7 +272,7 @@
 
     <h3>Worked cases — answer vs defer</h3>
     <p class="lead">Two real held-out cases through the same gate: when the detector is correct and confident it commits; when it is wrong but unsure it abstains and returns candidates — the behaviour that makes a triage tool trustworthy.</p>
-    <div class="grid2">
+    <div class="grid2" style="grid-template-columns:1fr">
       <figure><img src="assets/answer_case.png" alt="ANSWER case AP_SK_102: predicted slot 2 of 17 correct, calibrated confidence 0.57 above threshold, commit GUID.">
         <figcaption><strong>ANSWER (AP_SK_102).</strong> Predicted slot 2 of 17 — correct; calibrated confidence 0.57 ≥ τ 0.40, so the system commits the GUID.</figcaption></figure>
       <figure><img src="assets/defer_case.png" alt="DEFER case AP_SK_092: predicted slot 1 but truth slot 8, calibrated confidence 0.05 below threshold, abstain.">
@@ -307,41 +309,30 @@
     <h3>Triage effort proxy — pool review becomes verification</h3>
     <div class="grid2" style="align-items:center">
       <table>
-        <thead><tr><th>Review scope</th><th class="n">Median candidates / inspections</th><th class="n">≈ time / element</th><th class="n">Top-1</th></tr></thead>
+        <thead><tr><th>Filter level</th><th class="n">Median pool</th><th class="n">Expected inspections</th><th class="n">≈ time / element</th><th class="n">Top-1</th></tr></thead>
         <tbody>
-          <tr><td>Unranked final pool</td><td class="n">76 candidates / 38 expected inspections</td><td class="n">~570 s</td><td class="n">1.8%</td></tr>
-          <tr><td>Coarse storey + class address</td><td class="n">46 candidates / 23 expected inspections</td><td class="n">~345 s</td><td class="n">4.9%</td></tr>
-          <tr class="best"><td>+ spatial-address ceiling</td><td class="n">0.5</td><td class="n">~8 s</td><td class="n">78.5%</td></tr>
+          <tr><td>No retrieval (building-wide)</td><td class="n">1233</td><td class="n">~616</td><td class="n">~2.6 h</td><td class="n">—</td></tr>
+          <tr><td>Storey + type</td><td class="n">46</td><td class="n">23</td><td class="n">~345 s</td><td class="n">4.9%</td></tr>
+          <tr><td>+ spatial relationship (1-hop)</td><td class="n">~9</td><td class="n">~5</td><td class="n">~68 s</td><td class="n">—</td></tr>
+          <tr class="best"><td>+ exact position slot</td><td class="n">1</td><td class="n">~0.5</td><td class="n">~8 s</td><td class="n">78.5%</td></tr>
         </tbody>
       </table>
       <div class="callout">
         <h3>What is measured?</h3>
-        <p>This is not a user study or observed field-labor time. It is a ranking-derived proxy over
-          the same held-out final candidate pools: how many model candidates a coordinator would
-          expect to inspect before reaching the correct element.</p>
-        <p>The fair baseline is the system's own unranked final pool, not a building-wide manual
-          search. The spatial address turns a long review list into a near-front verification task.</p>
+        <p>Not a user study or observed field-labour time — a ranking-derived proxy over the
+          held-out targets: the <strong>median candidate pool</strong> a coordinator would scan, with
+          expected inspections ≈ ½·pool at ~15 s each, before reaching the correct element.</p>
+        <p>The address ladder turns a building-wide search (1233 elements) into a near-front
+          verification task: storey + type alone still leaves ~46 look-alikes; the spatial address
+          collapses the pool toward one.</p>
       </div>
     </div>
-    <p class="tcap">Pool-derived effort proxy on the held-out final candidate pools. Time uses a 15 s/inspection assumption and should be read as scale, not measured labor.</p>
+    <p class="tcap">Median candidate pool on the held-out targets; expected inspections ≈ ½·pool under a 15 s/inspection assumption — read as scale, not measured labour. The position-slot row is the oracle spatial-address ceiling (Top-1 78.5%).</p>
 
     <figure>
       <img src="assets/portfolio/fig-workflow-impact.png" alt="Human-in-the-loop triage and downstream BCF / CORENET compliance">
       <figcaption>Human-in-the-loop triage: the coordinator's role shifts from searching a database to verifying model-linked evidence. Accept/reject becomes a fine-tuning signal.</figcaption>
     </figure>
-  </div>
-</section>
-
-<!-- Demo -->
-<section id="demo">
-  <div class="wrap">
-    <h2><span class="num">Demo</span>One case, end-to-end</h2>
-    <p class="lead">A browser demo takes an uploaded construction photo plus a natural-language description and highlights the matched IFC elements in a 3D viewer. The interactive version lets you pick a representative held-out case and inspect both the knowledge-graph spatial address that drives retrieval and the grounded element highlighted in 3D.</p>
-    <div class="btns" style="justify-content:flex-start;margin:22px 0 0">
-      <a class="btn" href="demo.html">▶ &nbsp;Launch the interactive 3D demo</a>
-      <span class="muted" style="font-size:.84rem;align-self:center">serve <code>site/</code> over HTTP:
-        <code>cd site &amp;&amp; python3 -m http.server</code> → <code>http://localhost:8000/demo.html</code></span>
-    </div>
   </div>
 </section>
 
