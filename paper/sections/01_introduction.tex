@@ -9,86 +9,86 @@ message from a front-line worker. In the project record, truth is allocentric an
 model, IFC element types, topology, and GUIDs. The traceability gap is the missing translation between
 these two views. A coordinator does not merely need to know that an image contains \emph{a window};
 they need to know which of the many near-identical windows in the BIM cloud should receive the issue,
-handoff record, or BCF link. Before an AI system can answer higher-level AEC questions --- what
-happened, who is responsible, what action should follow --- it must solve the foundational grounding
+handoff record, or BCF link. Before an AI system can answer higher-level AEC questions (what
+happened, who is responsible, what action should follow), it must solve the foundational grounding
 question: \emph{where exactly is it in the model?}
 
-The setting is deliberately cold-start. A construction or facilities team has a complete IFC/BIM
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\textwidth]{thesis_traceability.png}
+  \caption{The traceability gap and the interpreter-middleware vision. Site evidence is unstructured
+  and egocentric; the BIM/IFC record is structured and allocentric. A coordinator translates between
+  them by hand, introducing semantic drift and context decay. The interpreter middleware inserts a
+  machine layer that answers the field questions (\emph{where?}, then \emph{what?}, \emph{how?}),
+  anchoring every observation to a regulator-grade IFC GUID. This work targets the foundational
+  \emph{where}.}
+  \label{fig:gap}
+\end{figure}
+
+Why this grounding problem is genuinely hard is best seen at the element level. Industrialized
+(prefabricated, volumetric) construction produces extreme geometric repetition: a single storey can
+hold dozens of windows that share every queryable attribute, so a pure attribute filter is at chance.
+With ${\sim}46$ identical windows on a floor, attribute-only matching is ${\approx}2.2\%$ ($1$ of $46$);
+the only signal that separates two siblings is their \emph{position in the building's relational
+topology} (Figure~\ref{fig:topology}). This ``attribute-entropy deadlock'' is the empirical reason the
+system is neuro-symbolic rather than a single learned matcher.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.78\textwidth]{thesis_topology.png}
+  \caption{Why topology, not attributes. (a) A physical building module and (b) its abstract
+  space/opening graph. Visually and semantically identical elements are separated only by their
+  relational position (highlighted), which attribute filtering cannot express. Abstract graph
+  representation after~\citet{zhu2023ifcgraph}.}
+  \label{fig:topology}
+\end{figure}
+
+The setting is cold-start. A construction or facilities team has a complete IFC/BIM
 model but no history of labelled site imagery; on day one they want to point a phone at an element,
 add a short note, and be told \emph{which} modelled element it is. The final step is a selection from
 a retrieved candidate pool in which the ground truth is present (median 76, in-pool 100\%), so the
 difficulty is not retrieval but \textbf{discrimination among visually identical siblings}, in a regime
-with no paired supervision to learn that discrimination from. Our strongest learned configuration ---
-a fine-tuned-VLM extraction pipeline feeding deterministic retrieval, with no within-pool reranking
---- plateaus at Top-1 6.7\% with the answer already in the pool, because the signal that separates two
+with no paired supervision to learn that discrimination from. Our strongest learned configuration,
+a fine-tuned-VLM extraction pipeline feeding deterministic retrieval with no within-pool reranking,
+plateaus at Top-1 6.7\% with the answer already in the pool, because the signal that separates two
 identical windows is not in either window's pixels but in the building's relational structure, which a
 black-box matcher would have to reconstruct internally and unreliably (we develop this design rationale
 in \secref{sec:rationale}~\citep{sutton2019bitter}).
 
 \subsection{Research questions}
 
-This paper makes one contribution --- an \textbf{ontology-grounded, topology-derived spatial
-address} and the calibrated routing that makes it usable. Ontology supplies the floor and the
-guardrail: the vocabulary, storey, class, and schema-compliant execution boundary that prevent
-hallucinated element IDs. Topology supplies the discriminator: the local relational structure that
-separates visually identical siblings. The contribution is developed through three research
-questions:
+This paper reports the project as an \textbf{interpreter middleware}: a neuro-symbolic layer that
+turns mixed site evidence into typed constraints, grounds those constraints against an enriched IFC
+graph, and returns traceable GUID candidates for human verification. Ontology supplies the execution
+boundary that prevents hallucinated element IDs. Topology supplies the relational structure needed to
+separate visually identical siblings. The spatial address and calibration results are an enhancement
+inside this larger system, not the whole system. The contribution is developed through
+three questions:
 
 \begin{itemize}
-  \item \textbf{RQ1 --- Representation (\secref{sec:eval-oracle}).} \emph{What is the minimal sufficient
-  spatial address?} We show it is \textbf{type-conditional}: a coarse ontological prefix (storey +
-  class) that is necessary but saturated, completed by a class-specific topological body --- the
-  position-slot $(i, M)$ for fillers, a connectivity fingerprint for walls
-  (Figure~\ref{fig:address} gives one worked address per class). At an oracle level it
-  reorders the pool from Top-1 4.9\% to \textbf{78.5\%}, with the gain partitioned by element type
-  (fillers 91\%, walls 64\%).
+  \item \textbf{RQ1: Multimodal grounding under ambiguity (\secref{sec:eval-neural}).}
+  \emph{How can heterogeneous multimodal site evidence (a site photo, a marked floorplan crop, and a
+  free-text note) be fused and reliably grounded into structured IFC search constraints despite
+  geometric repetition and noisy input?} The neural layer is treated as a parser, not a GUID
+  generator: it jointly reads the visual and textual channels and emits typed fields with confidence
+  and provenance. Fine-tuning saturates the coarse IFC fields (storey and class) and improves
+  spatial-relation extraction, while exposing which fields require deterministic support.
 
-  \item \textbf{RQ2 --- Mechanism (\secref{sec:eval-realized}).} \emph{How is a noisily-recovered address
-  used without losing recall, and how much of the ceiling is realizable?} Hard filtering destroys recall,
-  so the address is a \textbf{soft prior in a recall-fixed pool}; one real extractor lifts the
-  addressable Top-1 from 6.6\% to \textbf{58.9\%} end-to-end (a 67.6\% upper bound if the coarse fields
-  are supplied at oracle level), its confidence passes an ECE gate (AUROC 0.80),
-  and --- since reweighting a finest-grained prior is a no-op --- its payoff is \textbf{selective
-  prediction}: deferring the least-confident ${\sim}20\%$ raises answered-set Top-1 to \textbf{73.4\%}
-  \citep{guo2017calibration, geifman2017selective}.
+  \item \textbf{RQ2: Ontology-driven, hallucination-resistant retrieval (\secref{sec:eval-oracle},
+  \secref{sec:eval-union}).}
+  \emph{How can IFC ontology and topology turn probabilistic neural outputs into deterministic,
+  auditable retrieval that cannot return an element absent from the model?} The IFC parse engine
+  builds a project graph, the planner compiles constraints into a fixed Cypher cascade over only the
+  model's real GUIDs, and the retrieval backend preserves the target through recall-safe union rather
+  than brittle intersection.
 
-  \item \textbf{RQ3 --- Architecture (\secref{sec:eval-depth}).} \emph{Where should the relational context
-  live --- extracted deep at inference, or compiled into the node?} A \textbf{depth law}: under an
-  oracle the confusable set is already a singleton at one hop ($|C|$ median $13 \to 1$), so deeper hops
-  add nothing in principle, and the realized gain saturates at one hop for an \emph{informational}
-  reason --- the model reads deep relation \emph{types} reliably ($96.7/93.9/69.6\%$ at hop $1/2/3$),
-  but those types are homogeneous (every window \texttt{FILLS} a wall, every wall \texttt{CONNECTS} a
-  wall) and so carry no discriminating power; the discriminating signal (neighbour identity) is
-  image-recoverable only as the filler position-slot (Figure~\ref{fig:depthintro}). The architecture
-  therefore compiles depth into the node and extracts at
-  depth $\le 1$, placing learning at the neural$\to$symbolic interface \citep{mao2019nscl}.
+  \item \textbf{RQ3: Spatial-address enhancement (\secref{sec:eval-realized},
+  \secref{sec:eval-depth}).} \emph{What additional topology-derived signal resolves the repeated-element
+  ambiguity left by the base interpreter?} A type-conditional spatial address reorders the same
+  recall-safe pool from Top-1 4.9\% to \textbf{78.5\%} at oracle level; one realized position-slot
+  detector lifts the addressable filler subset to \textbf{58.9\%} end-to-end and supports selective
+  prediction \citep{guo2017calibration, geifman2017selective}.
 \end{itemize}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\textwidth]{address_sample.png}
-  \caption{What a \textbf{type-conditional spatial address} is, by class --- one worked sample each.
-  A coarse ontological prefix (storey $+$ IFC class) is shared but \emph{non-discriminating} (oracle
-  Top-1 4.9\% alone). The discriminating body is class-specific: a position-slot $(i,M)$ for fillers
-  (``the $i$-th of $M$ openings along the host wall'') and a connectivity fingerprint for walls.
-  Each reorders the \emph{same} retrieved pool to the per-class oracle Top-1 shown; the filler slot
-  is image-recoverable and realized (58.9\% end-to-end), the wall fingerprint is reported at oracle level only.}
-  \label{fig:address}
-\end{figure}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\textwidth]{depth_sample.png}
-  \caption{RQ3 made concrete. \emph{Left:} a depth-$n$ neighbourhood is every node within $n$ edges
-  of the target; each added hop (FILLS / NEXT\_TO, then CONNECTS\_TO, then ADJACENT\_TO) pulls in more
-  relational context. The model \emph{reads} these relation types reliably ($96.7/93.9/69.6\%$ at hop
-  $1/2/3$ on the held-out set), but the types are homogeneous (every window \texttt{FILLS} a wall) so
-  they do not discriminate. \emph{Right:} the oracle confusable set $|C|$ is already a singleton at one
-  hop, so deeper hops add nothing in principle; realized discrimination saturates at one hop for an
-  informational reason, not an extraction-reliability cascade. This is the depth law that keeps the
-  address shallow.}
-  \label{fig:depthintro}
-\end{figure}
 
 \subsection{Related work and positioning}
 \label{sec:related}
@@ -101,7 +101,7 @@ training on synthetic spatial-QA data; SpatialVLM demonstrates that metric and r
 judgments are learnable from generated supervision \citep{chen2024spatialvlm}, and VLM-based
 scene-graph extraction recovers object-relation structure from images
 \citep{wang2024vlmscenegraph}.
-These systems answer in \emph{image} space --- a region, a relation, a distance --- and stop at the
+These systems answer in \emph{image} space (a region, a relation, or a distance) and stop at the
 image boundary: none of them names an element in a building's authoritative model.
 
 \paragraph{LLM-driven graph retrieval.} A second line connects language models to graph stores.
@@ -114,60 +114,51 @@ converts the model into a queryable property graph \citep{zhu2023ifcgraph}, Grap
 extract information from IFC data \citep{iranmanesh2025ifcgraphrag}, and MCP4IFC drives IFC-based
 design through LLM tool calls \citep{nithyanantham2025mcp4ifc}; Text2BIM generates building models
 from language \citep{du2024text2bim}. All of these, however, operate on \emph{structured or textual}
-queries --- none grounds unstructured multimodal site evidence to an element.
+queries; none grounds unstructured multimodal site evidence to an element.
 
-\paragraph{Positioning.} To our knowledge, this is the first work to combine open-vocabulary
-multimodal perception with IFC-native deterministic graph retrieval for \emph{element-level}
-grounding in construction site workflows. Prior IFC-based systems
+\paragraph{Positioning.} Our work occupies a quadrant that these two lines leave open: it couples
+open-vocabulary multimodal perception with IFC-native deterministic graph retrieval for
+\emph{element-level} grounding in construction-site workflows. Prior IFC-based systems
 \citep{nithyanantham2025mcp4ifc, iranmanesh2025ifcgraphrag} operate on structured queries; prior
 VLM-based spatial systems \citep{chen2024spatialvlm} lack IFC-grounded retrieval. This work bridges
 the gap, placing the system in the high-determinism, multimodal-input quadrant of the landscape:
 flexible vision-language perception on the input side, ontology-constrained graph execution on the
-output side, with a calibrated routing layer between them. The neuro-symbolic precedent --- neural
-perception feeding a symbolic executor, with learning at the interface --- is the concept-learner
+output side, with a calibrated routing layer between them. The neuro-symbolic precedent, neural
+perception feeding a symbolic executor with learning at the interface, is the concept-learner
 line \citep{mao2019nscl}.
 
 \subsection{Contributions}
 
 \begin{enumerate}
-  \item \textbf{A neuro-symbolic interpreter architecture} that maps unstructured multimodal AEC
-  evidence (photo + note + plan) to IFC element GUIDs via a structured intermediate representation
-  --- a per-field \texttt{\{value, confidence, source\}} contract --- achieving hallucination-resistant
-  retrieval: the neural layer describes evidence, but only the symbolic layer names GUIDs
-  (\secref{sec:design}).
+  \item \textbf{A neuro-symbolic interpreter middleware with a typed intermediate layer} that is
+  hallucination-resistant and auditable by construction. Unstructured AEC evidence (photo + note +
+  plan, with optional workflow metadata) is mapped to a per-field \texttt{\{value, confidence,
+  source\}} contract: the neural layer keeps the generalization needed to describe open-vocabulary
+  multimodal evidence, while the symbolic layer alone names GUIDs, so the design balances multimodal
+  flexibility against hallucination control rather than trading one for the other (\secref{sec:design}).
 
-  \item \textbf{A type-conditional spatial address} --- the ordinal position-slot
-  for openings and a connectivity fingerprint for walls --- computable from the raw IFC model with no
-  human labels, that reorders the retrieved pool from Top-1 4.9\% to 78.5\% at an oracle level. The
-  opening slot is image-recoverable and we realize it (58.9\% end-to-end on the filler subset); the wall
-  fingerprint contributes the oracle gain but is \emph{not} image-realizable and is reported at
-  oracle level only (\secref{sec:eval-oracle}, \secref{sec:eval-realized}).
+  \item \textbf{A searchable representation of building topology}: an IFC-native graph, a deterministic
+  query cascade, and a type-conditional spatial-address format. Together they answer how relational
+  structure should be encoded so that a building knowledge graph is searchable for element-level
+  grounding: raw IFC becomes a normalized, topology-enriched graph; typed constraints compile into
+  deterministic Cypher plans with recall-safe fallback and candidate-pool fusion; and an ordinal
+  position-slot (openings) plus a connectivity fingerprint (walls) reorder the retrieved pool from
+  Top-1 4.9\% to 78.5\% at oracle level, with the realized opening-slot detector reaching 58.9\%
+  end-to-end and supporting defer-on-low-confidence routing (\secref{sec:ifc}, \secref{sec:symbolic},
+  \secref{sec:eval-realized}).
 
   \item \textbf{An oracle-based evaluation methodology} that decomposes retrieval failure into the
-  symbolic-layer ceiling versus neural extraction quality --- demonstrating 100\% ground-truth
+  symbolic-layer ceiling versus neural extraction quality, demonstrating 100\% ground-truth
   retention, isolating extraction as the bottleneck, and yielding a recall-safety principle (union,
   never intersection, when combining mature and immature signals) and a measured depth law for
   relational context (\secref{sec:eval}).
-
-  \item \textbf{An empirical analysis of where learned and deterministic components belong}: a
-  per-field profile of a LoRA fine-tuned VLM showing saturation on coarse fields and failure on
-  discriminating ones, motivating delegation to deterministic visual specialists with calibrated,
-  selectively-predictive routing (ECE gate, defer-on-low-confidence) rather than further fine-tuning
-  (\secref{sec:eval-neural}, \secref{sec:eval-realized}).
 \end{enumerate}
 
 \subsection{Scope, stated up front}
 
-Two honesty boundaries frame every result. First, the diagnostic ceilings (RQ1, and the oracle rows
-of the evaluation) assume perfect extraction; the realizable numbers come from one deterministic
-extractor (the position-slot), with the wall fingerprint and remaining descriptors demonstrated at
-oracle level only --- full realization is future work. Second, all measurements are on a single
-synthetic project (cold-start by design); the \emph{form} of the contribution --- a type-conditional,
-shallow, image-recoverable, calibrated-soft address --- is general, but the specific reliabilities are
-project-specific. To keep the claim anchored beyond our own ablations, we add standard lexical and
-dense retrieval baselines and a triage-effort proxy: generic retrievers plateau at Top-1 1.7\% /
-Top-10 15.6--25.0\%, the realized position-slot specialist closes the filler subset to 58.9\% Top-1 end-to-end,
-and the perfect-address ceiling reduces expected inspection effort from a median 38 candidates to 0.5.
-We do not claim to beat an end-to-end matcher in the large-data limit; we claim that in the cold-start
-regime we can actually measure, the structured address is what makes grounding realizable, auditable,
-and transferable.
+Two scope boundaries frame every result. First, the base project is the interpreter layer: VLM
+constraint extraction, IFC graph construction, deterministic retrieval, traceability, and workflow
+handoff. The spatial address, specialist detector, and calibration gate are an enhanced module added
+to reduce the repeated-element ranking gap. Second, all measurements are on a single synthetic project
+(cold-start by design). The system form is transferable, but the reported reliabilities are
+project-specific until validated on real site traces.

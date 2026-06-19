@@ -36,8 +36,8 @@ ACCENT = "#2a6f97"   # accepted choice (single calm blue, used throughout)
 
 def _panel(ax, title, metric, alt_label, alt_val, our_label, our_val,
            unit="%", vmax=100, alt_unverified=False):
-    ax.set_title(title, fontsize=10.5, fontweight="bold", color=INK, loc="left", pad=14)
-    ax.text(0, 1.06, metric, transform=ax.transAxes, fontsize=8.2, color=MUTED, style="italic",
+    ax.set_title(title, fontsize=10.5, fontweight="bold", color=INK, loc="left", pad=26)
+    ax.text(0, 1.04, metric, transform=ax.transAxes, fontsize=8.2, color=MUTED, style="italic",
             ha="left", va="bottom")
     ys = [1, 0]
     for y, lab, val, col in ((1, alt_label, alt_val, ALT), (0, our_label, our_val, ACCENT)):
@@ -73,8 +73,8 @@ def build(out_path: Path):
            "doc GraphRAG (LLM-extracted)", 0, "IFC-native graph (ours)", 100.0, vmax=100,
            alt_unverified=True)
     _panel(axes[1, 1], "4.  LoRA fine-tuning over prompting",
-           "spatial-direction accuracy",
-           "zero-shot prompt-only", 0.0, "LoRA fine-tuned (ours)", 82.0, vmax=100)
+           "predicate slot-accuracy, held-out",
+           "zero-shot prompt-only", 43.1, "LoRA fine-tuned (ours)", 84.0, vmax=100)
 
     # one shared legend, bottom
     from matplotlib.patches import Patch

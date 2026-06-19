@@ -46,44 +46,85 @@ def profile(idx, cases) -> dict:
     return {"n": n, **{k: round(100 * v / n, 1) for k, v in c.items()}}
 
 
+INK = "#1a1c20"
+MUTED = "#5b6470"
+ORANGE = "#ef7d00"       # VLM-reliable coarse fields
+AMBER = "#f4a93d"        # partial
+GREY = "#c2c8d0"         # needs deterministic specialist
+
+
+# Per-field EXTRACTION ACCURACY (correct value vs ground truth), fine-tuned G8 vs zero-shot
+# Gemini, the foundational comparator. Provenance: paper sec. eval-neural / thesis ch.7 Track-G
+#   storey:    G8 100  | Gemini 30.0   (storey_name normalized match)
+#   IFC class: G8 100  | Gemini 63.3   (ifc_class match; dataset-level ceiling for zero-shot)
+#   predicate: G8 82.8 | Gemini 43.1   (spatial-relation predicate slot accuracy)
+#   direction: G8 82.1 | Gemini  0.0   (relation direction; emerges only with fine-tuning)
+#   slot/size: 0/0 for BOTH            -> delegated to the deterministic visual specialists
+# (G8's storey/class accuracy equals its field-population rate in output/vlm_profile.json;
+#  the 56.7% direction figure there is an EMISSION rate, a different quantity from the 82.1%
+#  direction ACCURACY shown here.)
+ACC_FIELDS = [
+    ("storey",              100.0, 30.0, ORANGE),
+    ("IFC class",           100.0, 63.3, ORANGE),
+    ("spatial\npredicate",   82.8, 43.1, ORANGE),
+    ("relation\ndirection",  82.1,  0.0, AMBER),
+    ("position\nslot",        0.0,  0.0, GREY),
+    ("size\nband",            0.0,  0.0, GREY),
+]
+GEMINI_C = "#9aa3af"
+
+
 def make_figure(p, out_path):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    fig, ax2 = plt.subplots(figsize=(11.2, 3.9))
-    fig.suptitle("Perception takeaway: specialist fields make grounding usable", fontsize=16, fontweight="bold", y=1.03)
-    fig.text(
-        0.5,
-        0.925,
-        "The VLM supplies coarse typed semantics; sibling-level address fields need specialists before graph retrieval.",
-        ha="center",
-        fontsize=10.0,
-        color="#5b6470",
-    )
-    names = [
-        "VLM end-to-end\nAP n=60",
-        "real slot specialist\nfiller n=35",
-        "address ceiling\nAP n=60",
-    ]
-    vals = [6.7, 58.9, 78.5]
-    colors = ["#8f8f8f", "#ef7d00", "#9467bd"]
-    y = list(range(len(names)))
-    ax2.hlines(y, 0, vals, color=colors, lw=5, alpha=0.25)
-    ax2.scatter(vals, y, s=260, color=colors, zorder=3, edgecolors="white", linewidths=1.5)
-    for yy, v in zip(y, vals):
-        ax2.text(v + 2.0, yy, f"{v:.1f}%", va="center", fontsize=9.5, fontweight="bold")
-    ax2.set_yticks(y)
-    ax2.set_yticklabels(names, fontsize=10.0)
-    ax2.set_xlim(0, 100)
-    ax2.set_xlabel("Top-1 right-element-first accuracy", fontsize=10.0)
-    ax2.grid(axis="x", color="#e5e8ee", lw=0.8)
-    ax2.invert_yaxis()
-    for side in ("top", "right", "left"):
-        ax2.spines[side].set_visible(False)
-    ax2.tick_params(axis="y", length=0)
 
-    fig.tight_layout(rect=[0, 0, 1, 0.87])
-    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    labels = [f[0] for f in ACC_FIELDS]
+    g8 = [f[1] for f in ACC_FIELDS]
+    gem = [f[2] for f in ACC_FIELDS]
+    g8_colors = [f[3] for f in ACC_FIELDS]
+
+    fig, ax = plt.subplots(figsize=(9.8, 4.6))
+    fig.suptitle("Per-field extraction accuracy: fine-tuning (G8) vs zero-shot Gemini",
+                 fontsize=14, fontweight="bold", y=1.02)
+    fig.text(0.5, 0.93,
+             f"held-out benchmark (n={p['n']}); fine-tuning saturates the coarse prefix and "
+             "recovers relations, where zero-shot Gemini fails",
+             ha="center", fontsize=9.4, color=MUTED)
+
+    import numpy as np
+    x = np.arange(len(ACC_FIELDS)); w = 0.38
+    ax.bar(x - w / 2, g8, width=w, color=g8_colors, zorder=3, label="fine-tuned VLM (G8)")
+    ax.bar(x + w / 2, gem, width=w, color=GEMINI_C, zorder=3, label="zero-shot Gemini")
+    for xi, v in zip(x, g8):
+        ax.text(xi - w / 2, v + 2.2, ("0" if v < 1 else f"{v:g}"), ha="center", va="bottom",
+                fontsize=9, fontweight="bold", color=INK)
+    for xi, v in zip(x, gem):
+        ax.text(xi + w / 2, v + 2.2, ("0" if v < 1 else f"{v:g}"), ha="center", va="bottom",
+                fontsize=9, color=MUTED)
+    # mark the specialist-delegated fields (0% for both models)
+    for xi, f in zip(x, ACC_FIELDS):
+        if f[3] == GREY:
+            ax.text(xi, 9, "→ deterministic\nspecialist", ha="center", va="bottom",
+                    fontsize=7.6, color=MUTED, style="italic")
+
+    ax.set_xticks(list(x))
+    ax.set_xticklabels(labels, fontsize=9.6)
+    ax.set_ylim(0, 112)
+    ax.set_ylabel("field extracted correctly (%)", fontsize=10)
+    ax.set_yticks([0, 25, 50, 75, 100])
+    ax.grid(axis="y", color="#e5e8ee", lw=0.8, zorder=0)
+    for side in ("top", "right"):
+        ax.spines[side].set_visible(False)
+
+    from matplotlib.patches import Patch
+    fig.legend(handles=[Patch(color=ORANGE, label="fine-tuned VLM (G8)"),
+                        Patch(color=GEMINI_C, label="zero-shot Gemini"),
+                        Patch(color=GREY, label="0% for both → specialist")],
+               loc="lower center", ncol=3, frameon=False, fontsize=8.8, bbox_to_anchor=(0.5, -0.05))
+
+    fig.tight_layout(rect=[0, 0.05, 1, 0.9])
+    fig.savefig(out_path, dpi=160, bbox_inches="tight")
     print("figure →", out_path)
 
 

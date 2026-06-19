@@ -2,23 +2,23 @@
 \label{sec:conclusion}
 
 We asked how unstructured, egocentric site evidence can be grounded to a unique element in an
-allocentric BIM model, in a cold-start regime with no real labels. The answer is a neuro-symbolic
-decomposition organized around an \textbf{ontology-grounded, topology-derived spatial address}. The
-oracle analysis proves the architecture sound --- the symbolic layer retains the ground truth in 100\%
-of cases and, supplied with the type-conditional address, reorders the pool from Top-1 4.9\% to
-78.5\% --- and isolates extraction, not retrieval design, as the bottleneck. The realization study
-shows how much of that ceiling survives a real detector and how to consume a noisy address: as a
-calibrated soft prior inside a recall-fixed pool (union, never intersection), with one deterministic
-specialist lifting the addressable subset from 6.6\% to 58.9\% end-to-end and selective prediction
-raising the answered subset to 73.4\% --- the system knows when to abstain. The depth analysis supplies the
-architectural principle both rely on: realizable relational discrimination saturates at one hop, so
-depth is compiled into the node and learning is placed at the neural$\to$symbolic interface.
+allocentric BIM model, in a cold-start regime with no real labels. The answer is an interpreter
+middleware: a VLM parses mixed evidence into typed constraints, an IFC-native symbolic layer retrieves
+legal GUID candidates, and a validation/handoff layer keeps the result traceable for human review.
+The oracle analysis supports the architecture: the symbolic layer retains the ground truth in 100\%
+of cases and isolates extraction, not retrieval design, as the bottleneck. The spatial-address
+enhancement then addresses within-pool ranking: a type-conditional address reorders the pool from
+Top-1 4.9\% to 78.5\% at oracle level, and one deterministic specialist lifts the addressable subset
+from 6.6\% to 58.9\% end-to-end (39.1\% on realistic cluttered floors). Selective prediction raises
+the answered subset to 73.4\%. The depth
+analysis supplies the principle behind the enhancement: realizable relational discrimination
+saturates at one hop, so depth is compiled into the node and learning is placed at the
+neural$\to$symbolic interface.
 
-Three findings generalize beyond this system. An address field is deployable only if it is defined in
-a frame the evidence carries --- image-recoverability is a design constraint, not an afterthought.
-When a mature signal combines with an immature one, union preserves recall and intersection destroys
-it. And calibration's payoff here is not reweighting (a measured no-op) but \emph{selective
-prediction}: the honest deliverable of a grounding system with downstream consequence is a
-coverage--accuracy curve and an explicit defer route. Within the regime we can measure, the structured
-spatial address is what makes site-to-BIM grounding realizable, auditable, and transferable; validating
-it on real project traces is the immediate next step.
+Three findings generalize beyond this system. First, site-to-BIM AI should be evaluated as coupled
+stages, not as a single model score: extraction, graph retrieval, ranking, and handoff fail in
+different ways. Second, an address field is deployable only if it is defined in a frame the evidence
+carries; image-recoverability is a design constraint. Third, mature signals should preserve recall,
+while uncertain signals should rank or defer. Within the regime we can measure, the interpreter layer
+makes site-to-BIM grounding auditable, and the spatial-address enhancement makes repeated-element
+ranking substantially more usable. Real project traces are the immediate next validation step.

@@ -57,6 +57,9 @@ def build(out_path: Path):
     f = d["metrics_by_subgroup"]["filler"]
     w = d["metrics_by_subgroup"]["wall"]
     coarse_t1 = d["metrics_overall"]["coarse_storey_class"]["top1"]
+    addr_t1 = d["metrics_overall"]["plus_spatial_address"]["top1"]
+    f_coarse = f["coarse_storey_class"]["top1"]   # per-class coarse baselines (the honest "before")
+    w_coarse = w["coarse_storey_class"]["top1"]
 
     fig = plt.figure(figsize=(11.2, 5.4))
     ax = fig.add_axes([0, 0, 1, 1]); ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
@@ -73,8 +76,10 @@ def build(out_path: Path):
     ax.text(0.105, 0.800,
             'storey = "1 - First Floor"   ·   ifc_class = IfcWindow / IfcWall',
             fontsize=10.5, color=INK, ha="left", family="monospace")
-    ax.text(0.905, 0.817, f"alone: oracle Top-1 {coarse_t1:g}%", fontsize=9.2, color=RED,
-            ha="right", va="center", fontweight="bold")
+    ax.text(0.905, 0.834, f"prefix alone: overall oracle Top-1 {coarse_t1:g}%", fontsize=9.0,
+            color=RED, ha="right", va="center", fontweight="bold")
+    ax.text(0.905, 0.802, f"+ spatial address: {addr_t1:g}% overall", fontsize=9.0,
+            color=GREEN, ha="right", va="center", fontweight="bold")
 
     # two split arrows down to the two columns
     ax.add_patch(FancyArrowPatch((0.30, 0.775), (0.27, 0.715), arrowstyle="-|>",
@@ -107,13 +112,13 @@ def build(out_path: Path):
             ha="center", fontsize=7.8, color=MUTED)
 
     # the address string
-    _round(ax, lx + 0.025, ly + 0.105, lw_ - 0.05, 0.115, "#ffffff", LINE, lw=1.1)
-    ax.text(lx + 0.045, ly + 0.187, "address string", fontsize=8.3, fontweight="bold", color=MUTED)
-    ax.text(lx + 0.045, ly + 0.135,
+    _round(ax, lx + 0.025, ly + 0.100, lw_ - 0.05, 0.170, "#ffffff", LINE, lw=1.1)
+    ax.text(lx + 0.045, ly + 0.240, "address string", fontsize=8.3, fontweight="bold", color=MUTED)
+    ax.text(lx + 0.045, ly + 0.205,
             '{ storey:"1-First Floor",\n  class:IfcWindow,\n  slot:(i=8, M=10) }',
-            fontsize=8.8, color="#222", family="monospace", va="center", linespacing=1.25)
+            fontsize=8.8, color="#222", family="monospace", va="top", linespacing=1.45)
 
-    ax.text(lx + 0.02, ly + 0.055, f"oracle Top-1:  {coarse_t1:g}%  →  {f['plus_spatial_address']['top1']:g}%",
+    ax.text(lx + 0.02, ly + 0.055, f"filler oracle Top-1:  {f_coarse:g}%  →  {f['plus_spatial_address']['top1']:g}%",
             fontsize=10.3, color=GREEN, fontweight="bold")
     ax.text(lx + 0.02, ly + 0.022, "image-recoverable → REALIZED 58.9% end-to-end (real detector)",
             fontsize=8.4, color=MUTED, style="italic")
@@ -139,13 +144,13 @@ def build(out_path: Path):
     ax.text(cx, cy + 0.05, "degree 3 · 2 openings", ha="center", fontsize=7.8, color=MUTED)
     ax.text(cx, cy - 0.05, "external, length band L", ha="center", fontsize=7.8, color=MUTED)
 
-    _round(ax, rx + 0.025, ly + 0.105, lw_ - 0.05, 0.115, "#ffffff", LINE, lw=1.1)
-    ax.text(rx + 0.045, ly + 0.187, "address string", fontsize=8.3, fontweight="bold", color=MUTED)
-    ax.text(rx + 0.045, ly + 0.135,
+    _round(ax, rx + 0.025, ly + 0.100, lw_ - 0.05, 0.170, "#ffffff", LINE, lw=1.1)
+    ax.text(rx + 0.045, ly + 0.240, "address string", fontsize=8.3, fontweight="bold", color=MUTED)
+    ax.text(rx + 0.045, ly + 0.205,
             '{ connection_degree:3,\n  hosted_opening_count:2,\n  length_band:L, is_external:true }',
-            fontsize=8.5, color="#222", family="monospace", va="center", linespacing=1.25)
+            fontsize=8.5, color="#222", family="monospace", va="top", linespacing=1.45)
 
-    ax.text(rx + 0.02, ly + 0.055, f"oracle Top-1:  {coarse_t1:g}%  →  {w['plus_spatial_address']['top1']:g}%",
+    ax.text(rx + 0.02, ly + 0.055, f"wall oracle Top-1:  {w_coarse:g}%  →  {w['plus_spatial_address']['top1']:g}%",
             fontsize=10.3, color=GREEN, fontweight="bold")
     ax.text(rx + 0.02, ly + 0.022, "oracle-discriminative, but NOT image-recoverable (reported at oracle only)",
             fontsize=8.4, color=MUTED, style="italic")

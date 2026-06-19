@@ -26,7 +26,7 @@ GUID pool, with a calibrated answer/defer gate.
 
 | Diagnostic / system | GT-in-pool | Top-1 | Top-10 | MRR@10 |
 |---|---:|---:|---:|---:|
-| Zero-shot Gemini (baseline) | 95.0% | 1.7% | 18.3% | 0.056 |
+| Zero-shot Gemini (baseline) | 91.7% | 1.7% | 18.3% | 0.056 |
 | Fine-tuned VLM G8 (realized end-to-end) | 100% | 6.7% | 30.0% | 0.110 |
 | + realized position-slot specialist (n=35 fillers) | 100% | **58.9%** | 67.1% | — |
 | + realized slot, oracle coarse (upper bound) | 100% | 67.6% | 80.9% | — |

@@ -1,0 +1,66 @@
+% AEC Interpreter -- paper_v3 assembly (project-overview emphasis; reuses thesis Fig 1.2, 1.6, 4.2, 6.1, 8.1, 8.5, 8.6).
+% This version preserves the main paper and adds a reproducibility appendix for arXiv/journal review.
+% Compile: pdflatex main_v3 && bibtex main_v2 && pdflatex main_v2 && pdflatex main_v2.
+\documentclass[11pt]{article}
+
+\PassOptionsToPackage{hyphens}{url}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[protrusion=true,expansion=true]{microtype}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue,urlcolor=blue]{hyperref}
+
+\graphicspath{{figures/}}
+
+% Float management: this paper is figure-heavy, so relax placement and keep
+% figures inside their section (no drifting past the bibliography).
+\usepackage{placeins}
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.06}
+\renewcommand{\floatpagefraction}{0.60}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{6}
+
+% Section cross-reference shorthand used in the prose.
+\newcommand{\secref}[1]{\S\ref{#1}}
+
+\title{\bfseries AEC Interpreter: Cross-Modal Alignment and\\
+Ontology-Driven Retrieval for Site-to-BIM Element Grounding}
+\author{Chia Hui Yen\\
+\small Carnegie Mellon University\\
+\small \texttt{huiyenc@alumni.cmu.edu}}
+\date{2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\input{sections/00_abstract}
+\end{abstract}
+
+\noindent\textbf{Keywords:} AEC, spatial intelligence, neuro-symbolic grounding, IFC, vision-language models
+
+\input{sections/01_introduction}\FloatBarrier
+\input{sections/02_system_design}\FloatBarrier
+\input{sections/03_evaluation}\FloatBarrier
+\input{sections/04_discussion}\FloatBarrier
+\input{sections/05_conclusion}\FloatBarrier
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\clearpage
+\appendix
+\input{sections/06_reproducibility_appendix}
+
+\end{document}

@@ -97,21 +97,46 @@ def make_figure(rows, out_path):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from matplotlib.patches import Patch
     names = list(rows); t1 = [rows[k]["top1"] for k in names]; t10 = [rows[k]["top10"] for k in names]
-    colors = ["#999", "#bbb", "#7fb3d5", "#1f77b4", "#9467bd"][:len(names)]
+    # mark our own methods (fine-tuned extractor + structured address) vs external/zero-shot baselines
+    is_ours = ["g8" in k.lower() or "address" in k.lower() for k in names]
+    # baselines: steel blue/grey; ours: orange accent (matches the G8 colour in the per-field figure)
+    BASE_T1, BASE_T10 = "#5b7796", "#aebfd0"
+    OUR_T1, OUR_T10 = "#ef7d00", "#f6b366"
+    c1 = [OUR_T1 if o else BASE_T1 for o in is_ours]
+    c10 = [OUR_T10 if o else BASE_T10 for o in is_ours]
     fig, ax = plt.subplots(figsize=(10, 5))
-    x = range(len(names))
-    ax.bar([i - 0.2 for i in x], t1, width=0.4, label="Top-1", color="#1f77b4")
-    ax.bar([i + 0.2 for i in x], t10, width=0.4, label="Top-10", color="#9ecae1")
+    x = list(range(len(names)))
+    # light background band behind our own methods
+    for i, o in enumerate(is_ours):
+        if o:
+            ax.axvspan(i - 0.5, i + 0.5, color="#fff3e6", zorder=0)
+    ax.bar([i - 0.2 for i in x], t1, width=0.4, color=c1, zorder=3)
+    ax.bar([i + 0.2 for i in x], t10, width=0.4, color=c10, zorder=3)
     for i, v in enumerate(t1):
         ax.text(i - 0.2, v + 1, f"{v:.1f}", ha="center", fontsize=9, fontweight="bold")
     for i, v in enumerate(t10):
         ax.text(i + 0.2, v + 1, f"{v:.0f}", ha="center", fontsize=9)
-    ax.set_xticks(list(x)); ax.set_xticklabels(names, fontsize=9, rotation=12, ha="right")
-    ax.set_ylabel("held-out accuracy (%)"); ax.set_ylim(0, 105)
-    ax.set_title("External baselines vs the structured spatial address\n"
-                 "off-the-shelf text retrieval AND a zero-shot VLM stay at chance on identical siblings", fontsize=11)
-    ax.legend(); fig.tight_layout(); fig.savefig(out_path, dpi=130)
+    # "our methods" bracket over the shaded groups
+    ours_idx = [i for i, o in enumerate(is_ours) if o]
+    if ours_idx:
+        ax.text(sum(ours_idx) / len(ours_idx), 102, "our methods", ha="center", va="bottom",
+                fontsize=9, fontweight="bold", color="#b35900")
+    ax.set_xticks(x)
+    ax.set_xticklabels(names, fontsize=9, rotation=12, ha="right")
+    for i, lab in enumerate(ax.get_xticklabels()):
+        if is_ours[i]:
+            lab.set_fontweight("bold"); lab.set_color("#b35900")
+    ax.set_ylabel("held-out accuracy (%)"); ax.set_ylim(0, 108)
+    ax.set_title("External baselines, foundational/fine-tuned VLMs, and the structured spatial address\n"
+                 "text retrieval, a zero-shot VLM, and zero-shot Gemini stay near chance; the address separates identical siblings", fontsize=10.5)
+    ax.legend(handles=[Patch(color=BASE_T1, label="baseline Top-1"),
+                       Patch(color=BASE_T10, label="baseline Top-10"),
+                       Patch(color=OUR_T1, label="ours Top-1"),
+                       Patch(color=OUR_T10, label="ours Top-10")],
+              ncol=2, fontsize=8.5, loc="upper left")
+    fig.tight_layout(); fig.savefig(out_path, dpi=130)
     print("figure →", out_path)
 
 
@@ -137,8 +162,12 @@ def main():
                 rows[lbl] = {"top1": a["top1"], "top10": a["top10"], "mrr": a["mrr"], "n": a["n"]}
     else:
         print(f"[note] {vlm_path.name} not found — run eval/vlm_reranker_baseline.py to add the VLM rows")
+    # zero-shot Gemini v2 (prompt-only extraction -> deterministic retrieval), from the frozen
+    # fixture eval/fixtures/metrics/gemini_ap_v2.json (= mscd_demo results.md, Track-G): the
+    # foundational-model comparator the thesis reports. Top-1 1.7 / Top-10 18.3 / MRR 0.0557.
+    rows["zero-shot Gemini\n(prompt-only)"] = {"top1": 1.7, "top10": 18.3, "mrr": 0.0557, "n": 60}
     # reference points (from the ledger) for the figure
-    rows["our realized\n(G8)"] = {"top1": 6.7, "top10": 30.0, "mrr": 0.110, "n": 60}
+    rows["fine-tuned VLM\n(G8)"] = {"top1": 6.7, "top10": 30.0, "mrr": 0.110, "n": 60}
     rows["+ address\n(oracle)"] = {"top1": 78.5, "top10": 98.1, "mrr": 0.854, "n": 60}
 
     OUT.mkdir(exist_ok=True)

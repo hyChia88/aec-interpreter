@@ -4,7 +4,7 @@
 \subsection{Workflow impact: a before/after walkthrough}
 \label{sec:workflow}
 
-The system's value is best seen as a concrete walkthrough rather than a claim.
+The workflow effect can be described through a concrete walkthrough.
 
 \paragraph{Before (manual workflow).} A site worker photographs a cracked column near a stairwell on
 floor 12 and writes a chat message: ``crack near stairs, floor 12, block A.'' The coordinator reads it
@@ -13,17 +13,57 @@ into the issue tracker. Average lag: 1--3 days. If the coordinator leaves the pr
 leaves with them. The element lands in a flat spreadsheet, not linked to the BIM record, and downstream
 compliance requires manual re-entry.
 
-\paragraph{After (system-assisted).} The worker sends the same photo and message. The system returns a
-compact ranked shortlist within ${\sim}1$ second --- the pool compressed from ${\sim}1{,}200$ elements
-to a median of a few dozen, with the correct element in the pool ${\sim}100\%$ of the time and, on the
-addressable subset, at rank 1 in 58.9\% of cases end-to-end (73.4\% when the system is allowed to defer
-the least-confident fifth). The worker taps the correct element; a BCF package is generated and the
-element is linked to the BIM record. The coordinator's role shifts from data entry to verifying and
-escalating a shortlist, and no longer requires being on-site to resolve the link.
+\paragraph{After (system-assisted).} The worker sends the same photo and message. The interpreter
+parses the evidence into constraints, executes the IFC graph cascade, and returns a compact ranked
+shortlist within ${\sim}1$ second. The correct element remains in the pool ${\sim}100\%$ of the time;
+on the addressable subset, the enhanced slot module places it at rank 1 in 58.9\% of cases end-to-end
+(39.1\% on realistic cluttered floors; 73.4\% when the system is allowed to defer the least-confident
+fifth). The worker or coordinator
+confirms the element, and the output becomes a model-linked record rather than a loose image or chat
+message.
 
-The claim is deliberately bounded: this does not replace the coordinator. It eliminates the manual
-data-entry loop, surfaces the correct element inside a short ranked shortlist, abstains explicitly
-when unsure, and improves over the project lifecycle as confirmed GUIDs accumulate as supervision.
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.85\textwidth]{thesis_storyboard.png}
+  \caption{End-to-end workflow of the interpreter layer, shown as a closed loop: on-site capture
+  $\to$ interpret and ground $\to$ IFC-linked issue (BCF) $\to$ office review and validation $\to$
+  action/update loop $\to$ verified on-site closure, which feeds the next observation. Each card is
+  tagged with its actor (field, machine interpreter, office coordinator); the dashed return edge
+  marks the continuous loop.}
+  \label{fig:storyboard}
+\end{figure}
+
+The claim is bounded: this does not replace the coordinator. It shifts the coordinator from manual
+search and transcription toward verification, correction, and escalation. Confirmed GUIDs can later
+serve as supervised feedback for project-specific fine-tuning.
+
+\paragraph{From a single answer to institutional memory.} Once evidence is anchored to a GUID, each
+element accumulates a traceable, time-stamped history rather than a loose chat thread, mitigating the
+context decay that follows personnel turnover (Figure~\ref{fig:passport}, left). Aggregated across a
+project, these element-level records support macro-scale analytics that are hard to see in siloed
+reporting: heatmaps of defect density, spatial trade conflicts, and recurring inspection or regulatory
+blind spots (Figure~\ref{fig:heatmaps}). The same neuro-symbolic logic extends toward continuous,
+autonomous on-site tracking as manual capture is replaced by a camera network. These are downstream
+implications of the grounding layer, not claims evaluated here; they motivate the project framing in
+which the spatial-address enhancement is one component.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.82\textwidth]{thesis_passport.png}
+  \caption{Element-level traceability ``passport'': a per-GUID audit trail (design intent registered
+  $\to$ multimodal evidence captured $\to$ interpreter grounding candidate $\to$ allocentric BIM
+  confirmation) synchronized with the 3D model.}
+  \label{fig:passport}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.82\textwidth]{thesis_heatmaps.png}
+  \caption{Macro-scale traceability heatmaps aggregating element-level data to reveal defect density,
+  trade conflicts, and regulatory blind spots that are difficult to detect in traditional siloed
+  reporting.}
+  \label{fig:heatmaps}
+\end{figure}
 
 \subsection{Limitations}
 \label{sec:limitations}
@@ -35,32 +75,33 @@ next measurement. \emph{Single project:} the ceilings and reliabilities are meas
 model; the form of the contribution (type-conditional, shallow, image-recoverable, calibrated-soft) is
 general, the specific numbers are not. \emph{Statistical power:} the calibration and
 coverage--accuracy estimates rest on 35 addressable fillers; we report the operating point (defer
-${\sim}20\% \to 73.4\%$), not a precise optimal threshold. \emph{Class coverage:} the realized address
+${\sim}20\% \to 73.4\%$), not a precise optimal threshold. \emph{Test-set composition:} 18 of those
+35 fillers are on sparse re-rendered upper-floor plans that are easier to segment than realistic
+cluttered floors, so the aggregate slot accuracy overstates deployment; the realistic figure is the
+cluttered-floor 39.1\% (Table~\ref{tab:split}), and we report the split throughout. \emph{Class coverage:} the realized address
 covers fillers; the wall fingerprint is demonstrated at oracle level and is blocked from realization
 by the image-recoverability constraint itself (\secref{sec:eval-realized}); ``other''-class and
 room-relative addressing remain open. \emph{Multi-hop:} joint multi-hop extraction collapses under
 error cascade; practical use is single-hop plus human review, by design. \emph{IFC dependency:} the
 system retrieves against the model as given; if the IFC is outdated, retrieval is against stale ground
-truth --- mitigated by versioning the graph and surfacing low-confidence results for manual check.
+truth, which can be mitigated by versioning the graph and surfacing low-confidence results for manual check.
 
 \subsection{Future work, prioritized}
 \label{sec:future}
 
-\begin{enumerate}
-  \item \textbf{Real project traces.} Validate on live coordination data; the synthetic-to-real shift
-  is the most credible threat to the numbers and the first thing to measure.
-  \item \textbf{Remaining address classes.} Size-band realization (the ResNet head), relation-direction
-  improvement via subtype-contrastive augmentation, and room/space addressing where the export carries
-  space boundaries.
-  \item \textbf{Learned spatial topology.} Replace the distance-threshold \texttt{ADJACENT\_TO}
-  heuristic with a learned spatial graph model to generalize beyond standard geometries.
-  \item \textbf{Write-back integration.} BCF and BIM-cloud integration, so the grounded GUID lands in a
-  live workflow rather than a report; the human feedback loop then converts confirmed GUIDs into
-  supervised updates.
-  \item \textbf{4D temporal context.} Schedules, timestamps, and progress updates, making the IFC
-  graph a dynamic project database rather than a static snapshot.
-\end{enumerate}
+The priorities follow directly from the limitations. The first and most credible is \textbf{real
+project traces}: validating on live coordination data, since the synthetic-to-real shift is the
+single largest threat to the numbers. Next are the \textbf{remaining address classes}, which extend
+the realized address beyond the filler slot: size-band realization through the ResNet head,
+relation-direction improvement via subtype-contrastive augmentation, and room/space addressing
+wherever the export carries space boundaries. Beyond hand-tuned topology, a \textbf{learned spatial
+graph model} would replace the distance-threshold \texttt{ADJACENT\_TO} heuristic and generalize past
+standard geometries. Closing the loop, \textbf{write-back integration} with BCF and the BIM cloud
+would land the grounded GUID in a live workflow rather than a report, turning confirmed GUIDs into
+supervised feedback. Finally, adding \textbf{4D temporal context} (schedules, timestamps, and
+progress updates) would make the IFC graph a dynamic project database rather than a static
+snapshot.
 
 The long-term goal is not to replace construction managers but to remove the manual translation
-burden between physical on-site evidence and the digital record --- supporting timely, traceable, and
+burden between physical on-site evidence and the digital record, supporting timely, traceable, and
 continuously updated project analytics.

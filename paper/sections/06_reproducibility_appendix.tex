@@ -1,0 +1,127 @@
+\section{Reproducibility Details}
+\label{app:repro}
+
+This appendix expands implementation details that are compressed in the main text. It is intended to make the arXiv version easier to audit without changing the paper's claims: all reported numbers remain synthetic/IFC-grounded and single-project unless explicitly stated otherwise.
+
+\subsection{Input protocol, data construction, and split}
+\label{app:data}
+
+The input protocol is a cold-start site-to-BIM setting: a site image, a short text note, and a marked floorplan crop are grounded to an IFC element GUID. The current experiments do \emph{not} use real construction photographs or live project traces. The site imagery is synthetic, and the floorplan crop is a designed human-marked input that indicates the local target/anchor region; this corresponds to a coordinator marking the relevant plan area before the system grounds the target element.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \begin{tabular}{lp{0.64\linewidth}}
+    \toprule
+    Item & Value used in this paper \\
+    \midrule
+    Primary IFC model & \texttt{AdvancedProject.ifc}, used for all headline measurements. \\
+    Indexed elements & 1,233 elements across 10 storeys (9 containing elements). \\
+    Repeated classes & 263 windows and 771 walls (\texttt{IfcWall} + \texttt{IfcWallStandardCase}); typical floors contain many visually similar windows. \\
+    Hierarchy depth & Deepest IFC hierarchy: 5 levels. \\
+    Retained skeletons & 297 region-grounded skeletons mined from the IFC model. \\
+    Training split & 237 canonical training skeletons plus 753 augmented variants, for 990 AP-only training cases. \\
+    Held-out split & 60 held-out cases / 59 unique target elements; 35 cases are addressable fillers for the realized position-slot experiment. \\
+    Pattern families & \texttt{FILLS}: 69; \texttt{CONNECTS\_TO}: 69; \texttt{NEXT\_TO}: 97; \texttt{ADJACENT\_TO}: 62; \texttt{CONTINUOUS}: 22 mined skeletons, no generated cases in the reported benchmark. \\
+    Leakage audit & 12 of 59 held-out target elements also appear as training targets under different renders. Oracle graph diagnostics and deterministic OpenCV-slot results are leakage-proof; the learned VLM profile is unchanged on the leakage-clean 48-case subset. \\
+    \bottomrule
+  \end{tabular}
+  \caption{Dataset and split details for the reported benchmark.}
+  \label{tab:app-data}
+\end{table}
+
+\subsection{Neural extractor and LoRA settings}
+\label{app:lora}
+
+The neural extractor is treated as a structured parser rather than a GUID generator. Its output is a JSON constraint contract consumed by deterministic planning and retrieval.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \begin{tabular}{lp{0.62\linewidth}}
+    \toprule
+    Component & Setting \\
+    \midrule
+    Backbone & Qwen2.5-VL-7B-Instruct. \\
+    Deployment & 4-bit quantized backbone via Unsloth on Modal A100 GPUs during the thesis experiments. Repository inference loads \texttt{Qwen/Qwen2.5-VL-7B-Instruct} with bitsandbytes NF4 4-bit quantization when an adapter is supplied. \\
+    Adapter family & LoRA adapters; the strongest reported G-series configurations use rank 32 and learning rate $1\times10^{-4}$. Earlier ablations used rank 16 or rank 32 depending on the experiment. \\
+    Target modules & Q/K/V/O projection layers and MLP projection layers, as used for the multimodal structured-extraction adapter. \\
+    Final parser role & Extract \texttt{storey\_name}, \texttt{ifc\_class}, optional \texttt{space\_name}, optional descriptor keywords, and topology-bearing \texttt{spatial\_relations}. The parser does not emit GUIDs and does not generate Cypher. \\
+    Prompt parity & LoRA inference uses the same short system prompt family as training: extract IFC search constraints from multimodal evidence and output valid JSON only. The richer prompt-only schema is reserved for zero-shot/prompt baselines, not LoRA inference. \\
+    Known limitation & Exact training seeds, wall-clock training time, and full optimizer step logs should be attached before a journal resubmission if the original training logs are recovered. They are not inferred here. \\
+    \bottomrule
+  \end{tabular}
+  \caption{Neural-extractor settings included for reproducibility.}
+  \label{tab:app-lora}
+\end{table}
+\clearpage
+
+\subsection{Constraint contract and deterministic specialists}
+\label{app:contract}
+
+The contract invariant is per-field provenance: each extracted field is represented as \texttt{\{value, confidence, source\}} and later assigned a routing role such as hard filter, soft prior, drop, or clarify. The top-level fields are \texttt{storey\_name}, \texttt{ifc\_class}, \texttt{space\_name}, \texttt{position\_context}, \texttt{size\_cluster}, \texttt{size\_band}, \texttt{target\_name\_keyword}, and \texttt{spatial\_relations}. Nested spatial triplets include at least a predicate and object type, with optional subtype, direction, material, and confidence.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \begin{tabular}{lp{0.62\linewidth}}
+    \toprule
+    Specialist & Implementation detail \\
+    \midrule
+    OpenCV position-slot detector & Gaussian blur $5\times5$, $\sigma=0$; Canny 60/160; Hough $\rho/\theta=1$ px / $\pi/180$; Hough vote threshold 20; minimum line length / maximum gap 14 px / 18 px; HSV saturation mask $S\ge45$; morphological open kernel $3\times3$; minimum component area / aspect 10 px$^2$ / 1.3; confidence override gate 0.80. \\
+    ResNet size-band classifier & ResNet-18 with ImageNet1K-V1 weights; Linear(512, 6) head; 192$\times$192 RGB input with ImageNet normalization; rotations $\{0,90,180,270\}$, $\pm8$ px translation, color jitter (0.15, 0.10); weighted cross-entropy; AdamW with learning rate $3\times10^{-4}$ and weight decay $1\times10^{-4}$; cosine annealing $T_{\max}=30$; 30 epochs, batch size 16; split 155/17/23; test accuracy 82.6\%. \\
+    Prototype caveats & The OpenCV wall section is supplied by the marked-plan/region context in this prototype. The ResNet classifier consumes precomputed world coordinates rather than a fully end-to-end region proposal. These details bound the current claims and motivate the future real-data integration. \\
+    \bottomrule
+  \end{tabular}
+  \caption{Deterministic specialist settings.}
+  \label{tab:app-specialists}
+\end{table}
+\clearpage
+
+\subsection{Query cascade, ranking, and metrics}
+\label{app:query}
+
+The planner compiles the structured contract to a fixed Cypher cascade, not to open-ended text-to-Cypher. Every strategy with non-empty required fields emits an auditable plan; the retrieval backend fuses candidate pools rather than hard-intersecting noisy fields.
+
+\begin{table}[ht]
+  \centering
+  \small
+  \begin{tabular}{lp{0.66\linewidth}}
+    \toprule
+    Level & Evidence and role \\
+    \midrule
+    P0a & Spatial triplet edge traversal using \texttt{spatial\_relations}, \texttt{ifc\_class}, and non-\texttt{CONTINUOUS} predicates such as \texttt{FILLS}, \texttt{NEXT\_TO}, and \texttt{ADJACENT\_TO}. \\
+    P0b & Continuous-span property filter for \texttt{CONTINUOUS} cases, using materialized node properties such as \texttt{is\_continuous} and \texttt{top\_constraint}. \\
+    P1 & \texttt{space\_name} + \texttt{ifc\_class}. \\
+    P2 & \texttt{target\_name\_keyword} name/subtype lookup. \\
+    P4 & \texttt{storey\_name} + \texttt{ifc\_class}; also used as the P0 safety-net tier. \\
+    P5 & \texttt{storey\_name} only. \\
+    P6 & \texttt{ifc\_class} only. \\
+    P8 & Broad capped fallback pool. \\
+    Default fusion & \texttt{p0\_union\_p1}: return topology matches first, then append storey/type mates as a recall-preserving safety net. The relaxation ladder drops brittle filters only when a rung returns an empty pool: full fingerprint $\rightarrow$ no position $\rightarrow$ topology only $\rightarrow$ no storey $\rightarrow$ relaxed lowest-confidence triplet $\rightarrow$ attribute fallback. \\
+    \bottomrule
+  \end{tabular}
+  \caption{Deterministic query cascade used by the symbolic layer.}
+  \label{tab:app-query}
+\end{table}
+\clearpage
+
+Let $n$ be the number of evaluated cases, $GT_i$ the ground-truth GUID, $Pool_i$ the returned candidate pool, and $rank_i$ the rank of $GT_i$ when present. Retrieval health and ranking quality are reported as
+\[
+\mathrm{GT\mbox{-}in\mbox{-}Pool}=\frac{1}{n}\sum_{i=1}^{n}\mathbf{1}[GT_i \in Pool_i],
+\]
+\[
+\mathrm{Top}\mbox{-}k=\frac{1}{n}\sum_{i=1}^{n}\mathbf{1}[rank_i\le k],
+\qquad
+\mathrm{MRR@10}=\frac{1}{n}\sum_{i=1}^{n}\frac{\mathbf{1}[rank_i\le10]}{rank_i}.
+\]
+Pool-compression diagnostics use recall-weighted reduction,
+\[
+\mathrm{RWR}=\frac{1}{n}\sum_{i=1}^{n}\mathbf{1}[GT_i\in Pool_i]\left(1-\frac{|Pool_i|}{N}\right),
+\]
+where $N$ is the full indexed model size. Rate estimates and calibration quantities use case-level percentile bootstrap confidence intervals with 10,000 resamples and seed 0 unless otherwise stated.
+
+\subsection{Artifact availability}
+\label{app:artifacts}
+
+The development repository is \url{https://github.com/hyChia88/aec-interpreter}. The paper build lives under \texttt{paper/}; benchmark/test-set metadata live under \texttt{data/test\_sets/}; prompts and schemas live under \texttt{prompts/} and \texttt{schemas/}; evaluation scripts and figure generators live under \texttt{eval/}. Large artifacts such as IFC models, synthetic render corpora, model adapters, and generated outputs are documented in the repository but are not all bundled in git because of size and licensing constraints. The current arXiv-style claim should therefore be read as a reproducible system description with released code/metadata and documented artifact paths, not as a fully packaged public benchmark with real-site photographs.
