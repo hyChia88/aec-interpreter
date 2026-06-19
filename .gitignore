@@ -43,6 +43,20 @@ node_modules/
 logs/
 *.log
 
+# ── media / poster / explanation-diagram generators (decorative, not core paper figures;
+#    kept locally, regenerated on demand — the paper's own figure scripts stay tracked) ──────
+eval/fig_cover.py
+eval/fig_poster.py
+eval/fig_poster_v1_technical.py
+eval/fig_key_media.py
+eval/fig_key_media_alt.py
+eval/fig_method_spine_full.py
+eval/fig_workflow_storyboard.py
+eval/_render_bim3d.py
+
+# ── superseded published-PDF copy (the live project page links paper_v3.pdf) ────────────────
+site/assets/pdfs/paper_v2.pdf
+
 # ── deploy: Modal volume staging (large; holds the IFC + synthetic dataset images,
 #    rebuilt locally via deploy/stage_assets.py — never commit) ─────────────────
 deploy/_volume_stage/
