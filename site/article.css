@@ -39,6 +39,8 @@ header.hero{padding:40px 0;border-bottom:1px solid var(--line);text-align:center
 .hero .sub{font-size:1.18rem;color:var(--muted);max-width:760px;margin:0 auto 8px}
 .hero .authors{margin:18px 0 4px;font-size:1.02rem}
 .hero .affil{color:var(--muted);font-size:.95rem;margin-bottom:26px}
+.hero .back-main{display:block;text-align:left;font-weight:600;font-size:.95rem;margin-bottom:12px}
+.hero .back-main:hover{text-decoration:underline}
 .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:30px;
   background:var(--fg);color:#fff;font-weight:600;font-size:.96rem;border:1px solid var(--fg)}
