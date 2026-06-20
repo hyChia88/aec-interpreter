@@ -15,7 +15,7 @@ question: \emph{where exactly is it in the model?}
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.82\textwidth]{thesis_traceability.png}
+  \includegraphics[width=1.0\textwidth]{thesis_traceability.png}
   \caption{The traceability gap and the interpreter-middleware vision. Site evidence is unstructured
   and egocentric; the BIM/IFC record is structured and allocentric. A coordinator translates between
   them by hand, introducing semantic drift and context decay. The interpreter middleware inserts a
@@ -25,7 +25,7 @@ question: \emph{where exactly is it in the model?}
   \label{fig:gap}
 \end{figure}
 
-Why this grounding problem is genuinely hard is best seen at the element level. Industrialized
+Why the grounding problem is genuinely hard is best seen at the element level. Industrialized
 (prefabricated, volumetric) construction produces extreme geometric repetition: a single storey can
 hold dozens of windows that share every queryable attribute, so a pure attribute filter is at chance.
 With ${\sim}46$ identical windows on a floor, attribute-only matching is ${\approx}2.2\%$ ($1$ of $46$);
@@ -33,9 +33,9 @@ the only signal that separates two siblings is their \emph{position in the build
 topology} (Figure~\ref{fig:topology}). This ``attribute-entropy deadlock'' is the empirical reason the
 system is neuro-symbolic rather than a single learned matcher.
 
-\begin{figure}[t]
+\begin{figure}[H]
   \centering
-  \includegraphics[width=0.78\textwidth]{thesis_topology.png}
+  \includegraphics[width=0.75\textwidth]{thesis_topology.png}
   \caption{Why topology, not attributes. (a) A physical building module and (b) its abstract
   space/opening graph. Visually and semantically identical elements are separated only by their
   relational position (highlighted), which attribute filtering cannot express. Abstract graph
@@ -45,10 +45,10 @@ system is neuro-symbolic rather than a single learned matcher.
 
 The setting is cold-start. A construction or facilities team has a complete IFC/BIM
 model but no history of labelled site imagery; on day one they want to point a phone at an element,
-add a short note, and be told \emph{which} modelled element it is. The final step is a selection from
-a retrieved candidate pool in which the ground truth is present (median 76, in-pool 100\%), so the
-difficulty is not retrieval but \textbf{discrimination among visually identical siblings}, in a regime
-with no paired supervision to learn that discrimination from. Our strongest learned configuration,
+add a short note, and be told \emph{which} modelled element it is. On site, attaching an observation
+to the right element requires more than keying its type: labelling it a ``window'' or ``door''
+returns a pool of identical elements, so the task reduces to \textbf{discrimination among visually
+identical siblings}, in a regime with no paired supervision to learn that discrimination from. Our strongest learned configuration,
 a fine-tuned-VLM extraction pipeline feeding deterministic retrieval with no within-pool reranking,
 plateaus at Top-1 6.7\% with the answer already in the pool, because the signal that separates two
 identical windows is not in either window's pixels but in the building's relational structure, which a
@@ -159,6 +159,12 @@ line \citep{mao2019nscl}.
 Two scope boundaries frame every result. First, the base project is the interpreter layer: VLM
 constraint extraction, IFC graph construction, deterministic retrieval, traceability, and workflow
 handoff. The spatial address, specialist detector, and calibration gate are an enhanced module added
-to reduce the repeated-element ranking gap. Second, all measurements are on a single synthetic project
+to reduce the repeated-element ranking gap. The deployed ranking is deliberately distilled: the
+fine-tuned VLM supplies the typed constraints that build the recall-safe pool, a deterministic
+opening-slot specialist supplies the within-pool discriminator, and a calibrated gate decides when to
+defer. We also engineered and evaluated a fuller stack, adding a learned size-band filter and a Gemini
+Graph-RAG reranker over the shortlist; it did not improve on the distilled path and is reported as an
+ablation (\secref{sec:eval-rerank}), so the distillation is a measured result, not a convenience.
+Second, all measurements are on a single synthetic project
 (cold-start by design). The system form is transferable, but the reported reliabilities are
 project-specific until validated on real site traces.

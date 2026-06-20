@@ -23,7 +23,7 @@ image, so an image-space result does not reach a GUID: the only bridge is a coor
 address, and the discriminating signal is relational, not pixel-local (``the third of five fillers
 along an external wall''), which a pixel matcher would have to re-derive internally and unreliably.
 The evidence is that our strongest \emph{learned} configuration plateaus on exactly this
-discrimination: the fine-tuned-VLM pipeline (\emph{G8}) with no within-pool reranking reaches Top-1
+discrimination: our fine-tuned-VLM pipeline with no within-pool reranking reaches Top-1
 6.7\% (lexical/dense retrievers $\le 1.7\%$) on a pool that reorders to 78.5\% once the relational
 address is supplied (\secref{sec:eval-oracle}). Finally, construction compliance requires repeatability
 and audit, which a scalar matching score cannot provide. Trade-off accepted: less end-to-end
@@ -66,11 +66,30 @@ the VLM does not carry reliably; the IFC graph supplies the legal candidate univ
 topology; and the routing layer decides whether the recovered address is confident enough to answer or
 should surface a candidate set for human verification. This ordering is the hallucination control:
 \textbf{the neural layer describes evidence, but the symbolic layer alone names GUIDs.}
+The deployed pipeline is five stages:
+\begin{enumerate}
+\item \textbf{Multimodal input:} a site photo, a short note, and a marked floorplan crop.
+\item \textbf{Neural perception:} the fine-tuned VLM reads all three and emits a typed constraint
+record (storey, IFC class, and typed spatial relations), each field carrying a value, a confidence,
+and a source tag; it describes, it never names a GUID.
+\item \textbf{Symbolic retrieval:} the constraints compile into a fixed Cypher cascade over the
+enriched IFC graph, and a recall-safe union returns a candidate pool with the target retained in
+${\sim}100\%$ of cases. The relational predicates do pool formation here, not within-pool ranking.
+\item \textbf{Deterministic discrimination and soft rerank:} the OpenCV opening-slot specialist reads
+the position-slot $(i,M)$ from the plan, and the pool is reordered by a soft score (storey $+$ class
+$+$ confidence-weighted slot match) that never removes a candidate.
+\item \textbf{Calibrated answer/defer:} a temperature-scaled confidence commits the top GUID when it
+clears the threshold and otherwise defers the candidate pool to a human reviewer.
+\end{enumerate}
+A fuller stack, a ResNet size-band filter and a Gemini Graph-RAG reranker, was evaluated and not
+adopted (\secref{sec:eval-rerank}); the deployed ranking is therefore deterministic end to end apart
+from the perception front end.
 Figure~\ref{fig:system} gives the complete project view: an offline path that compiles raw IFC into
 the enriched Neo4j graph and mines paired training data (with a feedback loop), and an online
-inference path from multimodal input through the neural, symbolic, and Graph-RAG layers to a
+inference path from multimodal input through the neural and symbolic layers to a
 BIM-linked output that supplies the element GUIDs required to populate a BCF/CDE issue-package
-schema. The spatial-address and calibration components sit inside this
+schema (a fuller engineered stack, adding a learned size-band filter and an LLM Graph-RAG reranker, is
+evaluated as an ablation in \secref{sec:eval-rerank} but not adopted). The spatial-address and calibration components sit inside this
 larger middleware as one ranking-and-routing stage.
 
 \begin{figure}[ht]
@@ -79,8 +98,8 @@ larger middleware as one ranking-and-routing stage.
   \caption{The neuro-symbolic interpreter middleware, end to end. \emph{Offline:} raw IFC is parsed
   and topology-enriched into a Neo4j graph, from which skeleton-first synthetic cases are mined for
   training (feedback loop). \emph{Online:} multimodal input $\to$ neural VLM layer $\to$ symbolic
-  Cypher cascade $\to$ Graph-RAG rerank $\to$ BIM-linked output (GUID pool, JSON record, BCF $\to$
-  CDE).}
+  Cypher cascade $\to$ BIM-linked output (GUID pool, JSON record, BCF $\to$
+  CDE); an LLM Graph-RAG reranker was evaluated but not adopted (\secref{sec:eval-rerank}).}
   \label{fig:system}
 \end{figure}
 
@@ -144,9 +163,9 @@ and emits a structured contract, \texttt{\{storey\_name, ifc\_class,
 spatial\_relations:[\{predicate, object\_type, direction\}]\}}, and nothing else: \emph{it
 describes, it never queries} (Figure~\ref{fig:vlmimpl}). Fine-tuning on the synthetic corpus is what
 makes the spatial fields exist at all: spatial-direction accuracy reaches 82\% where zero-shot
-prompting scores ${\sim}0\%$ (this 82\% and the G-series ablation below are prior thesis measurements,
-not re-run on this repo's harness), and the coarse fields (storey, \texttt{ifc\_class}) saturate at
-100\% versus 30--63\% zero-shot. The G-series ablation also exposes a
+prompting scores ${\sim}0\%$ (this 82\% and the adapter-configuration ablation below come from the
+project's full fine-tuning sweep, detailed in Appendix~\ref{app:sweep}), and the coarse fields
+(storey, \texttt{ifc\_class}) saturate at 100\% versus 30--63\% zero-shot. This adapter sweep also exposes a
 multi-task capacity trade-off under a fixed adapter rank: under-resourced adapters collapse on spatial
 extraction while the coarse fields stay saturated, so topology-specific supervision and added
 position-context capacity are needed to recover spatial fingerprints. As the per-field profile
@@ -155,7 +174,7 @@ which is why they are delegated to the specialists below.
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.85\textwidth]{vlm_finetune.png}
+  \includegraphics[width=1.0\textwidth]{vlm_finetune.png}
   \caption{Neural extraction and routing diagnostics. Fine-tuning improves coarse fields and relation
   typing, while discriminating address fields motivate deterministic specialists and calibration.}
   \label{fig:vlmimpl}
@@ -177,7 +196,7 @@ added, the ground-truth address is fixed prior to augmentation (Figure~\ref{fig:
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.82\textwidth]{thesis_dataset.png}
+  \includegraphics[width=1.0\textwidth]{thesis_dataset.png}
   \caption{Skeleton-first synthetic curation. Each case is traced from the dataset split through
   relation multiplicity (1/2/3-relation), topology family, anchor-element pattern, evidence scale, and
   text tier; the dominant 3-relation family is \texttt{FILLS+NEXT\_TO+NEXT\_TO} (a window anchored

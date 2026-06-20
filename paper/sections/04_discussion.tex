@@ -17,7 +17,7 @@ compliance requires manual re-entry.
 parses the evidence into constraints, executes the IFC graph cascade, and returns a compact ranked
 shortlist within ${\sim}1$ second. The correct element remains in the pool ${\sim}100\%$ of the time;
 on the addressable subset, the enhanced slot module places it at rank 1 in 58.9\% of cases end-to-end
-(39.1\% on realistic cluttered floors; 73.4\% when the system is allowed to defer the least-confident
+(21.2\% on realistic cluttered floors; 73.4\% when the system is allowed to defer the least-confident
 fifth). The worker or coordinator
 confirms the element, and the output becomes a model-linked record rather than a loose image or chat
 message.
@@ -78,7 +78,7 @@ coverage--accuracy estimates rest on 35 addressable fillers; we report the opera
 ${\sim}20\% \to 73.4\%$), not a precise optimal threshold. \emph{Test-set composition:} 18 of those
 35 fillers are on sparse re-rendered upper-floor plans that are easier to segment than realistic
 cluttered floors, so the aggregate slot accuracy overstates deployment; the realistic figure is the
-cluttered-floor 39.1\% (Table~\ref{tab:split}), and we report the split throughout. \emph{Class coverage:} the realized address
+cluttered-floor 21.2\% end-to-end (Table~\ref{tab:split}), and we report the split throughout. \emph{Class coverage:} the realized address
 covers fillers; the wall fingerprint is demonstrated at oracle level and is blocked from realization
 by the image-recoverability constraint itself (\secref{sec:eval-realized}); ``other''-class and
 room-relative addressing remain open. \emph{Multi-hop:} joint multi-hop extraction collapses under

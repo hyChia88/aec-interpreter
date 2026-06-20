@@ -44,7 +44,7 @@ The neural extractor is treated as a structured parser rather than a GUID genera
     \midrule
     Backbone & Qwen2.5-VL-7B-Instruct. \\
     Deployment & 4-bit quantized backbone via Unsloth on Modal A100 GPUs during the thesis experiments. Repository inference loads \texttt{Qwen/Qwen2.5-VL-7B-Instruct} with bitsandbytes NF4 4-bit quantization when an adapter is supplied. \\
-    Adapter family & LoRA adapters; the strongest reported G-series configurations use rank 32 and learning rate $1\times10^{-4}$. Earlier ablations used rank 16 or rank 32 depending on the experiment. \\
+    Adapter family & LoRA adapters; the deployed configuration uses rank 32 and learning rate $1\times10^{-4}$. The fine-tuning sweep (Appendix~\ref{app:sweep}) varied rank ($16$ vs $32$), learning rate, and supervision targets. \\
     Target modules & Q/K/V/O projection layers and MLP projection layers, as used for the multimodal structured-extraction adapter. \\
     Final parser role & Extract \texttt{storey\_name}, \texttt{ifc\_class}, optional \texttt{space\_name}, optional descriptor keywords, and topology-bearing \texttt{spatial\_relations}. The parser does not emit GUIDs and does not generate Cypher. \\
     Prompt parity & LoRA inference uses the same short system prompt family as training: extract IFC search constraints from multimodal evidence and output valid JSON only. The richer prompt-only schema is reserved for zero-shot/prompt baselines, not LoRA inference. \\
@@ -54,6 +54,58 @@ The neural extractor is treated as a structured parser rather than a GUID genera
   \caption{Neural-extractor settings included for reproducibility.}
   \label{tab:app-lora}
 \end{table}
+\clearpage
+
+\subsection{Fine-tuning sweep and a worked extraction example}
+\label{app:sweep}
+
+The deployed extractor was selected from a sweep of LoRA adapter configurations that varied data
+augmentation, adapter rank ($16$ vs $32$), learning rate, and supervision targets. The progression
+moved from attribute-only extraction, to multi-hop spatial predicates, to position-context and
+relation-direction labels, and finally to absolute-dimension targets. Two findings fixed the deployed
+choice. First, the strongest combined Top-10 / MRR@10 on the held-out benchmark comes from the
+configuration that adds position-context and dimension supervision at rank 32 (the \emph{position-context
+$+$ dimension} adapter used throughout \secref{sec:eval}); the immediately preceding
+position-context-only configuration is competitive on MRR@10 but weaker on Top-10. Second, an
+under-resourced rank-16 control collapses on spatial extraction while the coarse fields (storey,
+\texttt{ifc\_class}) stay saturated at $100\%$, which is the multi-task capacity trade-off noted in
+\secref{sec:vlm}: topology-specific supervision, not raw scale, is what makes the spatial fields
+appear. A separate hybrid configuration pairs the VLM parser explicitly with the OpenCV slot detector
+and the ResNet size head, the division of labour realized in \secref{sec:eval-realized}.
+
+The extractor is a structured parser: it consumes the multimodal evidence and emits the JSON
+constraint contract, never a GUID or Cypher. For a window query \emph{``On Level~1, check the window
+beside the door at this location,''} paired with a site photograph, a marked floorplan crop, and the
+OpenCV opening count (\texttt{2nd of 3 openings on the same wall}), the merged contract is:
+
+{\small
+\begin{verbatim}
+{
+  "storey_name": "1",
+  "ifc_class": "IfcWindow",
+  "target_name_keyword": "floor-to-ceiling window",
+  "position_context": "2nd of 3 openings on the same wall",
+  "position_context_confidence": 0.92,
+  "position_context_source": "opencv",
+  "spatial_relations": [
+    {"predicate": "NEXT_TO", "object_type": "IfcDoor",
+     "direction": "right", "confidence": 1.0},
+    {"predicate": "FILLS",   "object_type": "IfcWallStandardCase",
+     "confidence": 1.0},
+    {"predicate": "NEXT_TO", "object_type": "IfcWindow",
+     "direction": "left",  "confidence": 1.0}
+  ],
+  "confidence": 0.85,
+  "source": "lora"
+}
+\end{verbatim}
+}
+
+\noindent The \texttt{storey\_name} and \texttt{ifc\_class} are the coarse prefix the VLM saturates;
+\texttt{position\_context} is supplied by the deterministic detector, not the VLM; and each
+\texttt{spatial\_relations} triplet carries the typed topology consumed by the P0 cascade. Every
+field also carries \texttt{\{confidence, source\}} provenance, so the planner can route it as a hard
+filter, a soft prior, or a deferral signal.
 \clearpage
 
 \subsection{Constraint contract and deterministic specialists}

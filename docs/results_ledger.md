@@ -449,6 +449,7 @@ floor, pull each window's **host wall** via FILLS→VOIDS and render walls+windo
 byte-matches `floorplans_full/` (blue/green/dark + world_bbox json), consumed by the detector
 unchanged. **Coverage 17/35 → 35/35.**
 
+Oracle-coarse path (coarse target = GT storey/class):
 | subset | Top-1 | Top-10 | exact_M |
 |---|--:|--:|--:|
 | **orig-17 (realistic, cluttered)** | **39.1** | 65.3 | 12/17 |
@@ -456,14 +457,23 @@ unchanged. **Coverage 17/35 → 35/35.**
 | all-35 (aggregate) | 67.6 | 80.9 | 29/35 |
 | oracle | 91.0 | 100.0 | 35/35 |
 
+End-to-end path (extracted coarse storey/class; `eval/realized_split.py`, 2026-06-19):
+| subset | Top-1 | Top-10 |
+|---|--:|--:|
+| **orig-17 (realistic, cluttered)** | **21.2** | 36.8 |
+| new-18 (sparse host-wall renders) | 94.6 | 95.7 |
+| all-35 (aggregate) | 58.9 | 67.1 |
+
 **⚠️ Honesty caveat (load-bearing).** The new upper-floor plans contain **only the host walls +
 windows** (the multi-storey walls aren't storey-contained, so only host walls are pull-able) → they
 are **sparser/easier than realistic cluttered floors** (no corridors/doors/interior walls to confuse
-collinearity). So **94.6 is an optimistic ceiling**, and the **realistic deployable number is the
-cluttered-floor 39.1** (floor 2.4 → 39.1 = 16× on realistic plans; aggregate 67.6 is flattered by a
-half-sparse test set — report the split, not the aggregate alone). A fully-realistic upper-floor
-render needs the multi-storey-wall→floor assignment (genuine future work). Full M1b arc on realistic
-plans: floor 2.4 → 39.1.
+collinearity). So **94.6 is an optimistic ceiling**. The **realistic deployable number is the
+cluttered-floor end-to-end 21.2** (floor 2.4 → 21.2 = ~8.8× on realistic plans); **39.1 is the
+oracle-coarse upper bound** — on cluttered floors the extracted storey/`ifc_class` also degrade and
+compound with slot error, while on the sparse subset coarse extraction is errorless so the two paths
+coincide at 94.6. Aggregate 58.9/67.6 are flattered by the half-sparse test set — report the split,
+not the aggregate alone. A fully-realistic upper-floor render needs the multi-storey-wall→floor
+assignment (genuine future work).
 
 ---
 

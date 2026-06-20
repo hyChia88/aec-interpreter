@@ -94,6 +94,14 @@
     <h2><span class="num">Architecture</span>The neuro-symbolic interpreter</h2>
     <p class="lead">Architecture in five stages: <strong>multimodal input → neural extraction (VLM + LoRA) → Constraints JSON → symbolic retrieval (priority Cypher cascade over a Neo4j IFC graph) → calibrated soft-rerank (optional Graph-RAG/LLM reorder) → ranked GUIDs.</strong> </p>
     <p> The neural side translates evidence into a typed spatial address; the symbolic side names only GUIDs that exist in the model. Design rationale: reliability over flexibility (deterministic templates instead of Text-to-Cypher), and an IFC-native graph built from the schema itself rather than noisy document-level extraction.</p>
+    <ol class="pipeline-steps">
+      <li><strong>Multimodal input</strong> — a site photo, a short field note, and a marked floorplan crop.</li>
+      <li><strong>Neural perception (VLM)</strong> — a fine-tuned Qwen2.5-VL + LoRA emits a typed <code>Constraints</code> JSON <code>{storey, ifc_class, spatial_relations[{predicate, object_type, direction}]}</code>, each field a <code>{value, confidence, source}</code> record. It describes; it never names a GUID.</li>
+      <li><strong>Symbolic retrieval</strong> — the constraints compile into a deterministic Cypher cascade over the enriched Neo4j IFC graph; a recall-safe <code>p0∪p1</code> union returns a candidate pool with the target retained ~100% of the time. The relational predicates <em>build the pool</em>, not the within-pool ranking.</li>
+      <li><strong>Deterministic slot discriminator + soft rerank</strong> — an OpenCV specialist reads the opening position-slot <code>(i of M)</code> from the plan; candidates are reordered by a soft score (storey + class + confidence-weighted slot match) that never removes a candidate.</li>
+      <li><strong>Calibrated answer / defer</strong> — a temperature-scaled confidence commits the top GUID when it clears the threshold, and otherwise defers the candidate pool to a human reviewer.</li>
+    </ol>
+    <p>A fuller engineered stack — a ResNet size-band filter and a Gemini Graph-RAG LLM reranker — was <strong>evaluated and not adopted</strong>: on the topology-filtered pool the LLM reorder is redundant and lowers Top-1 (6.7% → 1.7%) while breaking the 100% recall guarantee. The deployed ranking is deterministic end-to-end apart from the VLM perception front end.</p>
     <figure>
       <img src="assets/graph_reasoning.png"
            alt="Module decomposition as graph reasoning on a real case: pool narrows from 76 to 46 same-class siblings, the position-slot resolves to rank 1">
@@ -212,7 +220,7 @@
         <tr class="best"><td>Spatial address (KG traversal)</td><td>the type-conditional address — position-slot <code>(i of M)</code> for an opening — reorders the siblings to the target</td><td class="n">1</td></tr>
       </tbody>
     </table>
-    <p class="tcap">A <strong>calibration gate</strong> (AUROC 0.80) then routes ANSWER (commit the GUID) vs DEFER (return the pool), and a <strong>Graph-RAG reranker</strong> produces the final ranked candidates — traced on one real case below.</p>
+    <p class="tcap">A <strong>calibration gate</strong> (AUROC 0.80) then routes ANSWER (commit the GUID) vs DEFER (return the pool), and the <strong>deterministic slot soft-rerank</strong> produces the final ranked candidates — traced on one real case below.</p>
     <figure>
       <img src="assets/pipeline_shots.png"
            alt="The spatial-interpretation pipeline traced through one real case with real screenshots, stages (a)-(e)">
@@ -253,14 +261,14 @@
     <table>
       <thead><tr><th>Model / diagnostic</th><th class="n">GT-in-pool</th><th class="n">Top-1</th><th class="n">Top-10</th><th class="n">MRR@10</th></tr></thead>
       <tbody>
-        <tr><td>Zero-shot Gemini</td><td class="n">95.0%</td><td class="n">1.7%</td><td class="n">18.3%</td><td class="n">0.056</td></tr>
+        <tr><td>Zero-shot Gemini</td><td class="n">91.7%</td><td class="n">1.7%</td><td class="n">18.3%</td><td class="n">0.056</td></tr>
         <tr><td>Fine-tuned VLM (best end-to-end)</td><td class="n">100%</td><td class="n">6.7%</td><td class="n">30.0%</td><td class="n">0.110</td></tr>
         <tr><td>+ realized position-slot specialist (end-to-end)</td><td class="n">100%</td><td class="n">58.9%</td><td class="n">67.1%</td><td class="n">—</td></tr>
         <tr><td>+ realized slot, oracle coarse (upper bound)</td><td class="n">100%</td><td class="n">67.6%</td><td class="n">80.9%</td><td class="n">—</td></tr>
         <tr class="best"><td>+ type-conditional spatial-address ceiling</td><td class="n">100%</td><td class="n">78.5%</td><td class="n">98.1%</td><td class="n">0.854</td></tr>
       </tbody>
     </table>
-    <p class="tcap">The ceiling row is a diagnostic upper bound, not a deployed end-to-end system. The realized row is the actual spatial-address path currently built — a deterministic position-slot specialist for the 35 window/door filler cases; realized wall/other extractors are future work.</p>
+    <p class="tcap">The ceiling row is a diagnostic upper bound, not a deployed end-to-end system. The realized row is the actual spatial-address path currently built — a deterministic position-slot specialist for the 35 window/door filler cases; realized wall/other extractors are future work. The realized 58.9% is the aggregate over those 35 fillers; on the realistic <strong>cluttered-floor</strong> subset it is <strong>21.2% end-to-end</strong> (39.1% with oracle coarse fields) — the aggregate is flattered by 18 sparser re-rendered upper-floor plans, so we report the split.</p>
 
     <h3>The calibration is real — and pays off as deferral</h3>
     <div class="grid2">

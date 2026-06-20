@@ -10,10 +10,11 @@ in a building's BIM model.
 > improve as real on-site data flows in**.
 
 **Pipeline:** fine-tuned VLM extracts typed spatial constraints → JSON contract →
-deterministic Cypher templates over an enriched Neo4j IFC graph → Graph-RAG reranked
-GUID pool, with a calibrated answer/defer gate.
+deterministic Cypher templates over an enriched Neo4j IFC graph → deterministic
+opening-slot rerank with a calibrated answer/defer gate (an LLM Graph-RAG reranker was
+evaluated but **not adopted** — it is redundant on a topology-filtered pool).
 
-📄 **[Paper (PDF)](site/assets/pdfs/paper.pdf)** · 🌐 **[Project page](site/index.html)** · 🎬 **[Demo video](site/assets/video/MSCD_demo_web.mp4)** · 📒 **[Results ledger](docs/results_ledger.md)**
+📄 **[Paper (PDF)](site/assets/pdfs/paper_v3.pdf)** · 🌐 **[Project page](site/index.html)** · 🎬 **[Demo video](site/assets/video/MSCD_demo_web.mp4)** · 📒 **[Results ledger](docs/results_ledger.md)**
 
 > This is the clean development repo for the post-thesis **enhancement + paper phase**.
 > The original thesis-submission code is frozen in `~/projects/cmu/master_thesis/`
@@ -32,6 +33,11 @@ GUID pool, with a calibrated answer/defer gate.
 | + realized slot, oracle coarse (upper bound) | 100% | 67.6% | 80.9% | — |
 | **Type-conditional spatial-address ceiling** | 100% | **78.5%** | 98.1% | 0.854 |
 
+> **Report the split, not just the aggregate.** The realized 58.9% is the aggregate over 35 fillers;
+> on the realistic **cluttered-floor** subset it is **21.2%** end-to-end (39.1% with oracle coarse
+> fields). The aggregate is flattered by 18 sparse re-rendered upper-floor plans — provenance in
+> [`docs/results_ledger.md`](docs/results_ledger.md).
+
 Three load-bearing findings (one per RQ):
 
 - **Architecture is sound, perception is the bottleneck.** Under perfect extraction the
@@ -40,11 +46,42 @@ Three load-bearing findings (one per RQ):
 - **The address is a *soft prior*, not a hard filter.** Hard-filtering on a noisy field deletes
   the answer; routing on a **calibrated** confidence (AUROC 0.80) recovers the gain and lets the
   system **abstain** — the answered subset reaches **73.4%**.
-- **Discrimination saturates at one hop.** Deeper relations are more unique but less recoverable
-  from a flat image, so the confusable set shrinks **13 → ~8** at depth-1 and then plateaus.
-  Compile relations into the node; don't chase deep chains.
+- **Discrimination saturates at one hop.** Under an oracle the confusable set collapses **13 → 1**
+  at depth-1; but deeper relations, though more unique, are **not image-recoverable** (the readable
+  predicates are type-homogeneous), so the **realizable** pool only shrinks **13 → 8.2** and then
+  plateaus (8.1 at depth-2/3). Compile relations into the node; don't chase deep chains.
 
 Every number is provenance-tracked in [`docs/results_ledger.md`](docs/results_ledger.md).
+
+---
+
+## Final pipeline (deployed)
+
+```text
+input:  site photo  +  NL note  +  marked floorplan crop
+ ① VLM perception     fine-tuned Qwen2.5-VL + LoRA → typed Constraints JSON
+                      {storey, ifc_class, spatial_relations[{predicate, object_type, direction}]}
+                      each field {value, confidence, source} · describes, never names a GUID
+ ② symbolic retrieve  constraints → deterministic Cypher cascade over the Neo4j IFC graph
+                      recall-safe UNION → candidate pool, GT-in-pool ~100%   (predicates build the pool)
+ ③ slot discriminator OpenCV reads position-slot (i,M) from the plan         (the within-pool discriminator)
+ ④ soft rerank        score(c) = 1[storey] + 1[ifc_class] + conf·1[slot]     (soft prior, never deletes)
+ ⑤ answer / defer     calibrated confidence ≥ τ → ANSWER (commit GUID) | < τ → DEFER (pool → human)
+output: ranked IFC GUID pool / Top-1 answer / BCF handoff
+```
+
+**Three load-bearing choices:**
+- **Division of labour** — the VLM is reliable on coarse fields + relation typing; the discriminating
+  slot is delegated to the deterministic OpenCV specialist (the VLM recovers a usable slot in **0/35**
+  fillers, so it never ranks siblings).
+- **Predicates build the pool, not the ranking** — they are type-homogeneous (the depth law), so they
+  keep the target *in* the pool (GT-in-pool 100%) but cannot order siblings; the slot does that.
+- **Auditable + safe** — only the symbolic layer names GUIDs (no hallucination); if OpenCV fails, the
+  slot term drops out and the system **defers** rather than guesses.
+
+**Evaluated, not adopted:** a ResNet size-band filter and a Gemini Graph-RAG LLM reranker — redundant
+on the topology-filtered pool (Top-1 6.7% → 1.7%) and they break the 100% recall guarantee. The
+deployed ranking stays deterministic end-to-end apart from the VLM front end.
 
 ---
 
@@ -56,7 +93,8 @@ site photo + natural-language note + floorplan
   → typed Constraints JSON  {value, confidence, source} per field
   → query planner (fingerprint ladder L0–L7, priorities P0–P8)
   → Neo4j Cypher retrieval (enriched IFC graph)
-  → Graph-RAG rerank + calibrated answer/defer gate
+  → deterministic opening-slot rerank + calibrated answer/defer gate
+    (LLM Graph-RAG reranker evaluated, not adopted — redundant on a filtered pool)
   → ranked IFC GUID pool (Top-1 answer, or DEFER + candidate pool)
 ```
 
@@ -79,11 +117,12 @@ site photo + natural-language note + floorplan
 - Retrieval backend is **Neo4j**; queries are deterministic templates (no Text-to-Cypher).
 
 ### 3. Rerank + routing
-- Graph-RAG reranker: [`src/aec_interpreter/neurosym/graph_rag_rerank.py`](src/aec_interpreter/neurosym/graph_rag_rerank.py) (AP variant: `graph_rag_rerank_ap.py`)
-  — **caveat:** helpful only on coarse / P1-only pools; on already topology-filtered pools it can *degrade* Top-1.
-- Deterministic visual specialists: [`src/aec_interpreter/visual/`](src/aec_interpreter/visual/) (CLIP aligner, image parser) +
-  `neurosym/floorplan_counter.py` (OpenCV slot/count), `neurosym/cluster_classifier.py` (ResNet size band).
-- Calibrated routing harness (offline): `eval/calibrate_rerank.py`, `eval/calibration_diag.py`, `eval/field_contract.py`.
+- **Adopted: deterministic slot rerank + calibrated routing.** Deterministic visual specialists:
+  [`src/aec_interpreter/visual/`](src/aec_interpreter/visual/) (CLIP aligner, image parser) +
+  `neurosym/floorplan_counter.py` (OpenCV slot/count), `neurosym/cluster_classifier.py` (ResNet size band);
+  routing harness (offline): `eval/calibrate_rerank.py`, `eval/calibration_diag.py`, `eval/field_contract.py`.
+- **Evaluated, not adopted: LLM Graph-RAG reranker** [`src/aec_interpreter/neurosym/graph_rag_rerank.py`](src/aec_interpreter/neurosym/graph_rag_rerank.py) (AP variant: `graph_rag_rerank_ap.py`)
+  — helpful only on coarse / P1-only pools; on the topology-filtered pool it *degrades* Top-1 (6.7% → 1.7%) and adds a non-auditable LLM to the ranking loop, so it is kept as an ablation only.
 
 ### 4. Service, handoff, datagen
 - Pipeline as a callable + FastAPI app: [`src/aec_interpreter/service/app.py`](src/aec_interpreter/service/app.py), [`src/aec_interpreter/pipeline_base.py`](src/aec_interpreter/pipeline_base.py)
@@ -169,15 +208,19 @@ site photo + natural-language note + floorplan
         single-hop / multi-anchor traversal + relaxation ladder
         (drop exact_slot → drop fingerprint → drop storey → P4)
    │  p0_union_p1:  P0 pool  ∪  storey+type safety net
-   ▼  GRAPH-RAG RERANK + ROUTE            graph_rag_rerank.py
-        per-candidate graph context → Gemini reorder
+   ▼  SLOT RERANK + ROUTE                 slot_detector_cv.py · calibrate_rerank.py
+        deterministic opening-slot soft prior (OpenCV specialist)
         calibrated confidence → ANSWER (commit GUID) | DEFER (pool)
+        [evaluated, not adopted] LLM Graph-RAG reorder — graph_rag_rerank.py
    │
    ▼  ranked IFC GUID pool → Top-1 answer
 ```
 
-> **Graph-RAG caveat:** only helps on P1-only / coarse pools; on already topology-filtered
-> pools it *degrades* Top-1 — see [`docs/thesis/rq1_spatial_address.md`](docs/thesis/rq1_spatial_address.md).
+> **Why the rerank is deterministic, not LLM.** A Gemini Graph-RAG reranker only helps on P1-only /
+> coarse pools; on the already topology-filtered pool it is redundant and *degrades* Top-1
+> (6.7% → 1.7%), and re-introduces a non-auditable LLM in the ranking loop. The deployed path keeps
+> ranking deterministic (the OpenCV slot specialist) + calibrated defer — see
+> [`docs/thesis/rq1_spatial_address.md`](docs/thesis/rq1_spatial_address.md).
 
 ---
 

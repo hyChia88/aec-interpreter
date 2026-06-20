@@ -1,14 +1,14 @@
 Architecture, Engineering, and Construction (AEC) projects hinge on coordination across many
 stakeholders and heterogeneous data formats. Despite open digital standards (OpenBIM/IFC), day-to-day
-coordination still depends on manual interpretive labour: practitioners translate unstructured site
+coordination between physical and digital models still depends on manual interpretive labour: practitioners translate unstructured site
 evidence (photographs, chat notes, and marked floorplan patches) into model-linked,
 schema-compliant records. This manual translation is error-prone, causing information loss across
 handoffs, ambiguous evidence-to-element links, delayed update of site information, and regulatory non-compliance. We propose a
 neuro-symbolic \textbf{interpreter middleware} that maps on-site evidence to the digital model
 automatically by separating probabilistic perception from deterministic graph retrieval. We target
 the \textbf{spatial grounding} problem at its core: linking a piece of multimodal site evidence to
-the single correct IFC element (its GUID) amidst extreme geometric repetition, where dozens of
-near-identical elements on a floor share every queryable attribute and only relational position
+the single correct IFC element, by GUID, amidst extreme geometric repetition, where dozens of
+near-identical elements on a floor share every queryable attribute and only relational spatial position
 separates them. The system uses a fine-tuned VLM to emit typed spatial constraints, an IFC parse
 engine to build a normalized and topology-enriched project graph, and a symbolic query cascade that
 returns auditable candidate pools instead of hallucinated element IDs. This project-level grounding
@@ -18,7 +18,7 @@ in the candidate pool throughout, while learned extraction alone reaches Top-1 6
 elements remain visually and semantically identical. The enhanced spatial address reorders the same pool from Top-1
 4.9\% to \textbf{78.5\%} at the oracle ceiling; this ceiling is realizable only in part, since the
 recoverable signal is the filler position-slot, where one OpenCV detector lifts the addressable
-filler subset ($n=35$) from a 6.6\% floor to \textbf{58.9\%} end-to-end (39.1\% on the realistic
+filler subset ($n=35$) from a 6.6\% floor to \textbf{58.9\%} end-to-end (21.2\% on the realistic
 cluttered-floor cases) and supports selective prediction (AUROC 0.80, 95\% CI $[0.58, 0.99]$ at
 $n=35$; deferring the least-confident fifth raises answered-set Top-1 to \textbf{73.4\%}). The outcome is an auditable site-to-BIM
 interpreter: neural models parse evidence, IFC topology constrains retrieval, and calibrated

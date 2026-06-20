@@ -26,20 +26,22 @@ from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch, Rectangl
 REPO = Path(__file__).resolve().parent.parent
 OUT = REPO / "output"
 
+# Monochrome palette (match the clean B&W storyboard figure): white fills, dark borders,
+# black text, grey secondary labels, no chromatic accents.
 INK = "#1a1c20"
-MUTED = "#5b6470"
-LINE = "#d8dde5"
-ORANGE = "#ef7d00"
-RED = "#d62728"
-BLUE = "#56B4E9"
-GREEN = "#2ca02c"
-PURPLE = "#9467bd"
-WALLCOL = "#3a3f47"
+MUTED = "#6b7280"
+LINE = "#b9bfc9"
+ORANGE = INK      # filler accent (was orange) -> ink
+RED = INK         # target / "before" emphasis (was red) -> ink
+BLUE = INK        # wall accent (was blue) -> ink
+GREEN = INK       # oracle-lift numbers (was green) -> ink
+PURPLE = INK
+WALLCOL = "#3a3f47"   # dark-grey schematic bar (reads as dark in B&W)
 
-PREFIX_FC = "#eef2f8"
-PREFIX_EC = "#9aa7bd"
-FILLER_FC = "#fff4e3"
-WALL_FC = "#eaf6ff"
+PREFIX_FC = "#ffffff"
+PREFIX_EC = "#3a3f47"
+FILLER_FC = "#ffffff"
+WALL_FC = "#ffffff"
 
 
 def load():
@@ -72,7 +74,7 @@ def build(out_path: Path):
 
     # ---- shared coarse prefix banner ----
     _round(ax, 0.085, 0.775, 0.83, 0.085, PREFIX_FC, PREFIX_EC, lw=1.4)
-    ax.text(0.105, 0.835, "PREFIX  (both classes)", fontsize=9, fontweight="bold", color="#5c6b86", ha="left")
+    ax.text(0.105, 0.835, "PREFIX  (both classes)", fontsize=9, fontweight="bold", color=MUTED, ha="left")
     ax.text(0.105, 0.800,
             'storey = "1 - First Floor"   ·   ifc_class = IfcWindow / IfcWall',
             fontsize=10.5, color=INK, ha="left", family="monospace")
@@ -126,7 +128,7 @@ def build(out_path: Path):
     # ================= RIGHT : WALL fingerprint =================
     rx = 0.525
     _round(ax, rx, ly, lw_, lh, WALL_FC, BLUE, lw=1.6)
-    ax.text(rx + 0.02, ly + lh - 0.04, "WALL", fontsize=11, fontweight="bold", color="#1f7bc0")
+    ax.text(rx + 0.02, ly + lh - 0.04, "WALL", fontsize=11, fontweight="bold", color=INK)
     ax.text(rx + 0.02, ly + lh - 0.075, "body = connectivity fingerprint", fontsize=9.6, color=INK,
             style="italic")
 

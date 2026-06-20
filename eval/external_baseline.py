@@ -100,7 +100,7 @@ def make_figure(rows, out_path):
     from matplotlib.patches import Patch
     names = list(rows); t1 = [rows[k]["top1"] for k in names]; t10 = [rows[k]["top10"] for k in names]
     # mark our own methods (fine-tuned extractor + structured address) vs external/zero-shot baselines
-    is_ours = ["g8" in k.lower() or "address" in k.lower() for k in names]
+    is_ours = ["ours" in k.lower() or "address" in k.lower() for k in names]
     # baselines: steel blue/grey; ours: orange accent (matches the G8 colour in the per-field figure)
     BASE_T1, BASE_T10 = "#5b7796", "#aebfd0"
     OUR_T1, OUR_T10 = "#ef7d00", "#f6b366"
@@ -167,7 +167,10 @@ def main():
     # foundational-model comparator the thesis reports. Top-1 1.7 / Top-10 18.3 / MRR 0.0557.
     rows["zero-shot Gemini\n(prompt-only)"] = {"top1": 1.7, "top10": 18.3, "mrr": 0.0557, "n": 60}
     # reference points (from the ledger) for the figure
-    rows["fine-tuned VLM\n(G8)"] = {"top1": 6.7, "top10": 30.0, "mrr": 0.110, "n": 60}
+    rows["fine-tuned VLM\n(ours)"] = {"top1": 6.7, "top10": 30.0, "mrr": 0.110, "n": 60}
+    # realized deployed end-to-end: VLM coarse + OpenCV slot, on the addressable filler subset (n=35).
+    # NOT the same slice as the n=60 bars; its matching oracle is the filler 91.0% (see caption).
+    rows["+ address\nrealized (n=35)"] = {"top1": 58.9, "top10": 67.1, "mrr": 0.0, "n": 35}
     rows["+ address\n(oracle)"] = {"top1": 78.5, "top10": 98.1, "mrr": 0.854, "n": 60}
 
     OUT.mkdir(exist_ok=True)
